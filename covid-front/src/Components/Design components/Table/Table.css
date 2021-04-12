@@ -1,0 +1,26 @@
+.tableContainer{
+  grid-column: span 2;
+  padding: 2rem 0;
+  margin: 4rem 0;
+}
+
+.tableContainer h1{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+table {
+  border-radius: 5px;
+  margin: 0 auto;
+  background: white;
+  border-collapse: collapse;
+  width: 80%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}

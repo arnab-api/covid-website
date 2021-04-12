@@ -1,0 +1,35 @@
+.topBar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #263238;
+    padding: 1rem;
+}
+
+.brand{
+    padding: 1rem;
+    font-size: 2rem;
+    color:#eee;
+    cursor: pointer;
+}
+
+.grow{
+    flex:1;
+}
+
+.cats{
+    list-style: none;
+    display: flex;
+}
+
+.catItem{
+    /* background-color: #eee; */
+    padding: 1rem 2rem;
+    margin-right: 2rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.catItem a{
+    color: #fafafa !important;
+}
