@@ -27,16 +27,19 @@ const geographyStyle = {
         outline: 'none'
     },
     hover: {
-        fill: '#ccc',
+        fill: '#fafa6e',
         transition: 'all 250ms',
         outline: 'none'
     },
     pressed: {
+        fill: '#4B0082',
         outline: 'none'
     }
 };
 
 const BD_TOPO_JSON = require('../Data/bd_topo.json');
+const BD_DIST_TOPO = require('../Data/bd_dist_topo.json');
+
 const DEFAULT_COLOR = '#EEE';
 // Red Variants
 const COLOR_RANGE = [
@@ -83,15 +86,27 @@ const PROJECTION_CONFIG = {
     center: [90.412518, 23.810332] // always in [East Latitude, North Longitude]
 };
 
+// {
+//     "id": "54",
+//     "division_id": "7",
+//     "name": "Sylhet",
+//     "bn_name": "সিলেট",
+//     "lat": "24.8897956",
+//     "long": "91.8697894"
+//   }
 
 export const MapChart = ( {
             setArea,
-            getSucceptiblePopulation__For
+            updateCharts__For
     }) => {
 
     const [tooltipContent, setTooltipContent] = useState('');
     const [heatmap, setHeatMap] = useState([]);
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
+    const [projection_config, setProjectionConfig] = useState({
+        scale: 40,
+        center: [90.412518, 23.810332] 
+    });
 
     const onMouseLeave = () => {
         // console.log("mouse leaving")
@@ -105,21 +120,25 @@ export const MapChart = ( {
         // enter_count += 1
         // onMouseClick(geo, current)
         return () => {
-            setTooltipContent(`${current.id}: ${current.value}`);
+            setTooltipContent(`${current.dist}: ${current.value}`);
         };
     }
 
     const handleClick = geo => () => {
-        setDistrictData(geo)
+        setDistrictData(geo.properties)
         console.log(geo);
-        setArea(": "+geo.NAME_3)
-        getSucceptiblePopulation__For(geo)
+        setArea(geo.properties.DIST_NAME)
+        updateCharts__For(geo.properties)
+        // setProjectionConfig({
+        //     scale: 70,
+        //     center: [91.8697894, 24.8897956] 
+        // })
     };
 
     const getHeatMapData = () => {
         setDistrictData({}); //****** added *******/
         console.log("refreshing heat map data")
-        fetch('/api/heat_map').then(response => {
+        fetch('/api/heat_map_dist').then(response => {
             if (response.ok) {
                 return response.json()
             }
@@ -134,7 +153,7 @@ export const MapChart = ( {
         .range(COLOR_RANGE);
 
     useEffect(() => {
-        fetch('/api/heat_map').then(response => {
+        fetch('/api/heat_map_dist').then(response => {
             if (response.ok) {
                 return response.json()
             }
@@ -150,13 +169,13 @@ export const MapChart = ( {
         <div>
             <ReactTooltip>{tooltipContent}</ReactTooltip>
             <ComposableMap
-                projectionConfig={PROJECTION_CONFIG}
+                projectionConfig={projection_config}
                 projection="geoMercator"
                 width={5}
                 height={3}
                 data-tip=""
             >
-                <Geographies geography={BD_TOPO_JSON}>
+                <Geographies geography={BD_DIST_TOPO}>
                     {({ geographies }) =>
                         geographies.map(geo => {
                             const current = heatmap.find(s => s.id === geo.id);
@@ -165,10 +184,11 @@ export const MapChart = ( {
                                     key={geo.rsmKey}
                                     geography={geo}
                                     fill={current ? colorScale(current.value) : DEFAULT_COLOR}
+                                    // fill= {DEFAULT_COLOR}
                                     style={geographyStyle}
                                     onMouseEnter={onMouseEnter(geo, current)}
                                     onMouseLeave={onMouseLeave}
-                                    onClick={handleClick(geo.properties)}
+                                    onClick={handleClick(geo)}
                                 />
                             )
                         }

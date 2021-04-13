@@ -38,22 +38,42 @@ const CssTextField = withStyles({
 })(TextField);
 
 
-export default function CustomizedInputs() {
+export default function CustomizedInputs({
+  dist_2_id, 
+  area, setArea,
+  updateCharts, updateCharts__For
+}) {
 
   const [districtData, setDistrictData] = useContext(DistrictDataContext);
+
+  // console.log("from search bar", dist_2_id)
+  let district_names = []
+  for(var dist in dist_2_id){
+    district_names.push(dist);
+  }
 
   return (
     <div style={{ width: 400 }}>
       <Autocomplete
         id="search-district"
-        value={districtData.NAME_3}
+        value={area}
         onChange={(event, newValue) => {
-          let newDistricData = {...districtData};
-          newDistricData.NAME_3 = newValue;
-          setDistrictData(newDistricData);
+          console.log(" !!>> ", newValue, dist_2_id[newValue])
+          if(newValue != null) {
+            console.log("updating charts for ", newValue)
+            updateCharts__For(newValue)
+          }
+          else {
+            console.log("updating charts for whole Bangladesh")
+            updateCharts()
+          }
+          // let newDistricData = {...districtData};
+          // newDistricData.NAME_3 = newValue;
+          // setDistrictData(newDistricData);
+          setArea(newValue)
         }}
 
-        options={Districts}
+        options={district_names}
         getOptionLabel={(option) => option}
         renderInput={(params) => (
           <CssTextField

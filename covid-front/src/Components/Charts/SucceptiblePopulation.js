@@ -40,7 +40,7 @@ export const SucceptiblePopulation = ( {chartData, chartOptions, area, updateSuc
         <>
             <div className="box">
                 <h2>
-                    Succeptible Population{area} 
+                    Succeptible Population: {area} 
                 </h2>
                 <div className="container" style={{ display: 'flex', alignItems: 'center' }}>
                     <Bar data={chartData} options={chartOptions} width={600} height={300} />

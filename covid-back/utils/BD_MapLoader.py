@@ -136,3 +136,25 @@ class BD_MapLoader:
             })
         
         return heat_map
+
+    @staticmethod
+    def getDistrictData():
+        with open("utils/bd_dist_id.json", 'r') as f:
+            dist_dict = json.load(f)
+            return dist_dict
+    
+    @staticmethod
+    def getRandomHeatMap_dist():
+        dist_dict = BD_MapLoader.getDistrictData()
+        heat_map = []
+        for dist in dist_dict:
+            for _id in dist_dict[dist]:
+                obj = {
+                    'id': _id,
+                    'dist': dist,
+                    'value': random.randint(1,100)
+                }
+                if dist == 'Indian Chhitmahal in Bangladesh':
+                    obj['value'] = 0
+                heat_map.append(obj)
+        return heat_map

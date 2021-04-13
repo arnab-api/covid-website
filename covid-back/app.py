@@ -222,6 +222,16 @@ def getheatmap():
     mapdata = BD_MapLoader.getRandomHeatMap()
     return jsonify(mapdata)
 
+@app.route("/api/heat_map_dist")
+def getheatmap_dist():
+    mapdata = BD_MapLoader.getRandomHeatMap_dist()
+    return jsonify(mapdata)
+
+@app.route("/api/dist_2_id")
+def get_dist():
+    mapdata = BD_MapLoader.getDistrictData()
+    return jsonify(mapdata)
+
 
 @app.route("/api/rt_forcast_table")
 def getForcastTable():
