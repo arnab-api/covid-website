@@ -19,7 +19,7 @@ const Table = () => {
 
   return (
     <div className='tableContainer'>
-      <h1>Data Table</h1>
+      <h1>Forecasting SERS-CoV-2 in Bangladesh</h1>
       <table>
         <thead>
           <tr>
@@ -39,8 +39,8 @@ const Table = () => {
                 <td>{rowData.confirmedCases}</td>
                 <td>{rowData.recoveredCases}</td>
                 <td>{rowData.deaths}</td>
-                <td>{rowData.Rt}</td>
-                <td>{rowData.DT}</td>
+                <td>{rowData.Rt.toFixed(2)}</td>
+                <td>{rowData.DT.toFixed(2)}</td>
               </tr>
             ))
           }

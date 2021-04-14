@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Line, defaults } from 'react-chartjs-2'
 import { merge } from 'lodash';
+import 'chartjs-plugin-annotation';
+
 
 merge(defaults, {
     global: {
@@ -17,7 +19,7 @@ export const RareImpact = () => {
     const [chartOptions, setChartOptions] = useState({})
 
     const updateLineObject = (rareImpact) => {
-        console.log("checking <RareImpact> values", rareImpact['values'])
+        console.log("checking <RareImpact> values", rareImpact)
 
         var data = rareImpact['values']
         var annotations = rareImpact['annotations']
@@ -86,7 +88,7 @@ export const RareImpact = () => {
                     ticks: {
                         userCallback: function (item, index) {
                             // console.log(" >>>> ", item, index)
-                            if (!(index % 20)) return item;
+                            if (!(index % 30)) return item;
                             return "";
                         },
                         autoSkip: false,
@@ -137,9 +139,9 @@ export const RareImpact = () => {
     return (
         <>
             <div class="box">
-                {/* <h2>
-                Rare impact on daily cases
-                </h2> */}
+                <h2>
+                    Chart name
+                </h2>
                 <div class="container" style={{ display: 'flex', alignItems: 'center' }}>
                     <Line data={chartData} options={chartOptions} width={600} height={300} />
                 </div>

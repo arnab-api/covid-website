@@ -4,6 +4,7 @@ import { ObservableImpact } from '../Components/Charts/ObservableImpact';
 import { SucceptiblePopulation } from '../Components/Charts/SucceptiblePopulation';
 import { MapChart } from '../Components/Charts/MapChart';
 import { PlotlyChart } from '../Components/Charts/PlotlyChart'
+import { CaseEstimation } from '../Components/Charts/CaseEstimation';
 
 import styles from './homePage.module.css';
 import Table from '../Components/Design components/Table/Table';
@@ -12,6 +13,8 @@ import { DistrictDataContext } from '../App';
 
 export const HomePage = ({
     area, setArea,
+    caseEstimationData, setCaseEstimationData,
+    caseEstimationOptions, setCaseEstimationOptions,
     succeptiblePopulationData, setSucceptiblePopulationData,
     succeptiblePopulationOptions, setSucceptiblePopulationOptions,
     observableImpactData, setObservableImpactData,
@@ -22,6 +25,7 @@ export const HomePage = ({
     plotlyLayout, setPlotlyLayout,
 
     updateSucceptiblePopulationData,
+    updateCaseEstimationData,
     updateCharts, updateCharts__For
 }) => {
     const [districtData, setDistrictData] = useContext(DistrictDataContext)
@@ -46,14 +50,20 @@ export const HomePage = ({
 
             <div className={styles.chartsContainer}>
                 <div className={styles.chart}>
-                        <SucceptiblePopulation 
+                    <CaseEstimation
+                        chartData = {caseEstimationData}
+                        chartOptions = {caseEstimationOptions}
+                        area = {area}
+                        updateCaseEstimationData = {updateCaseEstimationData}
+                    />
+                        {/* <SucceptiblePopulation 
                             chartData={succeptiblePopulationData} 
                             // setChartData={setSucceptiblePopulationData}
                             chartOptions={succeptiblePopulationOptions}
                             // setChartOptions={setSucceptiblePopulationOptions}
                             area = {area}
                             updateSucceptiblePopulationData = {updateSucceptiblePopulationData}
-                        />    
+                        />     */}
                     {/* {
                         districtData.NAME_3 ? <PlotlyChart></PlotlyChart> : <SucceptiblePopulation 
                                                                                 chartData={succeptiblePopulationData} 
@@ -61,9 +71,8 @@ export const HomePage = ({
                     } */}
                 </div>
                 <div className={styles.chart}>
-                    {
-                        districtData.NAME_3 ? <RareImpact></RareImpact> : <ObservableImpact></ObservableImpact>
-                    }
+                    <RareImpact></RareImpact>
+                    {/* <ObservableImpact></ObservableImpact> */}
                 </div>
             </div>
             <Table/>
