@@ -370,6 +370,22 @@ function App() {
         }
 
         var chartOptions = {
+            tooltips :{
+                callbacks: {
+                    title: function(tooltipItem, data) {
+                        // console.log(tooltipItem, data)
+                    },
+                    label: function(tooltipItem, data) {
+                        // console.log(tooltipItem, data)
+                        // console.log(">>>>", tooltipItem['datasetIndex'])
+                        var legend = data['datasets'][tooltipItem['datasetIndex']]['legend']
+                        return legend + ": " + parseFloat(tooltipItem['value']).toFixed(2)
+                    },
+                    afterLabel: function(tooltipItem, data) {
+                        // console.log(tooltipItem, data)
+                    }
+                }
+            },
             annotation: {
                 annotations: annotation_formatted
             },

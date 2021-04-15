@@ -73,6 +73,17 @@ const COLOR_RANGE = [
 //     '#e90a0a'
 // ]
 // https://colordesigner.io/gradient-generator
+// https://www.w3schools.com/colors/colors_picker.asp
+
+const COLOR_BUCKET = [
+    '#009933',   // trivial
+    '#cccc00',   // Community spread
+    '#ff9966',   // Accelerated spread
+    '#cc3300',   // Tipping point
+]
+const bins = [1, 9, 24]
+
+
 
 const gradientData = {
     fromColor: COLOR_RANGE[0],
@@ -119,6 +130,8 @@ export const MapChart = ( {
         // console.log(enter_count, "current >> ", current, geo.properties)
         // enter_count += 1
         // onMouseClick(geo, current)
+        // console.log(current)
+        // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
         return () => {
             setTooltipContent(`${current.dist}: ${current.value}`);
         };
@@ -152,6 +165,14 @@ export const MapChart = ( {
         .domain(heatmap.map(d => d.value))
         .range(COLOR_RANGE);
 
+    const my_colorScale = (value) => {
+        // console.log("---> ", value)
+        if(value < bins[0]) return COLOR_BUCKET[0];
+        if(value < bins[1]) return COLOR_BUCKET[1];
+        if(value < bins[2]) return COLOR_BUCKET[2];
+        return COLOR_BUCKET[3];
+    }
+
     useEffect(() => {
         fetch('/api/heat_map').then(response => {
             if (response.ok) {
@@ -183,7 +204,8 @@ export const MapChart = ( {
                                 <Geography
                                     key={geo.rsmKey}
                                     geography={geo}
-                                    fill={current ? colorScale(current.value) : DEFAULT_COLOR}
+                                    // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
+                                    fill= {current ? my_colorScale(current.value) : DEFAULT_COLOR}
                                     // fill= {DEFAULT_COLOR}
                                     style={geographyStyle}
                                     onMouseEnter={onMouseEnter(geo, current)}
@@ -196,6 +218,12 @@ export const MapChart = ( {
                 </Geographies>
             </ComposableMap>
             {/* <div><LinearGradient data={gradientData} /></div> */}
+            <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>
+                <li><span style={{'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0]}}>{"__"}</span> <strong>Trivial</strong></li>
+                <li><span style={{'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1]}}>__</span> <strong>Community Spread</strong></li>
+                <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
+                <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
+            </ul> 
             
             {/* <Button 
             variant="outlined"
