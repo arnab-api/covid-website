@@ -27,7 +27,7 @@ const geographyStyle = {
         outline: 'none'
     },
     hover: {
-        fill: '#fafa6e',
+        fill: '#ff99ff',
         transition: 'all 250ms',
         outline: 'none'
     },
@@ -138,7 +138,7 @@ export const MapChart = ( {
     const getHeatMapData = () => {
         setDistrictData({}); //****** added *******/
         console.log("refreshing heat map data")
-        fetch('/api/heat_map_dist').then(response => {
+        fetch('/api/heat_map').then(response => {
             if (response.ok) {
                 return response.json()
             }
@@ -153,7 +153,7 @@ export const MapChart = ( {
         .range(COLOR_RANGE);
 
     useEffect(() => {
-        fetch('/api/heat_map_dist').then(response => {
+        fetch('/api/heat_map').then(response => {
             if (response.ok) {
                 return response.json()
             }
@@ -197,14 +197,14 @@ export const MapChart = ( {
             </ComposableMap>
             {/* <div><LinearGradient data={gradientData} /></div> */}
             
-            <Button 
+            {/* <Button 
             variant="outlined"
              startIcon={<CachedIcon/>} 
              onClick={getHeatMapData} 
              style={{position:'absolute',right:'1rem',top:'1rem'}}
              >
                 Refresh
-            </Button>
+            </Button> */}
             
             {/* </div> */}
         </div>

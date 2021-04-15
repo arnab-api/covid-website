@@ -47,9 +47,6 @@ function App() {
     const [observableImpactData, setObservableImpactData] = useState({})
     const [observableImpactOptioins, setObservableImpactOptioins] = useState({})
 
-    const [rareImpactData, setRareImpactData] = useState({})
-    const [rareImpactOptions, setRareImpactOptions] = useState({})
-
     const [plotlyData, setPlotlyData] = useState({})
     const [plotlyLayout, setPlotlyLayout] = useState({})
 
@@ -157,8 +154,8 @@ function App() {
               'data': data[i]['value'],
               'label': data[i]['label'],
               'type': 'line',
-              'lineTension': .3,
-              'borderWidth': 4,
+              'lineTension': 0,
+              'borderWidth': 1,
               'backgroundColor': data[i]['color'],
               'borderColor': data[i]['color'],
               // 'pointColor': data[i]['color'],
@@ -180,7 +177,7 @@ function App() {
               data_obj['pointRadius'] = 2
           }
           // if (data[i]['label'] == 'R_t0') data_obj['fill'] = '+1'
-          // if(data[i]['label'] == 'R_t1') data_obj['fill'] = true
+          if(data[i]['label'] == 'Hospitals Required') data_obj['borderWidth'] = 2
 
           // console.log(data[i]['label'], data_obj['fill'])
 
@@ -203,7 +200,7 @@ function App() {
                   scaleID: "x-axis-0",
                   value: annotations[i]['value'],
                   borderColor: annotations[i]['color'],
-                  borderWidth: 3,
+                  borderWidth: 2,
                   label: {
                       content: annotations[i]['text'],
                       enabled: true,
@@ -221,22 +218,56 @@ function App() {
               xAxes: [{
                   ticks: {
                       userCallback: function (item, index) {
-                          // console.log(" >>>> ", item, index)
-                          if (!(index % 20)) return item;
-                          return "";
+                        //   console.log(" >>>> ", item, index)
+                          var date = item.split("-")
+                        //   console.log(date)
+                          if(date[2] == "01"){
+                              return date[0] + "-" + date[1]
+                          }
+                        //   if (!(index % 20)) return item;
+                          return null;
                       },
                       autoSkip: false,
                       // color: 'rgba(0, 0, 0, 1)'
                   },
                   display: true
               }],
+              yAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Number of Cases',
+                },
+                type: 'logarithmic',
+                ticks: {
+                    userCallback: function (value, index) {
+                        if (value === 10000000) return "10M";
+                        if (value === 1000000) return "1M";
+                        if (value === 100000) return "100K";
+                        if (value === 10000) return "10K";
+                        if (value === 1000) return "1K";
+                        if (value === 100) return "100";
+                        if (value === 10) return "10";
+                        if (value === 1) return "1";
+                        return null;
+                    },
+                    autoSkip: false,
+                    // color: 'rgba(0, 0, 0, 1)'
+                },
+                display: true
+            }],
           },
           legend: {
-              display: true,
-              position: 'bottom',
+            //   display: true,
+            //   position: 'bottom',
               // labels: {
               //   fontColor: "#000080",
               // }
+                labels: {
+                    filter: function(item, chart) {
+                        // Logic to remove a particular legend item goes here
+                        return !item.text.includes('Real');
+                    }
+                }
           },
           maintainAspectRatio: false
       }
@@ -270,13 +301,146 @@ function App() {
     }
     // ###################################### Estimated Cases ######################################
 
+    // ###################################### rare impact ##########################################
+    const [rareImpactData, setRareImpactData] = useState({})
+    const [rareImpactOptions, setRareImpactOptions] = useState({})
+
+    const updateRareImpactData = (rareImpact) => {
+        console.log("checking <RareImpact> values", rareImpact)
+
+        var data = rareImpact['values']
+        var annotations = rareImpact['annotations']
+        var label = rareImpact['x_labels']
+
+        var datasets = []
+        for (var i = 0; i < data.length; i++) {
+            var data_obj = {
+                'legend': data[i]['label'],
+                'data': data[i]['value'],
+                'label': data[i]['label'],
+                'type': 'line',
+                'lineTension': 0,
+                'borderWidth': 1,
+                'backgroundColor': data[i]['color'],
+                'borderColor': data[i]['color'],
+                // 'pointColor': data[i]['color'],
+                // 'fillColor': data[i]['color'],
+                // 'fill': true,
+                'pointBackgroundColor': data[i]['color'],
+                'pointRadius': 2,
+                'fill': false,
+                'fillOpacity': .3,
+                'spanGaps': true
+            }
+            if (data[i]['label'] == 'R_t Low' || data[i]['label'] == 'R_t High'){
+                data_obj['pointRadius'] = 0
+            }
+            if (data[i]['label'] == 'R_t Low') data_obj['fill'] = '+1'
+            // if(data[i]['label'] == 'R_t1') data_obj['fill'] = true
+
+            // console.log(data[i]['label'], data_obj['fill'])
+
+            datasets.push(data_obj)
+        }
+
+        var chartData = {
+            'labels': label,
+            'datasets': datasets,
+            // 'lineAtIndex': [1,2,3,4]
+        }
+
+        var annotation_formatted = []
+        for (var i = 0; i < annotations.length; i++) {
+            annotation_formatted.push(
+                {
+                    type: "line",
+                    connectNullData: true,
+                    mode: "vertical",
+                    scaleID: "x-axis-0",
+                    value: annotations[i]['value'],
+                    borderColor: annotations[i]['color'],
+                    borderWidth: 3,
+                    label: {
+                        content: annotations[i]['text'],
+                        enabled: true,
+                        position: "top"
+                    }
+                }
+            )
+        }
+
+        var chartOptions = {
+            annotation: {
+                annotations: annotation_formatted
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        userCallback: function (item, index) {
+                            //   console.log(" >>>> ", item, index)
+                            var date = item.split("-")
+                            //   console.log(date)
+                            if(date[2] == "01"){
+                                return date[0] + "-" + date[1]
+                            }
+                            return null;
+                        },
+                        autoSkip: false,
+                        // color: 'rgba(0, 0, 0, 1)'
+                    },
+                    display: true
+                }],
+            },
+            legend: {
+                labels: {
+                    filter: function(item, chart) {
+                        // Logic to remove a particular legend item goes here
+                        return  !item.text.includes('Low') && 
+                                !item.text.includes('High');
+                    }
+                }
+            },
+            maintainAspectRatio: false
+        }
+
+        setRareImpactData(chartData)
+        setRareImpactOptions(chartOptions)
+    }
+
+          // For Bangladesh
+        const getRareImpact = () => {
+            console.log("refreshing estimation data for Bangladesh")
+            fetch('/api/rareimpact').then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+            }).then(data => {
+                updateRareImpactData(data)
+            })
+        }
+    
+        // For a particular district
+        const getRareImpact__For = (geo) => {
+            console.log("refreshing estimation data for ", geo)
+            fetch('/api/rareimpact/'+geo.DIST_NAME).then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+            }).then(data => {
+                updateRareImpactData(data)
+            })
+        }
+    // ###################################### rare impact ##########################################
+
     const updateCharts = () => {
       getEstimatedCases()
+      getRareImpact()
       // getSucceptiblePopulation()
     }
 
     const updateCharts__For = (geo) => {
       getEstimatedCases__For(geo)
+      getRareImpact__For(geo)
       // getSucceptiblePopulation__For(geo)
     }
 
@@ -310,6 +474,7 @@ function App() {
 
               updateSucceptiblePopulationData = {updateSucceptiblePopulationData}
               updateCaseEstimationData = {updateCaseEstimationData}
+              updateRareImpactData = {updateRareImpactData}
               updateCharts = {updateCharts} updateCharts__For = {updateCharts__For}
             />
           </Route>

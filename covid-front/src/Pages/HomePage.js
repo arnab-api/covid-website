@@ -26,6 +26,7 @@ export const HomePage = ({
 
     updateSucceptiblePopulationData,
     updateCaseEstimationData,
+    updateRareImpactData,
     updateCharts, updateCharts__For
 }) => {
     const [districtData, setDistrictData] = useContext(DistrictDataContext)
@@ -71,7 +72,12 @@ export const HomePage = ({
                     } */}
                 </div>
                 <div className={styles.chart}>
-                    <RareImpact></RareImpact>
+                    <RareImpact
+                        chartData = {rareImpactData}
+                        chartOptions = {rareImpactOptions}
+                        area = {area}
+                        updateRareImpactData = {updateRareImpactData} 
+                    />
                     {/* <ObservableImpact></ObservableImpact> */}
                 </div>
             </div>

@@ -5,12 +5,12 @@ import { DistrictDataContext } from '../../../App';
 const OptionBar = ({
     area,
     setArea,
-    getSucceptiblePopulation
+    updateCharts
 }) => {
 
   const handleClick = () => {
     setArea("")
-    getSucceptiblePopulation()
+    updateCharts()
   }
 
   return (

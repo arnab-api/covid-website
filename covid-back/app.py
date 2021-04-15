@@ -71,10 +71,10 @@ def getRandom__RareImpactData():
             'value': test_pos, 'label': 'Test positive rate', 'color': "rgba(58, 156, 9)"
         },
         {
-            'value': R_t0, 'label': 'R_t0', 'color': "rgba(235, 9, 28, .5)"
+            'value': R_t0, 'label': 'R_t_1', 'color': "rgba(235, 9, 28, .5)"
         },
         {
-            'value': R_t1, 'label': 'R_t1', 'color': "rgba(235, 9, 28, .5)"
+            'value': R_t1, 'label': 'R_t_2', 'color': "rgba(235, 9, 28, .5)"
         },
     ]
 
@@ -96,6 +96,10 @@ def getRandom__RareImpactData():
         'x_labels': labels
     }
 
+def loadRareImpactData():
+    with open('Data/web_plot_2.json', 'r') as f:
+        rareimpact = json.load(f)
+    return rareimpact
 
 def getRandom__CaseEstimationData():
     labels = []
@@ -193,6 +197,12 @@ def getRandom__CaseEstimationData():
     }
 
 
+def loadCaseEstimationData():
+    with open('Data/web_plot_1.json', 'r') as f:
+        caseEstimation = json.load(f)
+    return caseEstimation
+
+
 def getRandom__ObservableImpactData():
     # point_arr = [{
     #     'x': 5, 'y': 5
@@ -264,12 +274,20 @@ def getRandom__ForcastData():
 
 @app.route("/api/rareimpact")
 def getRareImpactData():
+    # rareImpact = getRandom__RareImpactData()
+    rareImpact = loadRareImpactData()
+    return rareImpact
+
+@app.route("/api/rareimpact/<district_name>")
+def getRareImpactData__For(district_name):
+    print("getting estimation data for {}".format(district_name))
     rareImpact = getRandom__RareImpactData()
     return rareImpact
 
 @app.route("/api/caseEstimation")
 def getCaseEstimationData():
-    caseEstimation = getRandom__CaseEstimationData()
+    # caseEstimation = getRandom__CaseEstimationData()
+    caseEstimation = loadCaseEstimationData()
     return caseEstimation
 
 @app.route("/api/caseEstimation/<district_name>")
@@ -305,7 +323,8 @@ def getMapData():
 
 @app.route("/api/heat_map")
 def getheatmap():
-    mapdata = BD_MapLoader.getRandomHeatMap()
+    # mapdata = BD_MapLoader.getRandomHeatMap()
+    mapdata = BD_MapLoader.getRiskData()
     return jsonify(mapdata)
 
 @app.route("/api/heat_map_dist")

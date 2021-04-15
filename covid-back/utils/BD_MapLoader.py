@@ -158,3 +158,41 @@ class BD_MapLoader:
                     obj['value'] = 0
                 heat_map.append(obj)
         return heat_map
+
+    @staticmethod
+    def getRiskData():
+        dist_dict = BD_MapLoader.getDistrictData()
+        with open("Data/dist_2_risk.json", 'r') as f:
+            dist_2_risk = json.load(f)
+
+        replace_name = {
+            'BARISAL': 'BARISHAL',
+            'CHITTAGONG': 'CHATTOGRAM',
+            'COMILLA': 'CUMILLA',
+            "COX'S BAZAR": 'COXS BAZAR',
+            'NETROKONA': 'NETRAKONA',
+            'JESSORE': 'JASHORE',
+            'JHENAIDAHA': 'JHENAIDAH',
+            'BOGRA': 'BOGURA',
+            'CHAPAI': 'CHAPAINABABGANJ',
+            'MAULVIBAZAR': 'MOULVIBAZAR'
+        }
+        
+        heat_map = []
+        for dist in dist_dict:
+            for _id in dist_dict[dist]:
+                obj = {
+                    'id': _id,
+                    'dist': dist,
+                }
+                if dist == 'Indian Chhitmahal in Bangladesh':
+                    obj['value'] = 0
+                    continue
+                if dist in dist_2_risk:
+                    obj['value']= round(dist_2_risk[dist], 2)
+                else:
+                    rep = replace_name[dist]
+                    obj['value']= round(dist_2_risk[rep], 2)
+                heat_map.append(obj)
+
+        return heat_map
