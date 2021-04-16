@@ -12,6 +12,7 @@ import plotly
 from datetime import date, timedelta
 
 from utils.BD_MapLoader import BD_MapLoader
+from utils.DistrictDataLoader import DistrictDataLoader
 
 app = Flask(__name__)
  
@@ -341,6 +342,20 @@ def get_dist():
 @app.route("/api/rt_forcast_table")
 def getForcastTable():
     return jsonify(getRandom__ForcastData())
+
+
+@app.route("/api/dist_plot_1/<district_name>")
+def getDistPlot1__For(district_name):
+    # district_name = "DHAKA"
+    # with open('Data/District/web_plot_1/'+district_name+".json", 'r') as f:
+    #     plot_data = json.load(f)
+    # return jsonify(plot_data) 
+    # return BD_MapLoader.testPlotly()
+    return DistrictDataLoader.getPlot1__For(district_name)
+
+@app.route("/api/dist_plot_2/<district_name>")
+def getDistPlot2__For(district_name):
+    return DistrictDataLoader.getPlot2__For(district_name)
 
 if __name__ == "__main__":
     app.run(

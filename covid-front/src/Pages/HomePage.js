@@ -4,7 +4,9 @@ import { ObservableImpact } from '../Components/Charts/ObservableImpact';
 import { SucceptiblePopulation } from '../Components/Charts/SucceptiblePopulation';
 import { MapChart } from '../Components/Charts/MapChart';
 import { PlotlyChart } from '../Components/Charts/PlotlyChart'
+import { PlotlyChart__2 } from '../Components/Charts/PlotlyChart__2'
 import { CaseEstimation } from '../Components/Charts/CaseEstimation';
+import { District__cum_rt } from '../Components/Charts/District__cum_rt';
 
 import styles from './homePage.module.css';
 import Table from '../Components/Design components/Table/Table';
@@ -23,13 +25,22 @@ export const HomePage = ({
     rareImpactOptions, setRareImpactOptions,
     plotlyData, setPlotlyData,
     plotlyLayout, setPlotlyLayout,
+    plotlyData__2, setPlotlyData__2,
+    plotlyLayout__2, setPlotlyLayout__2,
+    dist_cum_rt_Data, dist_cum_rt_Options,
 
     updateSucceptiblePopulationData,
     updateCaseEstimationData,
     updateRareImpactData,
-    updateCharts, updateCharts__For
+    updateCharts, updateCharts__For,
+    updateDist_cum_rt_Data
 }) => {
     const [districtData, setDistrictData] = useContext(DistrictDataContext)
+
+    const checkArea = () => {
+        console.log('<',area,">")
+        return area == ""
+    }
     
     return (
         <section>
@@ -51,12 +62,21 @@ export const HomePage = ({
 
             <div className={styles.chartsContainer}>
                 <div className={styles.chart}>
-                    <CaseEstimation
-                        chartData = {caseEstimationData}
-                        chartOptions = {caseEstimationOptions}
-                        area = {area}
-                        updateCaseEstimationData = {updateCaseEstimationData}
-                    />
+                    { 
+                        checkArea() ? (
+                            <CaseEstimation
+                                chartData = {caseEstimationData}
+                                chartOptions = {caseEstimationOptions}
+                                area = {area}
+                                updateCaseEstimationData = {updateCaseEstimationData}
+                            />
+                        ) : (
+                            <PlotlyChart
+                                data = {plotlyData}
+                                layout = {plotlyLayout}
+                            />
+                        )
+                    }
                         {/* <SucceptiblePopulation 
                             chartData={succeptiblePopulationData} 
                             // setChartData={setSucceptiblePopulationData}
@@ -72,12 +92,21 @@ export const HomePage = ({
                     } */}
                 </div>
                 <div className={styles.chart}>
-                    <RareImpact
-                        chartData = {rareImpactData}
-                        chartOptions = {rareImpactOptions}
-                        area = {area}
-                        updateRareImpactData = {updateRareImpactData} 
-                    />
+                    {
+                        checkArea() ? (
+                            <RareImpact
+                                chartData = {rareImpactData}
+                                chartOptions = {rareImpactOptions}
+                                area = {area}
+                                updateRareImpactData = {updateRareImpactData} 
+                            />
+                        ) : (
+                            <PlotlyChart__2
+                                data = {plotlyData__2}
+                                layout = {plotlyLayout__2}
+                            />
+                        )
+                    }
                     {/* <ObservableImpact></ObservableImpact> */}
                 </div>
             </div>

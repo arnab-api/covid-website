@@ -15,7 +15,8 @@
 .mapContainer {
   background-color: #fff;
   border-radius: 0.5rem;
-  height: 75rem;
+  height: 85rem;
+  /* width: 80rem; */
   position: relative;
 }
 
@@ -29,4 +30,5 @@
   background-color: #fff;
   border-radius: 0.5rem;
   padding: 1rem;
+  /* position: relative; */
 }

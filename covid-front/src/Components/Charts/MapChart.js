@@ -76,10 +76,10 @@ const COLOR_RANGE = [
 // https://www.w3schools.com/colors/colors_picker.asp
 
 const COLOR_BUCKET = [
-    '#009933',   // trivial
-    '#cccc00',   // Community spread
-    '#ff9966',   // Accelerated spread
-    '#cc3300',   // Tipping point
+    '#54b45f',   // trivial
+    '#ecd424',   // Community spread
+    '#f88c51',   // Accelerated spread
+    '#c01a27',   // Tipping point
 ]
 const bins = [1, 9, 24]
 
@@ -219,7 +219,7 @@ export const MapChart = ( {
             </ComposableMap>
             {/* <div><LinearGradient data={gradientData} /></div> */}
             <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>
-                <li><span style={{'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0]}}>{"__"}</span> <strong>Trivial</strong></li>
+                <li><span style={{'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0]}}>__</span> <strong>Trivial</strong></li>
                 <li><span style={{'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1]}}>__</span> <strong>Community Spread</strong></li>
                 <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>

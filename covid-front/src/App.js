@@ -47,9 +47,6 @@ function App() {
     const [observableImpactData, setObservableImpactData] = useState({})
     const [observableImpactOptioins, setObservableImpactOptioins] = useState({})
 
-    const [plotlyData, setPlotlyData] = useState({})
-    const [plotlyLayout, setPlotlyLayout] = useState({})
-
     // ###################################### Succeptible Population ######################################
     const [succeptiblePopulationData, setSucceptiblePopulationData] = useState({})
     const [succeptiblePopulationOptions, setSucceptiblePopulationOptions] = useState({})
@@ -447,6 +444,42 @@ function App() {
             })
         }
     // ###################################### rare impact ##########################################
+    
+
+// ###################################### District Cum Rt impact ##########################################
+const [plotlyData, setPlotlyData] = useState({})
+const [plotlyLayout, setPlotlyLayout] = useState({})
+
+const getDistrictChart1__For = (geo) => {
+    console.log("refreshing estimation data for ", geo)
+    fetch('/api/dist_plot_1/'+geo.DIST_NAME).then(response => {
+        if (response.ok) {
+            return response.json()
+        }
+    }).then(data => {
+        setPlotlyData(data[0].data)
+        setPlotlyLayout(data[0].layout)
+    })
+}
+// ###################################### District Cum Rt impact ##########################################
+
+// ###################################### District Cum Rt impact ##########################################
+const [plotlyData__2, setPlotlyData__2] = useState({})
+const [plotlyLayout__2, setPlotlyLayout__2] = useState({})
+
+const getDistrictChart2__For = (geo) => {
+    console.log("refreshing estimation data for ", geo)
+    fetch('/api/dist_plot_2/'+geo.DIST_NAME).then(response => {
+        if (response.ok) {
+            return response.json()
+        }
+    }).then(data => {
+        setPlotlyData__2(data[0].data)
+        setPlotlyLayout__2(data[0].layout)
+    })
+}
+// ###################################### District Cum Rt impact ##########################################
+
 
     const updateCharts = () => {
       getEstimatedCases()
@@ -455,9 +488,11 @@ function App() {
     }
 
     const updateCharts__For = (geo) => {
-      getEstimatedCases__For(geo)
-      getRareImpact__For(geo)
-      // getSucceptiblePopulation__For(geo)
+    //   getEstimatedCases__For(geo)
+    //   getRareImpact__For(geo)
+    //   getSucceptiblePopulation__For(geo)
+        getDistrictChart1__For(geo)
+        getDistrictChart2__For(geo)
     }
 
   return (
@@ -487,11 +522,15 @@ function App() {
               rareImpactOptions = {rareImpactOptions} setRareImpactOptions = {setRareImpactOptions}
               plotlyData = {plotlyData} setPlotlyData = {setPlotlyData}
               plotlyLayout = {plotlyLayout} setPlotlyLayout = {setPlotlyLayout}
+              plotlyData__2 = {plotlyData__2} setPlotlyData__2 = {setPlotlyData__2}
+              plotlyLayout__2 = {plotlyLayout__2} setPlotlyLayout__2 = {setPlotlyLayout__2}
+            //   dist_cum_rt_Data = {dist_cum_rt_Data} dist_cum_rt_Options = {dist_cum_rt_Options}
 
               updateSucceptiblePopulationData = {updateSucceptiblePopulationData}
               updateCaseEstimationData = {updateCaseEstimationData}
               updateRareImpactData = {updateRareImpactData}
               updateCharts = {updateCharts} updateCharts__For = {updateCharts__For}
+            //   updateDist_cum_rt_Data = {updateDist_cum_rt_Data}
             />
           </Route>
           <Route path='/home'>
