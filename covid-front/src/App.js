@@ -12,12 +12,15 @@ import TopBar from './Components/Design components/topBar/topBar';
 import Footer from './Components/Design components/footer/footer';
 import { HomePage } from './Pages/HomePage';
 import AboutPage from './Pages/AboutPage/AboutPage';
+import { ObservableImpact } from './Components/Charts/ObservableImpact'
+import { Rt_info } from './Pages/Rt/Rt_info'
+import ReactTooltip from 'react-tooltip';
 
 // style imports
 import './App.css';
 
 export const DistrictDataContext = createContext();
-const TITLE = 'COVID-19 in Bangladesh'
+// const TITLE = 'COVID-19 in Bangladesh'
 
 
 // const Plotly = window.Plotly;
@@ -497,9 +500,9 @@ const getDistrictChart2__For = (geo) => {
 
   return (
     <DistrictDataContext.Provider value={[districtData, setDistrictData]}>
-      <Helmet>
+      {/* <Helmet>
           <title>{ TITLE }</title>
-      </Helmet>
+      </Helmet> */}
       <Router>
         <TopBar 
           dist_2_id={dist_2_id}
@@ -536,12 +539,15 @@ const getDistrictChart2__For = (geo) => {
           <Route path='/home'>
             <HomePage />
           </Route>
+          <Route path='/rt'>
+            <Rt_info/>
+          </Route>
           <Route path='/about'>
             <AboutPage></AboutPage>
           </Route>
         </Switch>
       </Router>
-      <Footer/>
+      {/* <Footer/> */}
     </DistrictDataContext.Provider>
   );
 }

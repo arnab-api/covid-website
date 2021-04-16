@@ -20,7 +20,7 @@ const TopBar = ({
             <Link to='/'><div className={styles.brand}>Covid 19 in Bangladesh</div></Link>
             <div className={styles.grow} />
             {
-                location.pathname !== '/about'? 
+                location.pathname == '/'? 
                     <SearchBar 
                         dist_2_id={dist_2_id}
                         area = {area}
@@ -30,7 +30,8 @@ const TopBar = ({
             }
             <div className={styles.grow} />
             <ul className={styles.cats}>
-                <li className={styles.catItem}><Link to='/home'>Home</Link></li>
+                {/* <li className={styles.catItem}><Link to='/'>Home</Link></li> */}
+                <li className={styles.catItem}><Link to='/rt'>Rt</Link></li>
                 <li className={styles.catItem}><Link to='/about'>About Us</Link></li>
             </ul>
         </div>

@@ -235,7 +235,7 @@ class DistrictDataLoader:
             ),
             secondary_y=True,
         )
-        fig.update_layout(yaxis2=dict(color='#ff0000'))
+        fig.update_layout(yaxis2=dict(color='#0000ff'))
 
         # Add figure title
         fig.update_layout( title_text="Growth Rare vs Doubling Time >> {}".format(district_name) )
