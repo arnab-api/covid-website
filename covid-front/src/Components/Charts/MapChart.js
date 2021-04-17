@@ -9,6 +9,8 @@ import {
     ComposableMap,
     Geographies,
     Geography,
+    Marker,
+    Annotation
 } from "react-simple-maps"
 import Button from '@material-ui/core/Button';
 import CachedIcon from '@material-ui/icons/Cached';  // ******added******
@@ -24,21 +26,28 @@ const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-map
 
 const geographyStyle = {
     default: {
-        outline: 'none'
+        outline: 'none',
+        strokeWidth: .003,
+        stroke: '#000',
     },
     hover: {
         fill: '#ff99ff',
         transition: 'all 250ms',
-        outline: 'none'
+        outline: 'none',
+        strokeWidth: .003,
+        stroke: '#000',
     },
     pressed: {
         fill: '#4B0082',
-        outline: 'none'
+        outline: 'none',
+        strokeWidth: .003,
+        stroke: '#000',
     }
 };
 
 const BD_TOPO_JSON = require('../Data/bd_topo.json');
 const BD_DIST_TOPO = require('../Data/bd_dist_topo.json');
+const BD_DIST = require('../Data/bd-districts.json');
 
 const DEFAULT_COLOR = '#EEE';
 // Red Variants
@@ -110,6 +119,8 @@ export const MapChart = ( {
             setArea,
             updateCharts__For
     }) => {
+
+    console.log(BD_DIST)
 
     const [tooltipContent, setTooltipContent] = useState('');
     const [heatmap, setHeatMap] = useState([]);
@@ -204,10 +215,10 @@ export const MapChart = ( {
                                 <Geography
                                     key={geo.rsmKey}
                                     geography={geo}
+                                    style={geographyStyle}
                                     // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
                                     fill= {current ? my_colorScale(current.value) : DEFAULT_COLOR}
                                     // fill= {DEFAULT_COLOR}
-                                    style={geographyStyle}
                                     onMouseEnter={onMouseEnter(geo, current)}
                                     onMouseLeave={onMouseLeave}
                                     onClick={handleClick(geo)}
@@ -216,6 +227,25 @@ export const MapChart = ( {
                         }
                         )}
                 </Geographies>
+                {/* <Marker coordinates={[90.412518, 23.810332]} fill="#777">
+                    <text y="0" fontSize={.1} textAnchor="middle">
+                          Bangladesh
+                    </text>
+                </Marker>
+                <Marker coordinates={[91.777417, 24.482934]} fill="#777">
+                    <text y="0" fontSize={.08} font-weight={'bold'} textAnchor="middle">
+                          MAU
+                    </text>
+                </Marker> */}
+                {
+                    BD_DIST.districts.map( dist => (
+                        <Marker coordinates={[dist.long, dist.lat]} fill="#000">
+                            <text y=".03" x=".01" fontSize={.05} font-weight={'bold'} textAnchor="middle">
+                                {dist.name.substring(0,3).toUpperCase()}
+                            </text>
+                        </Marker>
+                    ))
+                }
             </ComposableMap>
             {/* <div><LinearGradient data={gradientData} /></div> */}
             <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>
