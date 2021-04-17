@@ -15,6 +15,7 @@ import {
 import Button from '@material-ui/core/Button';
 import CachedIcon from '@material-ui/icons/Cached';  // ******added******
 import { useBetween } from 'use-between';
+import './MapChart.css'
 
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
@@ -84,11 +85,18 @@ const COLOR_RANGE = [
 // https://colordesigner.io/gradient-generator
 // https://www.w3schools.com/colors/colors_picker.asp
 
+// const COLOR_BUCKET = [
+//     '#54b45f',   // trivial
+//     // '#ecd424',   // Community spread
+//     '#f88c51',   // Accelerated spread
+//     '#c01a27',   // Tipping point
+// ]
+
 const COLOR_BUCKET = [
-    '#54b45f',   // trivial
-    '#ecd424',   // Community spread
-    '#f88c51',   // Accelerated spread
-    '#c01a27',   // Tipping point
+    'rgb(84, 180, 95, .6)',   // trivial
+    'rgb(236, 212, 36, .6)',
+    'rgb(248, 140, 81, .6)',   // Accelerated spread
+    'rgb(192, 26, 39, .6)',   // Tipping point
 ]
 const bins = [1, 9, 24]
 
@@ -120,7 +128,7 @@ export const MapChart = ( {
             updateCharts__For
     }) => {
 
-    console.log(BD_DIST)
+    // console.log(BD_DIST)
 
     const [tooltipContent, setTooltipContent] = useState('');
     const [heatmap, setHeatMap] = useState([]);
@@ -152,7 +160,7 @@ export const MapChart = ( {
         setDistrictData(geo.properties)
         console.log(geo);
         setArea(geo.properties.DIST_NAME)
-        updateCharts__For(geo.properties)
+        updateCharts__For(geo.properties.DIST_NAME)
         // setProjectionConfig({
         //     scale: 70,
         //     center: [91.8697894, 24.8897956] 
@@ -207,6 +215,16 @@ export const MapChart = ( {
                 height={3}
                 data-tip=""
             >
+
+                {
+                    BD_DIST.districts.map( dist => (
+                        <Marker coordinates={[dist.long, dist.lat]} fill="#000">
+                            <text class="unselectable" y=".03" x=".01" fontSize={.06} font-weight={900} textAnchor="middle">
+                                {dist.name.substring(0,3).toUpperCase()}
+                            </text>
+                        </Marker>
+                    ))
+                }
                 <Geographies geography={BD_DIST_TOPO}>
                     {({ geographies }) =>
                         geographies.map(geo => {
@@ -227,25 +245,7 @@ export const MapChart = ( {
                         }
                         )}
                 </Geographies>
-                {/* <Marker coordinates={[90.412518, 23.810332]} fill="#777">
-                    <text y="0" fontSize={.1} textAnchor="middle">
-                          Bangladesh
-                    </text>
-                </Marker>
-                <Marker coordinates={[91.777417, 24.482934]} fill="#777">
-                    <text y="0" fontSize={.08} font-weight={'bold'} textAnchor="middle">
-                          MAU
-                    </text>
-                </Marker> */}
-                {
-                    BD_DIST.districts.map( dist => (
-                        <Marker coordinates={[dist.long, dist.lat]} fill="#000">
-                            <text y=".03" x=".01" fontSize={.05} font-weight={'bold'} textAnchor="middle">
-                                {dist.name.substring(0,3).toUpperCase()}
-                            </text>
-                        </Marker>
-                    ))
-                }
+
             </ComposableMap>
             {/* <div><LinearGradient data={gradientData} /></div> */}
             <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>

@@ -38,7 +38,7 @@ export const HomePage = ({
     const [districtData, setDistrictData] = useContext(DistrictDataContext)
 
     const checkArea = () => {
-        console.log('<',area,">")
+        // console.log('<',area,">")
         return area == ""
     }
     

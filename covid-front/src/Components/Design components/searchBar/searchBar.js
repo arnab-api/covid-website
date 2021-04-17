@@ -61,16 +61,17 @@ export default function CustomizedInputs({
           console.log(" !!>> ", newValue, dist_2_id[newValue])
           if(newValue != null) {
             console.log("updating charts for ", newValue)
+            setArea(newValue)
             updateCharts__For(newValue)
           }
           else {
             console.log("updating charts for whole Bangladesh")
+            setArea("")
             updateCharts()
           }
           // let newDistricData = {...districtData};
           // newDistricData.NAME_3 = newValue;
           // setDistrictData(newDistricData);
-          setArea(newValue)
         }}
 
         options={district_names}

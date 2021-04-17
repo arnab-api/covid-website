@@ -455,7 +455,7 @@ const [plotlyLayout, setPlotlyLayout] = useState({})
 
 const getDistrictChart1__For = (geo) => {
     console.log("refreshing estimation data for ", geo)
-    fetch('/api/dist_plot_1/'+geo.DIST_NAME).then(response => {
+    fetch('/api/dist_plot_1/'+geo).then(response => {
         if (response.ok) {
             return response.json()
         }
@@ -472,7 +472,7 @@ const [plotlyLayout__2, setPlotlyLayout__2] = useState({})
 
 const getDistrictChart2__For = (geo) => {
     console.log("refreshing estimation data for ", geo)
-    fetch('/api/dist_plot_2/'+geo.DIST_NAME).then(response => {
+    fetch('/api/dist_plot_2/'+geo).then(response => {
         if (response.ok) {
             return response.json()
         }
@@ -491,6 +491,7 @@ const getDistrictChart2__For = (geo) => {
     }
 
     const updateCharts__For = (geo) => {
+        console.log("updating charts for >> ", geo)
     //   getEstimatedCases__For(geo)
     //   getRareImpact__For(geo)
     //   getSucceptiblePopulation__For(geo)
