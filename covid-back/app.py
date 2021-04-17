@@ -392,6 +392,14 @@ def before_15_rt():
     json = data.to_json(orient="records")
     return json
 
+
+@app.route("/api/rt_value")
+def get_rt_value():
+    file_name = 'Rt/static/data/data.json'
+    with open(file_name, 'r') as f:
+        rt = json.load(f)
+    return jsonify(rt)
+
 ##################### RT ########################
 if __name__ == "__main__":
     app.run(

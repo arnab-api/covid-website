@@ -66,23 +66,23 @@ export const GridPlot = ( {area} ) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://dev.pipilika.com:9898/api/rt_value?location=" + props.area)
-  //     .then((response) => {
-  //       console.log(response.data.length);
-  //       setData(
-  //         processData(
-  //           response.data.filter((word) => word.district === props.area)
-  //         )
-  //       );
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       setData(null);
-  //       setLoading(false);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get("/api/rt_value?location=" + area)
+      .then((response) => {
+        console.log(response.data.length);
+        setData(
+          processData(
+            response.data.filter((word) => word.district === area)
+          )
+        );
+        setLoading(false);
+      })
+      .catch((error) => {
+        setData(null);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <>
