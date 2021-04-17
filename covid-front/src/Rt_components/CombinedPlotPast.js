@@ -16,12 +16,12 @@ export default function CombinedPlotPast(props) {
   const dataBar = props.data;
 
   const CustomTooltip = ({ active, payload, label }) => {
-    console.log(payload);
+    // console.log(payload);
     if (active) {
+      // console.log(active, payload)
       return (
         <Box
-          width="10rem"
-          bg="white"
+          background="white"
           boxShadow="0px 0px 5px rgba(1,1,1,0.3)"
           px={3}
           py={3}
@@ -35,7 +35,9 @@ export default function CombinedPlotPast(props) {
               ? "Whole Bangladesh"
               : payload[0].payload.district}
           </h3>
+          <br/>
           <h4>Rt: {payload[0].payload.ML}</h4>
+          <br/>
           <h5>
             High:{" "}
             {(payload[0].payload.Low + payload[0].payload.High).toFixed(2)}

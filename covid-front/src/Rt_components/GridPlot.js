@@ -10,31 +10,33 @@ import {
   ReferenceLine,
 } from "recharts";
 import axios from "axios";
+import "../Pages/Rt/Rt.css"
 
 export const GridPlot = ( {area} ) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active) {
-      console.log( " >>>>> ", active, payload, label)
+      // console.log( " >>>>> ", active, payload, label)
       return (
         <Box 
-          style={{
-            width: "10rem",
-            bg: "white",
-            boxShadow: "0px 0px 5px rgba(1,1,1,0.3)",
-            px: 3,
-            py: 0.3,
-            borderRadius: 10,
-            lineHeight: 0.6,
-            opacity: 0.9,
-            // fontFamily: "Baloo Da 2"
-          }}
+          background="white"
+          boxShadow="0px 0px 5px rgba(1,1,1,0.3)"
+          px={3}
+          py={3}
+          borderRadius={10}
+          lineHeight={0.6}
+          opacity={0.9}
+          fontFamily="Baloo Da 2"
         >
           <h2>
             R<sub>t</sub>: {payload[2].value.toFixed(2)}
           </h2>
-          Low: {payload[0].value.toFixed(2)}&nbsp;&nbsp; High:{" "}
-          {(payload[1].value + payload[0].value).toFixed(2)}
-          <Text color="green.500">{label + " ২০২০"}</Text>
+          <br/>
+          <h5>
+            Low: {payload[0].value.toFixed(2)}&nbsp;&nbsp; High:{" "}
+            {(payload[1].value + payload[0].value).toFixed(2)}
+          </h5>
+          <br/>
+          <Text color="green.500" fontWeight="bold">{label + " ২০২০"}</Text>
         </Box>
       );
     }
@@ -70,7 +72,7 @@ export const GridPlot = ( {area} ) => {
     axios
       .get("/api/rt_value?location=" + area)
       .then((response) => {
-        console.log(response.data.length);
+        // console.log(response.data.length);
         setData(
           processData(
             response.data.filter((word) => word.district === area)

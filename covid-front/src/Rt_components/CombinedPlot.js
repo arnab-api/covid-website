@@ -15,13 +15,16 @@ import {
 export default function CombinedPlot(props) {
   const dataBar = props.data;
 
+  console.log("inside combined plot >>> ", props)
+
   const CustomTooltip = ({ active, payload, label }) => {
-    console.log(payload);
+    // console.log(payload);
     if (active) {
+      // console.log(">>>>> ", active, payload);
       return (
         <Box
-          width="10rem"
-          bg="white"
+          // width="15rem"
+          background="white"
           boxShadow="0px 0px 5px rgba(1,1,1,0.3)"
           px={3}
           py={3}
@@ -35,14 +38,16 @@ export default function CombinedPlot(props) {
               ? "Whole Bangladesh"
               : payload[0].payload.district}
           </h3>
+          <br/>
           <h4>Rt: {payload[0].payload.ML}</h4>
+          <br/>
           <h5>
-            High:{" "}
-            {(payload[0].payload.Low_90 + payload[0].payload.High_90).toFixed(
-              2
-            )}
-            &nbsp; &nbsp; Low: {payload[0].payload.Low_90.toFixed(2)}
+            High:{" "}{(payload[0].payload.Low_90 + payload[0].payload.High_90).toFixed(2)}
+            &nbsp; &nbsp; 
+            Low: {" "}{payload[0].payload.Low_90.toFixed(2)}
           </h5>
+          <br/>
+          <h5></h5>
         </Box>
       );
     }

@@ -19,7 +19,7 @@ export const RtChart = ( {data, dataPast} ) => {
   });
 
   return (
-    <Box width="100%">
+    <Box width="100%"  bg= "white">
       <Flex
         as="nav"
         align="center"
@@ -49,7 +49,7 @@ export const RtChart = ( {data, dataPast} ) => {
           </Heading>
         </Flex> */}
       </Flex>
-      <Box height="50vh">
+      <Box>
         <Flex direction="column" justify="center" align="center" mb={5}>
           <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
             <h2>
