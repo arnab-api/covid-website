@@ -221,7 +221,7 @@ class BD_MapLoader:
                 obj = {
                     'id': _id,
                     'dist': dist,
-                    'value': random.randint(1,100)
+                    'value': random.randint(1,30)
                 }
                 if dist == 'Indian Chhitmahal in Bangladesh':
                     obj['value'] = 0

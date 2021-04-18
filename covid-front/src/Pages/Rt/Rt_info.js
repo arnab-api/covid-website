@@ -8,19 +8,32 @@ import axios from "axios";
 export const Rt_info = () => {
   const [data, setData] = useState({});
   const [dataPast, setDataPast] = useState(null);
+  const [dateNow, setDateNow] = useState("")
+  const [datePast, setDatePast] = useState("")
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get("/api/latest_rt_value")
       .then((response) => {
-        console.log(" <<<< RT >>>> ", response.data)
-        // setData(response.data)
+        // console.log(" <<<< RT >>>> ", response.data)
+        var dateNow = new Date(response.data[response.data.length-1]['Date']).toLocaleDateString("en-BD", {
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        });
+        // console.log(" <<<< DateNow >>>>", dateNow)
+        setDateNow(dateNow);
         setData(response.data.reverse());
-        // console.log(data)
         axios
           .get("/api/before_15_rt")
           .then((response) => {
+            var datePast = new Date(response.data[response.data.length-1]['Date']).toLocaleDateString("en-BD", {
+              month: "long",
+              day: "numeric",
+              year: "numeric"
+            });
+            setDatePast(datePast);
             setDataPast(response.data.reverse());
             setLoading(false);
           })
@@ -51,11 +64,14 @@ export const Rt_info = () => {
         >
           <Icon name="warning" size="32px" color="red.500" />
           <Text fontSize="xl" fontFamily="Baloo Da 2">
-            ডাটা পাওয়া যায়নি
+            Could not load data
           </Text>
         </Flex>
       ) : (
-        <RtChart data={data} dataPast={dataPast} />
+        <RtChart 
+          data={data} dateNow={dateNow} 
+          dataPast={dataPast} datePast={datePast}
+        />
       )}
     </ThemeProvider>
   );

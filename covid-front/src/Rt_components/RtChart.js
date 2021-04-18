@@ -5,7 +5,7 @@ import { GridPlot } from "./GridPlot";
 import CombinedPlotPast from "./CombinedPlotPast";
 
 // export default function RtChart(props) {
-export const RtChart = ( {data, dataPast} ) => {
+export const RtChart = ( {data, dateNow, dataPast, datePast} ) => {
   console.log(" <<< Inside RtChart >>> ", data, dataPast)
   const [width, setWidth] = useState(window.innerWidth * 0.8);
   // const [present, setPresent] = useState(new Date(data[0].Date));
@@ -53,7 +53,7 @@ export const RtChart = ( {data, dataPast} ) => {
         <Flex direction="column" justify="center" align="center" mb={5}>
           <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
             <h2>
-              ০৮/০৭/২০২০ তারিখের R<sub>t</sub> সংখ্যা
+              R<sub>t</sub> value of {dateNow}
             </h2>
           </Text>
           <CombinedPlot width={width} data={data} />
@@ -62,7 +62,7 @@ export const RtChart = ( {data, dataPast} ) => {
           <br />
           <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
             <h2>
-              ২৩/০৬/২০২০ তারিখের R<sub>t</sub> সংখ্যা{" "}
+              R<sub>t</sub> value of {datePast}
             </h2>
           </Text>
           <CombinedPlotPast width={width} data={dataPast} />
@@ -71,7 +71,7 @@ export const RtChart = ( {data, dataPast} ) => {
           <br />
 
           <h2>
-            জেলা অনুযায়ী R<sub>t</sub> সংখ্যা
+            District wise R<sub>t</sub> values
           </h2>
 
           <Flex wrap="wrap" width="100%" justify="center" align="center">

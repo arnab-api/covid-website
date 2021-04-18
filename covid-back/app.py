@@ -328,8 +328,13 @@ def getheatmap():
     mapdata = BD_MapLoader.getRiskData()
     return jsonify(mapdata)
 
-@app.route("/api/heat_map_dist")
-def getheatmap_dist():
+@app.route("/api/past_heat_map")
+def getheatmap__past():
+    mapdata = BD_MapLoader.getRandomHeatMap_dist()
+    return jsonify(mapdata)
+
+@app.route("/api/future_heat_map")
+def getheatmap__future():
     mapdata = BD_MapLoader.getRandomHeatMap_dist()
     return jsonify(mapdata)
 

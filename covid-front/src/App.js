@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet'
 import TopBar from './Components/Design components/topBar/topBar';
 import Footer from './Components/Design components/footer/footer';
 import { HomePage } from './Pages/HomePage';
+import { MapPage } from './Pages/MapPage/MapPage'
 import AboutPage from './Pages/AboutPage/AboutPage';
 import { ObservableImpact } from './Components/Charts/ObservableImpact'
 import { Rt_info } from './Pages/Rt/Rt_info'
@@ -542,6 +543,9 @@ const getDistrictChart2__For = (geo) => {
           </Route>
           <Route path='/rt'>
             <Rt_info/>
+          </Route>
+          <Route path='/maps'>
+            <MapPage/>
           </Route>
           <Route path='/about'>
             <AboutPage></AboutPage>

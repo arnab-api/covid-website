@@ -36,7 +36,7 @@ export const GridPlot = ( {area} ) => {
             {(payload[1].value + payload[0].value).toFixed(2)}
           </h5>
           <br/>
-          <Text color="green.500" fontWeight="bold">{label + " ২০২০"}</Text>
+          <Text color="green.800" fontWeight="bold">{label}</Text>
         </Box>
       );
     }
@@ -52,7 +52,7 @@ export const GridPlot = ( {area} ) => {
     let processedData = [];
     for (let i = 0; i < plot_data.length; i++) {
       const dataElement = {
-        DATE: new Date(plot_data[i].Date).toLocaleDateString("bn-BD", {
+        DATE: new Date(plot_data[i].Date).toLocaleDateString("en-BD", {
           month: "long",
           day: "numeric",
         }),
