@@ -51,11 +51,20 @@ export const GridPlot = ( {area} ) => {
 
     let processedData = [];
     for (let i = 0; i < plot_data.length; i++) {
+      var date = plot_data[i]['date']
+      date = date.split("-")
+      date = new Date(date[0], date[1]-1, date[2])
+      date = date.toLocaleDateString("en-BD", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      });
       const dataElement = {
-        DATE: new Date(plot_data[i].Date).toLocaleDateString("en-BD", {
-          month: "long",
-          day: "numeric",
-        }),
+        // DATE: new Date(plot_data[i].Date).toLocaleDateString("en-BD", {
+        //   month: "long",
+        //   day: "numeric",
+        // }),
+        DATE: date,
         ML: plot_data[i].ML,
         Low_90: plot_data[i].Low_90,
         High_90: plot_data[i].High_90 - plot_data[i].Low_90,
@@ -70,7 +79,7 @@ export const GridPlot = ( {area} ) => {
 
   useEffect(() => {
     axios
-      .get("/api/rt_value?location=" + area)
+      .get("/api/rt_value_arnab?location=" + area)
       .then((response) => {
         // console.log(response.data.length);
         setData(

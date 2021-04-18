@@ -132,6 +132,7 @@ export const MapChart = ( {
 
     const [tooltipContent, setTooltipContent] = useState('');
     const [heatmap, setHeatMap] = useState([]);
+    const [heatmap_date ,setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
     const [projection_config, setProjectionConfig] = useState({
         scale: 40,
@@ -167,18 +168,18 @@ export const MapChart = ( {
         // })
     };
 
-    const getHeatMapData = () => {
-        setDistrictData({}); //****** added *******/
-        console.log("refreshing heat map data")
-        fetch('/api/heat_map').then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-        }).then(data => {
-            // console.log(data)
-            setHeatMap(data)
-        })
-    }
+    // const getHeatMapData = () => {
+    //     setDistrictData({}); //****** added *******/
+    //     console.log("refreshing heat map data")
+    //     fetch('/api/heat_map').then(response => {
+    //         if (response.ok) {
+    //             return response.json()
+    //         }
+    //     }).then(data => {
+    //         // console.log(data)
+    //         setHeatMap(data)
+    //     })
+    // }
 
     const colorScale = scaleQuantile()
         .domain(heatmap.map(d => d.value))
@@ -199,7 +200,8 @@ export const MapChart = ( {
             }
         }).then(data => {
             // console.log(" >>> checking input", data)
-            setHeatMap(data)
+            setHeatMap(data.heat_map)
+            setHeatMap_date(data.date)
             // console.log("heat map", heatmap)
         })
 
@@ -254,7 +256,9 @@ export const MapChart = ( {
                 <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
             </ul> 
-            
+            <div style={{'text-align': 'center'}}>
+                <strong> {heatmap_date} </strong>
+            </div>
             {/* <Button 
             variant="outlined"
              startIcon={<CachedIcon/>} 

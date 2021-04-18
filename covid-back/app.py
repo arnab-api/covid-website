@@ -325,17 +325,17 @@ def getMapData():
 @app.route("/api/heat_map")
 def getheatmap():
     # mapdata = BD_MapLoader.getRandomHeatMap()
-    mapdata = BD_MapLoader.getRiskData()
+    mapdata = DistrictDataLoader.getRiskMap__present()
     return jsonify(mapdata)
 
 @app.route("/api/past_heat_map")
 def getheatmap__past():
-    mapdata = BD_MapLoader.getRandomHeatMap_dist()
+    mapdata = DistrictDataLoader.getRiskMap__past()
     return jsonify(mapdata)
 
 @app.route("/api/future_heat_map")
 def getheatmap__future():
-    mapdata = BD_MapLoader.getRandomHeatMap_dist()
+    mapdata = DistrictDataLoader.getRiskMap__future()
     return jsonify(mapdata)
 
 @app.route("/api/dist_2_id")
@@ -365,37 +365,44 @@ def getDistPlot2__For(district_name):
 ##################### RT ########################
 @app.route("/api/latest_rt_value")
 def latest_rt():
-    json = 'Rt/static/data/data.json'
-    data = pd.read_json(json)
-    data = data.sort_values(by=['Date'], ascending= False)
-    data = data.drop_duplicates('district')
-    data = data.sort_values(by=['ML'], ascending= False)
-    json = data.to_json(orient="records")
-    return json
+    return jsonify(DistrictDataLoader.get_latest_rt())
+# def latest_rt():
+#     json = 'Rt/static/data/data.json'
+#     data = pd.read_json(json)
+#     data = data.sort_values(by=['Date'], ascending= False)
+#     data = data.drop_duplicates('district')
+#     data = data.sort_values(by=['ML'], ascending= False)
+#     json = data.to_json(orient="records")
+#     return json
 
-@app.route("/api/before_15_rt")
-def before_15_rt():
-    json = 'Rt/static/data/data.json'
-    data = pd.read_json(json)
-    data = data.sort_values(by=['Date'], ascending= False)
-    tempData15 = data.drop_duplicates('Date')
-    tempData15 = tempData15[15:]
-    tempData15 = data.loc[data['Date'] == tempData15['Date'].iloc[0]]
-    data = data.drop_duplicates('district')
-    data = data.sort_values(by=['ML'], ascending= False)
-    merged_df = data.merge(tempData15, how = 'outer', on = ['district'])
-    merged_df["ML_y"] = merged_df["ML_y"].fillna(0)
-    merged_df["Low_90_y"] = merged_df["Low_90_y"].fillna(0)
-    merged_df["High_90_y"] = merged_df["High_90_y"].fillna(0)
-    merged_df["Date_y"] = merged_df["Date_y"].fillna(0)
-    del merged_df["ML_x"]
-    del merged_df["Low_90_x"]
-    del merged_df["High_90_x"]
-    del merged_df["Date_x"]
-    data = merged_df
-    data.columns = ['district','Date','ML','Low','High']
-    json = data.to_json(orient="records")
-    return json
+
+@app.route("/api/before_15_rt_arnab")
+def before_15_rt__arnab():
+    return jsonify(DistrictDataLoader.get_rt_before_15())
+
+# @app.route("/api/before_15_rt")
+# def before_15_rt():
+#     json = 'Rt/static/data/data.json'
+#     data = pd.read_json(json)
+#     data = data.sort_values(by=['Date'], ascending= False)
+#     tempData15 = data.drop_duplicates('Date')
+#     tempData15 = tempData15[15:]
+#     tempData15 = data.loc[data['Date'] == tempData15['Date'].iloc[0]]
+#     data = data.drop_duplicates('district')
+#     data = data.sort_values(by=['ML'], ascending= False)
+#     merged_df = data.merge(tempData15, how = 'outer', on = ['district'])
+#     merged_df["ML_y"] = merged_df["ML_y"].fillna(0)
+#     merged_df["Low_90_y"] = merged_df["Low_90_y"].fillna(0)
+#     merged_df["High_90_y"] = merged_df["High_90_y"].fillna(0)
+#     merged_df["Date_y"] = merged_df["Date_y"].fillna(0)
+#     del merged_df["ML_x"]
+#     del merged_df["Low_90_x"]
+#     del merged_df["High_90_x"]
+#     del merged_df["Date_x"]
+#     data = merged_df
+#     data.columns = ['district','Date','ML','Low','High']
+#     json = data.to_json(orient="records")
+#     return json
 
 
 @app.route("/api/rt_value")
@@ -404,6 +411,10 @@ def get_rt_value():
     with open(file_name, 'r') as f:
         rt = json.load(f)
     return jsonify(rt)
+
+@app.route("/api/rt_value_arnab")
+def get_rt_value_arnab():
+    return jsonify(DistrictDataLoader.get_rt_value())
 
 ##################### RT ########################
 if __name__ == "__main__":

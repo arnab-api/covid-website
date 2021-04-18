@@ -51,15 +51,15 @@ export const MapPage = ({
                     </Flex>) : (
                     <SimpleGrid columns={3} spacing={1}>
                         <div className={styles.mapContainer}>
-                            <MapChart_comparison heatmap={riskmap_past} heatmap__time={"Past"}/>
+                            <MapChart_comparison heatmap={riskmap_past.heat_map} heatmap__time={riskmap_past.date}/>
                             {/* Past */}
                         </div>
                         <div className={styles.mapContainer}>
-                            <MapChart_comparison heatmap={riskmap_present} heatmap__time={"Present"}/>
+                            <MapChart_comparison heatmap={riskmap_present.heat_map} heatmap__time={riskmap_present.date}/>
                             {/* Present */}
                         </div>
                         <div className={styles.mapContainer}>
-                            <MapChart_comparison heatmap={riskmap_future} heatmap__time={"Future"}/>
+                            <MapChart_comparison heatmap={riskmap_future.heat_map} heatmap__time={riskmap_future.date}/>
                             {/* Future */}
                         </div>
                     </SimpleGrid>

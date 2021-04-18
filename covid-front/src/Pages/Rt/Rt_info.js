@@ -16,24 +16,30 @@ export const Rt_info = () => {
     axios
       .get("/api/latest_rt_value")
       .then((response) => {
-        // console.log(" <<<< RT >>>> ", response.data)
-        var dateNow = new Date(response.data[response.data.length-1]['Date']).toLocaleDateString("en-BD", {
+        var date = response.data[response.data.length-1]['date']
+        date = date.split("-")
+        date = new Date(date[0], date[1]-1, date[2])
+        date = date.toLocaleDateString("en-BD", {
           month: "long",
           day: "numeric",
           year: "numeric"
         });
+        // var dateNow = new Date(dateNow)
         // console.log(" <<<< DateNow >>>>", dateNow)
-        setDateNow(dateNow);
+        setDateNow(date);
         setData(response.data.reverse());
         axios
-          .get("/api/before_15_rt")
+          .get("/api/before_15_rt_arnab")
           .then((response) => {
-            var datePast = new Date(response.data[response.data.length-1]['Date']).toLocaleDateString("en-BD", {
+            var date = response.data[response.data.length-1]['date']
+            date = date.split("-")
+            date = new Date(date[0], date[1]-1, date[2])
+            date = date.toLocaleDateString("en-BD", {
               month: "long",
               day: "numeric",
               year: "numeric"
             });
-            setDatePast(datePast);
+            setDatePast(date);
             setDataPast(response.data.reverse());
             setLoading(false);
           })

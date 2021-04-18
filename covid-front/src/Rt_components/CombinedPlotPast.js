@@ -40,8 +40,8 @@ export default function CombinedPlotPast(props) {
           <br/>
           <h5>
             High:{" "}
-            {(payload[0].payload.Low + payload[0].payload.High).toFixed(2)}
-            &nbsp; &nbsp; Low: {payload[0].payload.Low.toFixed(2)}
+            {(payload[0].payload.Low_90 + payload[0].payload.High_90).toFixed(2)}
+            &nbsp; &nbsp; Low: {payload[0].payload.Low_90.toFixed(2)}
           </h5>
         </Box>
       );
@@ -95,8 +95,8 @@ export default function CombinedPlotPast(props) {
         type="number"
       />
 
-      <Bar dataKey="Low" stackId="a" fill="#ffffff00" />
-      <Bar dataKey="High" stackId="a" radius={[100, 100, 100, 100]}>
+      <Bar dataKey="Low_90" stackId="a" fill="#ffffff00" />
+      <Bar dataKey="High_90" stackId="a" radius={[100, 100, 100, 100]}>
         {dataBar.map((entry, index) => (
           <Cell fill={entry.ML < 1 ? "#7fefa0" : "#ff8787"}></Cell>
         ))}

@@ -6,6 +6,9 @@ import plotly
 import plotly.graph_objects as go
 import numpy as np
 from plotly.subplots import make_subplots
+from datetime import datetime, timedelta, timezone
+
+from .BD_MapLoader import BD_MapLoader
 
 class DistrictDataLoader:
 
@@ -22,6 +25,13 @@ class DistrictDataLoader:
         'CHAPAI': 'CHAPAINABABGANJ',
         'MAULVIBAZAR': 'MOULVIBAZAR'
     }
+    this_week = datetime.today() - timedelta(days=1)
+    last_week = pd.to_datetime(this_week) - timedelta(days=7)
+    next_week = pd.to_datetime(this_week) + timedelta(days=7)
+    this_week = this_week.strftime('%Y-%m-%d')
+    last_week = last_week.strftime('%Y-%m-%d')
+    next_week = next_week.strftime('%Y-%m-%d')
+    risk_data = None
 
     @staticmethod
     def get_CSV_districtname(district_name):
@@ -34,6 +44,63 @@ class DistrictDataLoader:
             return district_name
 
         return "District Not found"
+
+    @staticmethod
+    def get_risk_data():
+        if(DistrictDataLoader.risk_data == None):
+            df_risk = pd.read_csv('Data/District/zone_risk_value.csv')
+            df_risk = df_risk[['district', 
+                                DistrictDataLoader.this_week, 
+                                DistrictDataLoader.last_week, 
+                                DistrictDataLoader.next_week]]
+            risk_data = {}
+            this_week = DistrictDataLoader.this_week
+            last_week = DistrictDataLoader.last_week
+            next_week = DistrictDataLoader.next_week
+            for index, row in df_risk.iterrows():
+                risk_data[row['district']] = {
+                        this_week: row[this_week],
+                        last_week: row[last_week],
+                        next_week: row[next_week]
+                    }
+            DistrictDataLoader.risk_data = risk_data
+
+        return DistrictDataLoader.risk_data
+    
+    @staticmethod
+    def get_risk_for(day):
+        dist_dict = dist_dict = BD_MapLoader.getDistrictData()
+        risk_data = DistrictDataLoader.get_risk_data()
+        heat_map = []
+        for dist in dist_dict:
+            for _id in dist_dict[dist]:
+                obj = {
+                    'id': _id,
+                    'dist': dist,
+                }
+                if dist == 'Indian Chhitmahal in Bangladesh':
+                    obj['value'] = 0
+                    continue
+                dist_name = DistrictDataLoader.get_CSV_districtname(dist)
+                obj['value']= round(risk_data[dist_name][day], 2)
+                heat_map.append(obj)
+        return {
+            'date': day,
+            'heat_map': heat_map
+        }
+    
+    @staticmethod
+    def getRiskMap__present():
+        return DistrictDataLoader.get_risk_for(DistrictDataLoader.this_week)
+
+    @staticmethod
+    def getRiskMap__past():
+        return DistrictDataLoader.get_risk_for(DistrictDataLoader.last_week)
+    
+    @staticmethod
+    def getRiskMap__future():
+        return DistrictDataLoader.get_risk_for(DistrictDataLoader.next_week)
+    
 
     @staticmethod
     def loadDistrictData__plot1(district_name):
@@ -160,6 +227,7 @@ class DistrictDataLoader:
 
         return graphJSON
 
+    @staticmethod
     def getPlot1__For(district_name):
         print("getting plot 1 data for >> ", district_name)
         csv_name = DistrictDataLoader.get_CSV_districtname(district_name)
@@ -266,8 +334,87 @@ class DistrictDataLoader:
 
         return graphJSON
 
+    @staticmethod
     def getPlot2__For(district_name):
         print("getting plot 2 data for >> ", district_name)
         csv_name = DistrictDataLoader.get_CSV_districtname(district_name)
         print("{} found in csv file as {}".format(district_name, csv_name))
         return DistrictDataLoader.makePlot2__For(csv_name)
+
+
+    @staticmethod
+    def dateISO_2_UTC(date):
+        date = datetime.fromisoformat(date)
+        timestamp = date.replace(tzinfo=timezone.utc).timestamp()
+        return timestamp
+
+
+    df_rt_real = pd.DataFrame()
+    df_rt_sim = pd.DataFrame()
+    @staticmethod
+    def load_rt_files():
+        if(DistrictDataLoader.df_rt_real.empty):
+            DistrictDataLoader.df_rt_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
+            DistrictDataLoader.df_rt_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
+
+        return DistrictDataLoader.df_rt_real, DistrictDataLoader.df_rt_sim
+
+    @staticmethod
+    def get_latest_rt():
+        df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
+
+        df_latest = df_rt_real.sort_values(by=['date'], ascending= False)
+        df_latest = df_latest.drop_duplicates('district')
+        df_latest = df_latest.sort_values(by=['ML'], ascending= False)
+        rt_latest = []
+        for index, row in df_latest.iterrows():
+            date = row['date'].split("-")
+            date_obj = {
+                'year': date[0],
+                'month': date[1],
+                'day': date[2]
+            }
+            rt_latest.append({
+                'date': row['date'],
+                'ML': row['ML'],
+                'Low_90': row['Low_90'],
+                'High_90': row['High_90'],
+                'district': row['district']
+            })
+        return rt_latest
+
+    @staticmethod
+    def get_rt_before_15():
+        rt_latest = DistrictDataLoader.get_latest_rt()
+        date_now = datetime.fromisoformat(rt_latest[0]['date'])
+        date_15 = date_now - timedelta(days= 15)
+        date_15 = date_15.strftime('%Y-%m-%d')
+
+        df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
+        df_15 = df_rt_real[df_rt_real['date'] <= date_15].sort_values(by=['date'], ascending= False)
+        df_15 = df_15.drop_duplicates('district')
+
+        rt_old = []
+        for latest_rt in rt_latest:
+            district = latest_rt['district']
+            old_rt = df_15[df_15['district'] == district]
+            old_rt_json = old_rt[['date','ML','Low_90','High_90', 'district']].to_json(orient="records")
+            old_rt_json = json.loads(old_rt_json)
+            old_rt_json = old_rt_json[0]
+            rt_old.append(old_rt_json)
+
+        return rt_old
+    
+    @staticmethod
+    def get_rt_value():
+        df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
+        rt_real = []
+        for index, row in df_rt_real.iterrows():
+            rt_real.append({
+                'date': row['date'],
+                'ML': row['ML'],
+                'Low_90': row['Low_90'],
+                'High_90': row['High_90'],
+                'district': row['district']
+            })
+        return rt_real
