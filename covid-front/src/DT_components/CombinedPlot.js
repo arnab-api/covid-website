@@ -12,15 +12,18 @@ import {
   Text,
 } from "recharts";
 
-export default function CombinedPlotPast(props) {
+export default function CombinedPlot(props) {
   const dataBar = props.data;
+
+  console.log("inside combined plot >>> ", props)
 
   const CustomTooltip = ({ active, payload, label }) => {
     // console.log(payload);
     if (active) {
-      // console.log(active, payload)
+      // console.log(">>>>> ", active, payload);
       return (
         <Box
+          // width="15rem"
           background="white"
           boxShadow="0px 0px 5px rgba(1,1,1,0.3)"
           px={3}
@@ -36,13 +39,11 @@ export default function CombinedPlotPast(props) {
               : payload[0].payload.district}
           </h3>
           <br/>
-          <h4>Rt: {payload[0].payload.ML}</h4>
-          <br/>
           <h5>
-            High:{" "}
-            {(payload[0].payload.Low_90 + payload[0].payload.High_90).toFixed(2)}
-            &nbsp; &nbsp; Low: {payload[0].payload.Low_90.toFixed(2)}
+            Doubling Time: {" "}{payload[0].payload.doubling_time.toFixed(2)}
           </h5>
+          <br/>
+          <h5></h5>
         </Box>
       );
     }
@@ -56,8 +57,8 @@ export default function CombinedPlotPast(props) {
 
       return (
         <Text
-          x={x + 3}
-          y={y - 8}
+          x={x + 10}
+          y={y - 2}
           dy={-4}
           fill={stroke}
           fontSize={12}
@@ -91,38 +92,20 @@ export default function CombinedPlotPast(props) {
         orientation="left"
         axisLine={false}
         tickMargin={10}
-        domain={[0, 3]}
+        domain={[0, Math.round(Math.max.apply(Math, dataBar.map(function(o) { return o.doubling_time; }))/100)*100 + 200]}
         type="number"
       />
 
-      <Bar dataKey="Low_90" stackId="a" fill="#ffffff00" />
-      <Bar dataKey="High_90" stackId="a" radius={[100, 100, 100, 100]}>
+      {/* <Bar dataKey="Low_90" stackId="a" fill="#ffffff00" /> */}
+      <Bar  dataKey="doubling_time" stackId="a" 
+            radius={[100, 100, 100, 100]} 
+            label={<CustomizedLabel />}
+            >
         {dataBar.map((entry, index) => (
-          <Cell fill={entry.ML < 1 ? "#7fefa0" : "#ff8787"}></Cell>
+          <Cell fill={"#8080ff"}></Cell>
         ))}
       </Bar>
-      <Line
-        type="monotone"
-        dataKey="ML"
-        stroke="#8884d800"
-        label={<CustomizedLabel />}
-        dot={{
-          stroke: "#ffffff80",
-          strokeWidth: 10,
-          width: 25,
-          height: 25,
-        }}
-      />
       <Tooltip content={<CustomTooltip />} />
-      <ReferenceLine
-        y={1}
-        stroke="red"
-        strokeWidth={0.7}
-        label={{
-          // value: "Rt=1",
-          position: "left",
-        }}
-      />
     </ComposedChart>
   );
 }

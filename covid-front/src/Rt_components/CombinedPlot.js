@@ -80,7 +80,7 @@ export default function CombinedPlot(props) {
   return (
     <ComposedChart
       width={props.width}
-      height={400}
+      height={250}
       data={dataBar}
       margin={{
         top: 20,
@@ -96,7 +96,7 @@ export default function CombinedPlot(props) {
         orientation="left"
         axisLine={false}
         tickMargin={10}
-        domain={[0, 4]}
+        domain={[0, 3]}
         type="number"
       />
 

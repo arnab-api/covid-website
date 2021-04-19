@@ -7,6 +7,9 @@ import plotly.graph_objects as go
 import numpy as np
 from plotly.subplots import make_subplots
 from datetime import datetime, timedelta, timezone
+import math
+from operator import itemgetter
+
 
 from .BD_MapLoader import BD_MapLoader
 
@@ -107,21 +110,21 @@ class DistrictDataLoader:
         df_cases_real = pd.read_csv('Data/District/districts_real.csv')
         df_cases_sim = pd.read_csv('Data/District/districts_sim.csv')
 
-        df_rt_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
-        df_rt_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
+        df_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
+        df_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
 
         df_cases_real.date = pd.to_datetime(df_cases_real.date)
         df_cases_sim.days_sim = pd.to_datetime(df_cases_sim.days_sim)
-        df_rt_real.date = pd.to_datetime(df_rt_real.date)
-        df_rt_sim.date = pd.to_datetime(df_rt_sim.date)
+        df_real.date = pd.to_datetime(df_real.date)
+        df_sim.date = pd.to_datetime(df_sim.date)
 
 
         ### select district_name from Bangladesh map by clicking on the district
 
         df_district_real = df_cases_real[df_cases_real.district == district_name]
         df_district_sim = df_cases_sim[df_cases_sim.district == district_name]
-        df_district_rt_real = df_rt_real[df_rt_real.district == district_name]
-        df_district_rt_sim = df_rt_sim[df_rt_sim.district == district_name]
+        df_district_rt_real = df_real[df_real.district == district_name]
+        df_district_rt_sim = df_sim[df_sim.district == district_name]
 
         return df_district_real, df_district_sim, df_district_rt_real, df_district_rt_sim
 
@@ -237,18 +240,18 @@ class DistrictDataLoader:
 
     @staticmethod
     def loadDistrictData__plot2(district_name):
-        df_rt_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
-        df_rt_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
+        df_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
+        df_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
 
-        df_rt_real.date = pd.to_datetime(df_rt_real.date)
-        df_rt_sim.date = pd.to_datetime(df_rt_sim.date)
+        df_real.date = pd.to_datetime(df_real.date)
+        df_sim.date = pd.to_datetime(df_sim.date)
 
 
         # ### select district_name from Bangladesh map by clicking on the district
         # district_name = 'Dhaka'
 
-        df_district_rt_real = df_rt_real[df_rt_real.district == district_name]
-        df_district_rt_sim = df_rt_sim[df_rt_sim.district == district_name]
+        df_district_rt_real = df_real[df_real.district == district_name]
+        df_district_rt_sim = df_sim[df_sim.district == district_name]
 
         return df_district_rt_real, df_district_rt_sim
 
@@ -349,21 +352,21 @@ class DistrictDataLoader:
         return timestamp
 
 
-    df_rt_real = pd.DataFrame()
-    df_rt_sim = pd.DataFrame()
+    df_real = pd.DataFrame()
+    df_sim = pd.DataFrame()
     @staticmethod
-    def load_rt_files():
-        if(DistrictDataLoader.df_rt_real.empty):
-            DistrictDataLoader.df_rt_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
-            DistrictDataLoader.df_rt_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
+    def load_rt_dt_gr_files():
+        if(DistrictDataLoader.df_real.empty):
+            DistrictDataLoader.df_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
+            DistrictDataLoader.df_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
 
-        return DistrictDataLoader.df_rt_real, DistrictDataLoader.df_rt_sim
+        return DistrictDataLoader.df_real, DistrictDataLoader.df_sim
 
     @staticmethod
     def get_latest_rt():
-        df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
+        df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
 
-        df_latest = df_rt_real.sort_values(by=['date'], ascending= False)
+        df_latest = df_real.sort_values(by=['date'], ascending= False)
         df_latest = df_latest.drop_duplicates('district')
         df_latest = df_latest.sort_values(by=['ML'], ascending= False)
         rt_latest = []
@@ -390,8 +393,8 @@ class DistrictDataLoader:
         date_15 = date_now - timedelta(days= 15)
         date_15 = date_15.strftime('%Y-%m-%d')
 
-        df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
-        df_15 = df_rt_real[df_rt_real['date'] <= date_15].sort_values(by=['date'], ascending= False)
+        df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
+        df_15 = df_real[df_real['date'] <= date_15].sort_values(by=['date'], ascending= False)
         df_15 = df_15.drop_duplicates('district')
 
         rt_old = []
@@ -407,9 +410,9 @@ class DistrictDataLoader:
     
     @staticmethod
     def get_rt_value():
-        df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
+        df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
         rt_real = []
-        for index, row in df_rt_real.iterrows():
+        for index, row in df_real.iterrows():
             rt_real.append({
                 'date': row['date'],
                 'ML': row['ML'],
@@ -424,9 +427,9 @@ class DistrictDataLoader:
     def load_rt_dictionary():
         if (not DistrictDataLoader.rt_dict):
             print(".... loading rt dictionary")
-            df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
+            df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
             rt_real = {}
-            df = df_rt_real.sort_values(by=['date'], ascending= False)
+            df = df_real.sort_values(by=['date'], ascending= False)
             for index, row in df.iterrows():
                 district = row['district']
                 if(district not in rt_real):
@@ -446,4 +449,60 @@ class DistrictDataLoader:
         DistrictDataLoader.load_rt_dictionary()
         return DistrictDataLoader.rt_dict[district]
 
+    dt_dict = {}
+    @staticmethod
+    def load_dt_dictionary():
+        if (not DistrictDataLoader.dt_dict):
+            print(".... loading doubling dictionary")
+            df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
+            doubling_time = {}
+            df = df_real.sort_values(by=['date'], ascending= False)
+            for index, row in df.iterrows():
+                district = row['district']
+                if(district not in doubling_time):
+                    doubling_time[district] = []
+                value = row['doubling_time_ML']
+                if(math.isnan(value)):
+                    value = 0
+                doubling_time[district].append({
+                    'Date': row['date'],
+                    'doubling_time': value,
+                    'district': row['district']
+                })
+
+            DistrictDataLoader.dt_dict = doubling_time
+        return DistrictDataLoader.dt_dict
+
+    @staticmethod
+    def get_dt_value__For(district):
+        DistrictDataLoader.load_dt_dictionary()
+        return DistrictDataLoader.dt_dict[district]
     
+    @staticmethod
+    def get_latest_dt():
+        DistrictDataLoader.load_dt_dictionary()
+        latest_dt = []
+        for district in DistrictDataLoader.dt_dict:
+            latest_dt.append(DistrictDataLoader.dt_dict[district][0])
+        latest_dt = sorted(latest_dt, key=itemgetter('doubling_time'), reverse=True)
+        return latest_dt
+
+    @staticmethod
+    def get_dt_before_15():
+        DistrictDataLoader.load_dt_dictionary()
+        latest_dt = DistrictDataLoader.get_latest_dt()
+
+        date_now = datetime.fromisoformat(latest_dt[0]['Date'])
+        date_15 = date_now - timedelta(days= 15)
+        date_15 = date_15.strftime('%Y-%m-%d')
+
+        dt_15 = []
+        for dt_latest in latest_dt:
+            district = dt_latest['district']
+            found = False
+            for dt_val in DistrictDataLoader.dt_dict[district]:
+                if(dt_val['Date'] <= date_15):
+                    dt_15.append(dt_val)
+                    found = True
+                    break
+        return dt_15

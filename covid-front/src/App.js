@@ -15,6 +15,7 @@ import { MapPage } from './Pages/MapPage/MapPage'
 import AboutPage from './Pages/AboutPage/AboutPage';
 import { ObservableImpact } from './Components/Charts/ObservableImpact'
 import { Rt_info } from './Pages/Rt/Rt_info'
+import { DT_info } from './Pages/DT/DT_info'
 import ReactTooltip from 'react-tooltip';
 
 // style imports
@@ -543,6 +544,9 @@ const getDistrictChart2__For = (geo) => {
           </Route>
           <Route path='/rt'>
             <Rt_info/>
+          </Route>
+          <Route path='/dt'>
+            <DT_info/>
           </Route>
           <Route path='/maps'>
             <MapPage/>

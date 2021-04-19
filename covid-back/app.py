@@ -387,6 +387,20 @@ def get_rt_value_arnab():
     return jsonify(DistrictDataLoader.get_rt_value())
 
 ##################### RT ########################
+
+##################### DT ########################
+@app.route("/api/dt_value/<district>")
+def get_dt_value__For(district):
+    return jsonify(DistrictDataLoader.get_dt_value__For(district))
+
+@app.route("/api/latest_dt_value")
+def latest_dt():
+    return jsonify(DistrictDataLoader.get_latest_dt())
+
+@app.route("/api/before_15_dt")
+def get_dt_before_15():
+    return jsonify(DistrictDataLoader.get_dt_before_15())
+##################### DT ########################
 if __name__ == "__main__":
     app.run(
                 host=os.getenv('IP', '0.0.0.0'), 
