@@ -13,6 +13,7 @@ from datetime import date, timedelta
 
 from utils.BD_MapLoader import BD_MapLoader
 from utils.DistrictDataLoader import DistrictDataLoader
+from utils.HomePageDataLoader import HomePageDataLoader
 
 app = Flask(__name__)
  
@@ -199,9 +200,10 @@ def getRandom__CaseEstimationData():
 
 
 def loadCaseEstimationData():
-    with open('Data/web_plot_1.json', 'r') as f:
-        caseEstimation = json.load(f)
-    return caseEstimation
+    # with open('Data/web_plot_1.json', 'r') as f:
+    #     caseEstimation = json.load(f)
+    # return caseEstimation
+    return HomePageDataLoader.load_web_plot_1()
 
 
 def getRandom__ObservableImpactData():
