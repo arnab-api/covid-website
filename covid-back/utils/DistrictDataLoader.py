@@ -418,3 +418,32 @@ class DistrictDataLoader:
                 'district': row['district']
             })
         return rt_real
+    
+    rt_dict = {}
+    @staticmethod
+    def load_rt_dictionary():
+        if (not DistrictDataLoader.rt_dict):
+            print(".... loading rt dictionary")
+            df_rt_real, df_rt_sim = DistrictDataLoader.load_rt_files()
+            rt_real = {}
+            df = df_rt_real.sort_values(by=['date'], ascending= False)
+            for index, row in df.iterrows():
+                district = row['district']
+                if(district not in rt_real):
+                    rt_real[district] = []
+                rt_real[district].append({
+                    'Date': row['date'],
+                    'ML': row['ML'],
+                    'Low_90': row['Low_90'],
+                    'High_90': row['High_90'],
+                    'district': row['district']
+                })
+            DistrictDataLoader.rt_dict = rt_real
+        return DistrictDataLoader.rt_dict
+
+    @staticmethod
+    def get_rt_value__For(district):
+        DistrictDataLoader.load_rt_dictionary()
+        return DistrictDataLoader.rt_dict[district]
+
+    

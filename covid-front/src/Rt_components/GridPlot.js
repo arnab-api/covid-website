@@ -12,12 +12,12 @@ import {
 import axios from "axios";
 import "../Pages/Rt/Rt.css"
 
-export const GridPlot = ( {area} ) => {
+export const GridPlot = ({ area }) => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active) {
       // console.log( " >>>>> ", active, payload, label)
       return (
-        <Box 
+        <Box
           background="white"
           boxShadow="0px 0px 5px rgba(1,1,1,0.3)"
           px={3}
@@ -30,12 +30,12 @@ export const GridPlot = ( {area} ) => {
           <h2>
             R<sub>t</sub>: {payload[2].value.toFixed(2)}
           </h2>
-          <br/>
+          <br />
           <h5>
             Low: {payload[0].value.toFixed(2)}&nbsp;&nbsp; High:{" "}
             {(payload[1].value + payload[0].value).toFixed(2)}
           </h5>
-          <br/>
+          <br />
           <Text color="green.800" fontWeight="bold">{label}</Text>
         </Box>
       );
@@ -45,20 +45,23 @@ export const GridPlot = ( {area} ) => {
   };
 
   const processData = (plot_data) => {
+    console.log("processing", plot_data)
     if (plot_data === "None") {
       return null;
     }
 
     let processedData = [];
-    for (let i = 0; i < plot_data.length; i++) {
-      var date = plot_data[i]['date']
+    for (let i = plot_data.length - 1; i >= 0; i--) {
+      // console.log(i, plot_data[i])
+      var date = plot_data[i]['Date']
       date = date.split("-")
-      date = new Date(date[0], date[1]-1, date[2])
+      date = new Date(date[0], date[1] - 1, date[2])
       date = date.toLocaleDateString("en-BD", {
         month: "long",
         day: "numeric",
         year: "numeric"
       });
+      // console.log(date)
       const dataElement = {
         // DATE: new Date(plot_data[i].Date).toLocaleDateString("en-BD", {
         //   month: "long",
@@ -71,6 +74,7 @@ export const GridPlot = ( {area} ) => {
       };
       processedData.push(dataElement);
     }
+    // console.log("processed")
     return processedData;
   };
 
@@ -79,34 +83,41 @@ export const GridPlot = ( {area} ) => {
 
   useEffect(() => {
     axios
-      .get("/api/rt_value_arnab?location=" + area)
+      .get("/api/rt_value/" + area)
       .then((response) => {
-        // console.log(response.data.length);
-        setData(
-          processData(
-            response.data.filter((word) => word.district === area)
-          )
-        );
-        setLoading(false);
+        // console.log(area, ' ===> ', response.data.length, response.data);
+        var dt = processData(response.data)
+        // console.log(dt)
+        //   setData(
+        //     processData(
+        //       // response.data.filter((word) => word.district === area)
+        //       response.data
+        //     )
+        //   );
+        //   setLoading(false);
+        // })
+        setData(dt);
       })
-      .catch((error) => {
-        setData(null);
-        setLoading(false);
-      });
+      // .catch((error) => {
+      //   setData(null);
+      //   setLoading(false);
+      // });
   }, []);
 
   return (
     <>
-      {loading ? (
+      {/* {loading ? (
         <Flex direction="column" align="center" justify="center"></Flex>
-      ) : data === null ? (
+      ) :  */}
+      { data === null ? (
         <Flex
           direction="column"
           align="center"
           justify="center"
           color="red.500"
         ></Flex>
-      ) : (
+      ) : 
+      (
         <>
           <Box
             className="disable-scrollbars graph-container"
@@ -186,7 +197,7 @@ export const GridPlot = ( {area} ) => {
             </ComposedChart>
           </Box>
         </>
-      )}
+       )} 
     </>
   );
 }
