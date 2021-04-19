@@ -73,7 +73,7 @@ export const RtChart = ( {data, dateNow, dataPast, datePast} ) => {
           <h2>
             District wise R<sub>t</sub> values
           </h2>
-
+          
           <Flex wrap="wrap" width="100%" justify="center" align="center">
             {data.map((place) => (
               <GridPlot area={place.district} />

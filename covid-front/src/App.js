@@ -12,14 +12,17 @@ import TopBar from './Components/Design components/topBar/topBar';
 import Footer from './Components/Design components/footer/footer';
 import { HomePage } from './Pages/HomePage';
 import { MapPage } from './Pages/MapPage/MapPage'
+import { WorldMapPage } from './Pages/MapPage/WorldMapPage'
 import AboutPage from './Pages/AboutPage/AboutPage';
 import { ObservableImpact } from './Components/Charts/ObservableImpact'
 import { Rt_info } from './Pages/Rt/Rt_info'
 import { DT_info } from './Pages/DT/DT_info'
 import ReactTooltip from 'react-tooltip';
+import { WorldMap } from './Components/Charts/WorldMap'
 
 // style imports
 import './App.css';
+import { Flex } from '@chakra-ui/core';
 
 export const DistrictDataContext = createContext();
 // const TITLE = 'COVID-19 in Bangladesh'
@@ -550,6 +553,13 @@ const getDistrictChart2__For = (geo) => {
           </Route>
           <Route path='/maps'>
             <MapPage/>
+          </Route>
+          <Route path='/world'>
+            <div style={{
+                background: '#fff'
+            }}>
+                <WorldMap/>
+            </div>
           </Route>
           <Route path='/about'>
             <AboutPage></AboutPage>

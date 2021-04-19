@@ -57,8 +57,6 @@ export const DTChart = ( {data, dateNow, dataPast, datePast} ) => {
           </Text>
           <CombinedPlot width={width} data={data} />
           <br />
-          <br />
-          <br />
           <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
             <h2>
             Doubling time (D<sub>t</sub>) values of {datePast}
@@ -68,6 +66,11 @@ export const DTChart = ( {data, dateNow, dataPast, datePast} ) => {
           <br />
           <br />
           <br />
+
+          {/* <Flex wrap="wrap" width="100%" justify="center" align="center">
+            <CombinedPlot width={width} data={data} />
+            <CombinedPlot width={width} data={dataPast} />
+          </Flex> */}
 
           <h2>
             District wise R<sub>t</sub> values

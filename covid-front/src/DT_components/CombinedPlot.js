@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { Box } from "@chakra-ui/core";
 import {
   YAxis,
+  XAxis,
   Tooltip,
   ReferenceLine,
   CartesianGrid,
@@ -10,6 +11,7 @@ import {
   Line,
   Cell,
   Text,
+  BarChart
 } from "recharts";
 
 export default function CombinedPlot(props) {
@@ -60,7 +62,7 @@ export default function CombinedPlot(props) {
           x={x + 10}
           y={y - 2}
           dy={-4}
-          fill={stroke}
+          fill={'#000'}
           fontSize={12}
           textAnchor="start"
           verticalAnchor="center"
@@ -98,7 +100,7 @@ export default function CombinedPlot(props) {
 
       {/* <Bar dataKey="Low_90" stackId="a" fill="#ffffff00" /> */}
       <Bar  dataKey="doubling_time" stackId="a" 
-            radius={[100, 100, 100, 100]} 
+            // radius={[100, 100, 100, 100]} 
             label={<CustomizedLabel />}
             >
         {dataBar.map((entry, index) => (
@@ -107,5 +109,22 @@ export default function CombinedPlot(props) {
       </Bar>
       <Tooltip content={<CustomTooltip />} />
     </ComposedChart>
+    
+    // <BarChart 
+    //         width={props.width/3}
+    //         height={800}
+    //         data={dataBar}
+    //         layout="vertical" barCategoryGap={.3}
+    //         margin={{ top: 0, right: 50, left: 0, bottom: 0 }}>
+    //   <XAxis type="number" />
+    //    <YAxis type="category" width={150} padding={{ left: 20 }} dataKey="district" hide/>
+            
+    //    <Bar 
+    //        dataKey="doubling_time" 
+    //        fill="#99bbff"
+    //        label={<CustomizedLabel />}
+    //        />
+    //     <Tooltip content={<CustomTooltip />} />
+    //   </BarChart>
   );
 }

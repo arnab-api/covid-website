@@ -134,7 +134,7 @@ class DistrictDataLoader:
         df_district_real, df_district_sim, df_district_rt_real, df_district_rt_sim = DistrictDataLoader.loadDistrictData__plot1(district_name)
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-
+        cumulative_cases_color = '#cc0000'
         # Add traces
         fig.add_trace(
             go.Scatter(
@@ -142,7 +142,7 @@ class DistrictDataLoader:
                 y=df_district_real['confirmed'], 
                 name="Cumulative Cases",
                 mode='lines+markers',
-                line_color='#ff0000'
+                line_color=cumulative_cases_color
             ),
             secondary_y=False,
         )
@@ -152,20 +152,21 @@ class DistrictDataLoader:
                 y=df_district_sim['confirmed_sim'], 
                 name="Cumulative Cases SIM",
                 mode='lines',
-                line_color='#ff0000',
+                line_color=cumulative_cases_color,
                 showlegend=False
             ),
             secondary_y=False,
         )
-        fig.update_layout(yaxis1=dict(type='log', color='#ff0000'))
+        fig.update_layout(yaxis1=dict(type='log', color=cumulative_cases_color))
 
+        rt_color = '#0000cc'
         fig.add_trace(
             go.Scatter(
                 x=df_district_rt_real.date, 
                 y=df_district_rt_real.ML, 
                 name="Rt",
                 mode='lines+markers',
-                line_color='#0000ff'
+                line_color=rt_color
             ),
             secondary_y=True,
         )
@@ -176,7 +177,7 @@ class DistrictDataLoader:
                 y=df_district_rt_sim.High_90, 
                 name="Rt_hi",
                 mode='lines',
-                line_color='#0000ff',
+                line_color=rt_color,
                 showlegend = False
             ),
             secondary_y=True,
@@ -196,7 +197,7 @@ class DistrictDataLoader:
             secondary_y=True,
         )
         fig.update_traces(line_width=1)
-        fig.update_layout(yaxis2=dict(color='#0000ff'))
+        fig.update_layout(yaxis2=dict(color=rt_color))
 
 
         # Add figure title
@@ -260,6 +261,7 @@ class DistrictDataLoader:
     def makePlot2__For(district_name):
         df_district_rt_real, df_district_rt_sim = DistrictDataLoader.loadDistrictData__plot2(district_name)
         fig = make_subplots(specs=[[{"secondary_y": True}]])
+        growth_rate_color = '#cc0000'
 
         # Add traces
         fig.add_trace(
@@ -268,7 +270,7 @@ class DistrictDataLoader:
                 y=df_district_rt_real['growth_rate_ML'], 
                 name="Growth Rate",
                 mode='lines+markers',
-                line_color='#ff0000'
+                line_color=growth_rate_color
             ),
             secondary_y=False,
         )
@@ -278,20 +280,21 @@ class DistrictDataLoader:
                 y=df_district_rt_sim['growth_rate_ML'], 
                 name="Growth Rate SIM",
                 mode='lines',
-                line_color='#ff0000',
+                line_color=growth_rate_color,
                 showlegend=False
             ),
             secondary_y=False,
         )
-        fig.update_layout(yaxis1=dict(type='log', color='#ff0000'))
-
+        fig.update_layout(yaxis1=dict(type='log', color=growth_rate_color))
+        
+        doubling_time_color = '#0000cc'
         fig.add_trace(
             go.Scatter(
                 x=df_district_rt_real['date'], 
                 y=df_district_rt_real['doubling_time_ML'], 
                 name="Doubling Time",
                 mode='lines+markers',
-                line_color='#0000ff',
+                line_color=doubling_time_color,
             ),
             secondary_y=True,
         )
@@ -301,12 +304,12 @@ class DistrictDataLoader:
                 y=df_district_rt_sim['doubling_time_ML'], 
                 name="Doubling Time SIM",
                 mode='lines',
-                line_color='#0000ff',
+                line_color=doubling_time_color,
                 showlegend=False
             ),
             secondary_y=True,
         )
-        fig.update_layout(yaxis2=dict(color='#0000ff'))
+        fig.update_layout(yaxis2=dict(color=doubling_time_color))
 
         # Add figure title
         fig.update_layout( title_text="Growth Rare vs Doubling Time >> {}".format(district_name) )
@@ -315,8 +318,8 @@ class DistrictDataLoader:
         fig.update_xaxes(title_text="<b>Date</b>")
 
         # Set y-axes titles
-        fig.update_yaxes(title_text="<b>Growth Rate</b>", title_font=dict(color='#ff0000'), secondary_y=False)
-        fig.update_yaxes(title_text="<b>Doubling </b>", title_font=dict(color='#0000ff'), secondary_y=True)
+        fig.update_yaxes(title_text="<b>Growth Rate</b>", title_font=dict(color=growth_rate_color), secondary_y=False)
+        fig.update_yaxes(title_text="<b>Doubling </b>", title_font=dict(color=doubling_time_color), secondary_y=True)
 
 
         fig.update_layout(
