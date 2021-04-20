@@ -278,8 +278,9 @@ def getRandom__ForcastData():
 @app.route("/api/rareimpact")
 def getRareImpactData():
     # rareImpact = getRandom__RareImpactData()
-    rareImpact = loadRareImpactData()
-    return rareImpact
+    # rareImpact = loadRareImpactData()
+    # return rareImpact
+    return HomePageDataLoader.load_web_plot_2()
 
 @app.route("/api/rareimpact/<district_name>")
 def getRareImpactData__For(district_name):

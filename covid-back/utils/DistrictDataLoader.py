@@ -15,6 +15,8 @@ from .BD_MapLoader import BD_MapLoader
 
 class DistrictDataLoader:
 
+    DATA_PATH = "Data/CSV/"
+
     csv_districts = ['Nilphamari', 'Chandpur', 'BOGURA', 'Natore', 'Khulna', 'Patuakhali', 'Rangpur', 'Satkhira', 'CUMILLA', 'CHATTOGRAM', 'CHAPAINABABGANJ', 'Lalmonirhat', 'Gaibandha', 'Jhenaidah', 'Dhaka', 'Panchagarh', 'Thakurgaon', 'Habiganj', 'Khagrachhari', 'Sunamganj', 'Joypurhat', 'Kurigram', 'Tangail', 'Sirajganj', 'Rangamati', 'Lakshmipur', 'COXS BAZAR', 'Feni', 'Magura', 'Bagerhat', 'Narail', 'Moulvibazar', 'KISHOREGANJ', 'Noakhali', 'Pabna', 'Rajshahi', 'Sherpur', 'BARISHAL', 'Bandarban', 'Sylhet', 'Bhola', 'Gazipur', 'Naogaon', 'Narsingdi', 'Chuadanga', 'Netrakona', 'Faridpur', 'Manikganj', 'Jamalpur', 'Munshiganj', 'Kushtia', 'Shariatpur', 'Pirojpur', 'Madaripur', 'Gopalganj', 'Jhalokati', 'Dinajpur', 'Barguna', 'Brahmanbaria', 'Meherpur', 'Narayanganj', 'JASHORE', 'Rajbari', 'Mymensingh']
     replace_name_ = {
         'BARISAL': 'BARISHAL',
@@ -51,7 +53,7 @@ class DistrictDataLoader:
     @staticmethod
     def get_risk_data():
         if(DistrictDataLoader.risk_data == None):
-            df_risk = pd.read_csv('Data/District/zone_risk_value.csv')
+            df_risk = pd.read_csv(DistrictDataLoader.DATA_PATH + 'zone_risk_value.csv')
             df_risk = df_risk[['district', 
                                 DistrictDataLoader.this_week, 
                                 DistrictDataLoader.last_week, 
@@ -107,11 +109,11 @@ class DistrictDataLoader:
 
     @staticmethod
     def loadDistrictData__plot1(district_name):
-        df_cases_real = pd.read_csv('Data/District/districts_real.csv')
-        df_cases_sim = pd.read_csv('Data/District/districts_sim.csv')
+        df_cases_real = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_real.csv')
+        df_cases_sim = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_sim.csv')
 
-        df_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
-        df_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
+        df_real = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_real_rt_gr_dt.csv')
+        df_sim = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_sim_rt_gr_dt.csv')
 
         df_cases_real.date = pd.to_datetime(df_cases_real.date)
         df_cases_sim.days_sim = pd.to_datetime(df_cases_sim.days_sim)
@@ -241,8 +243,8 @@ class DistrictDataLoader:
 
     @staticmethod
     def loadDistrictData__plot2(district_name):
-        df_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
-        df_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
+        df_real = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_real_rt_gr_dt.csv')
+        df_sim = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_sim_rt_gr_dt.csv')
 
         df_real.date = pd.to_datetime(df_real.date)
         df_sim.date = pd.to_datetime(df_sim.date)
@@ -360,8 +362,8 @@ class DistrictDataLoader:
     @staticmethod
     def load_rt_dt_gr_files():
         if(DistrictDataLoader.df_real.empty):
-            DistrictDataLoader.df_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
-            DistrictDataLoader.df_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
+            DistrictDataLoader.df_real = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_real_rt_gr_dt.csv')
+            DistrictDataLoader.df_sim = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_sim_rt_gr_dt.csv')
 
         return DistrictDataLoader.df_real, DistrictDataLoader.df_sim
 

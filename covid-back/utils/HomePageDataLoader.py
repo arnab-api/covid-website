@@ -1,8 +1,12 @@
 import pandas as pd
+import numpy as np
 import json
 import math
+import datetime
 
 class HomePageDataLoader:
+
+    DATA_PATH = "Data/CSV/"
 
     @staticmethod
     def get_num(num):
@@ -11,8 +15,19 @@ class HomePageDataLoader:
         # return math.log10(num)   
         return int(num) 
 
-    df_real = pd.read_csv('Data/Bangladesh_real.csv', encoding='UTF-8')
-    df_sim = pd.read_csv('Data/Bangladesh_sim.csv', encoding='UTF-8')
+    df_real = pd.read_csv(DATA_PATH + 'Bangladesh_real.csv', encoding='UTF-8')
+    df_sim = pd.read_csv(DATA_PATH + 'Bangladesh_sim.csv', encoding='UTF-8')
+    df_rt_real = pd.read_csv(DATA_PATH + "rt_real.csv")
+    df_rt_sim = pd.read_csv(DATA_PATH + 'rt_sim.csv')
+    df_owid = pd.read_csv(DATA_PATH + 'owid-covid-data.csv')
+    df_owid = df_owid[df_owid['location']=='Bangladesh']
+    df_owid['date'] = pd.to_datetime(df_owid['date'])
+    df_mobility = pd.read_csv(DATA_PATH + 'google_mobility.csv')
+    df_mobility = df_mobility[df_mobility['country_region_code']=='BD']
+    df_mobility = df_mobility[['date','retail_and_recreation_percent_change_from_baseline','grocery_and_pharmacy_percent_change_from_baseline','parks_percent_change_from_baseline','transit_stations_percent_change_from_baseline','workplaces_percent_change_from_baseline']]
+    df_mobility_mean = df_mobility[['retail_and_recreation_percent_change_from_baseline','grocery_and_pharmacy_percent_change_from_baseline','parks_percent_change_from_baseline','transit_stations_percent_change_from_baseline','workplaces_percent_change_from_baseline']]
+    df_mobility['mean'] = df_mobility_mean.mean(axis=1)
+
 
     web_plot_1 = None
     @staticmethod
@@ -83,3 +98,162 @@ class HomePageDataLoader:
 
         HomePageDataLoader.web_plot_1 = web_plot_1
         return HomePageDataLoader.web_plot_1
+
+    @staticmethod
+    def getFormattedDate(date):
+        return date.strftime("%Y-%m-%d")
+
+    web_plot_2 = None
+    @staticmethod
+    def load_web_plot_2():
+        if(HomePageDataLoader.web_plot_2 != None):
+            print("web plot 2 >> data already loaed and cached >> returning")
+            return HomePageDataLoader.web_plot_2
+        
+        print("data not loaded >> loading web plot 2")
+
+        min_date = datetime.datetime(2020, 2, 15)
+        max_date = datetime.datetime(2021, 6, 1)
+        delta = max_date - min_date
+
+        date_arr = []
+        for i in range(delta.days + 1):
+            day = min_date + datetime.timedelta(days=i)
+            # date_arr.append(day.strftime("%Y-%m-%d"))
+            date_arr.append(HomePageDataLoader.getFormattedDate(day))
+
+        # print(date_arr[0:5])
+        # print(date_arr.index('2020-02-17'))
+        mobility_drop = []
+        daily_cases = []
+        daily_cases_sim = []
+        test_positive = []
+        rt_1 = []
+        rt_2 = []
+        rt_1_low_90 = []
+        rt_1_high_90 = []
+
+        for date in date_arr:
+            mobility_drop.append(None)
+            daily_cases.append(None)
+            test_positive.append(None)
+            daily_cases_sim.append(None)
+            rt_1.append(None)
+            rt_2.append(None)
+            rt_1_low_90.append(None)
+            rt_1_high_90.append(None)
+
+        for index, row in HomePageDataLoader.df_mobility.iterrows():
+            date = row['date']
+            if(date == HomePageDataLoader.getFormattedDate(max_date)):
+                break
+            value = -row['mean']/10
+            idx = date_arr.index(date)
+            mobility_drop[idx] = value
+
+            # print(date, value, idx)
+            # limit -= 1
+            # if(limit == 0):
+            #     break
+        print("mobility drop data populated")
+
+        df_bd_real = HomePageDataLoader.df_real
+        df_bd_sim = HomePageDataLoader.df_sim
+
+        prev = None
+        for index, row in df_bd_real.iterrows():
+            date = row['date']
+            if(date == HomePageDataLoader.getFormattedDate(max_date)):
+                break
+            value = row['confirmed']
+            idx = date_arr.index(date)
+
+            if(prev == None):
+                diff = 0
+            else:
+                diff = value - prev
+            daily_cases[idx] = diff/1000
+            prev = value
+        print("daily cases data populated")
+
+        prev = None
+        for index, row in df_bd_sim.iterrows():
+            date = row['date']
+            if(date == HomePageDataLoader.getFormattedDate(max_date)):
+                print("HI")
+                break
+            value = row['confirmed']
+            idx = date_arr.index(date)
+
+            if(prev == None):
+                diff = 0
+            else:
+                diff = value - prev
+            daily_cases_sim[idx] = diff/1000
+            prev = value
+        print("daily cases __SIM data populated")
+
+
+        for index, row in HomePageDataLoader.df_owid.iterrows():
+            date = HomePageDataLoader.getFormattedDate(row['date'])
+            if(date == HomePageDataLoader.getFormattedDate(max_date)):
+                break
+            value = row['positive_rate']*10
+            idx = date_arr.index(date)
+            # test_positive[idx] = "--> {} -- {}".format(float(value), type(value))
+            if(math.isnan(float(value))):
+                continue
+            test_positive[idx] = float(value)
+        print("test positive data populated")
+
+        for index, row in HomePageDataLoader.df_rt_real.iterrows():
+            date = row['Date']
+            if(date == HomePageDataLoader.getFormattedDate(max_date)):
+                break
+            value = row['ML']
+            idx = date_arr.index(date)
+            # test_positive[idx] = "--> {} -- {}".format(float(value), type(value))
+            if(math.isnan(float(value))):
+                continue
+            rt_1[idx] = float(value)
+        print("rt_1 data populated")
+
+        for index, row in HomePageDataLoader.df_rt_sim.iterrows():
+            date = row['Date']
+            if(date == HomePageDataLoader.getFormattedDate(max_date)):
+                break
+            value = row['ML']
+            idx = date_arr.index(date)
+            # test_positive[idx] = "--> {} -- {}".format(float(value), type(value))
+            if(math.isnan(float(value))):
+                continue
+            rt_2[idx] = float(value)
+        print("rt_2 data populated")
+
+        for index, row in HomePageDataLoader.df_rt_real.iterrows():
+            date = row['Date']
+            if(date == HomePageDataLoader.getFormattedDate(max_date)):
+                break
+            lo = row['Low_90']
+            hi = row['High_90']
+            idx = date_arr.index(date)
+            rt_1_low_90[idx] = float(lo)
+            rt_1_high_90[idx] = float(hi)
+        print("rt_2 lo and hi data populated")
+
+        web_plot_2 = {
+            'x_labels': date_arr,
+            'values': [
+                { 'value': mobility_drop, 'label': 'Drops in Mobility (x10)', 'color': "black"},
+                { 'value': daily_cases, 'label': 'Daily Cases (x1K)', 'color': "#0000cc"},
+                { 'value': test_positive, 'label': 'Test Positive Rate (x10 in %)', 'color': "green" },
+                { 'value': rt_1, 'label': 'R_t_1', 'color': "#cc0000" },
+                # { 'value': rt_2, 'label': 'R_t_2', 'color': "rgba(235, 9, 28, .5)" },
+                { 'value': rt_1_low_90, 'label': 'R_t Low', 'color': "rgba(235, 9, 28, .35)" },
+                { 'value': rt_1_high_90, 'label': 'R_t High', 'color': "rgba(235, 9, 28, .35)" },
+            ],
+            'annotations': []
+        }
+
+        HomePageDataLoader.web_plot_2 = web_plot_2
+        return HomePageDataLoader.web_plot_2
