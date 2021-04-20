@@ -257,3 +257,57 @@ class HomePageDataLoader:
 
         HomePageDataLoader.web_plot_2 = web_plot_2
         return HomePageDataLoader.web_plot_2
+
+
+    forcast_data = []
+    def getForcastData():
+        if(len(HomePageDataLoader.forcast_data) > 0):
+            print("Forcast data >> already loaded and cached -- returning")
+            return HomePageDataLoader.forcast_data
+
+        DATA_PATH = "Data/CSV/"
+        bd_df = pd.read_csv(DATA_PATH + "Bangladesh_sim.csv")
+        bd_rt = pd.read_csv(DATA_PATH + "rt_sim.csv")
+        bd_dt = pd.read_csv(DATA_PATH + "doublingtimes_sim.csv")
+
+        today = datetime.datetime.today()
+        today_str = today.strftime("%Y-%m-%d")
+        max_limit = today + datetime.timedelta(days=10)
+        max_limit_str = max_limit.strftime("%Y-%m-%d")
+
+        bd_rt = bd_rt[bd_rt['Date'] >= today_str]
+        bd_rt = bd_rt[bd_rt['Date'] <= max_limit_str]
+
+        bd_dt = bd_dt[bd_dt['date'] >= today_str]
+        bd_dt = bd_dt[bd_dt['date'] <= max_limit_str]
+
+        bd_df = bd_df[bd_df['date'] >= today_str]
+        bd_df = bd_df[bd_df['date'] <= max_limit_str]
+
+        forcast_data = []
+
+        day = today
+        while(day <= max_limit):
+            day_str = day.strftime("%Y-%m-%d")
+            bd = bd_df[bd_df['date'] == day_str]
+            confirmed = int(bd['confirmed'].iloc[0])
+            recovered = int(bd['recovered'].iloc[0])
+            deaths = int(bd['deaths'].iloc[0])
+            rt = bd_rt[bd_rt['Date'] == day_str]['ML'].iloc[0]
+            dt = bd_dt[bd_dt['date'] == day_str]['doublingtimes'].iloc[0]
+
+            print(day, " >> ", confirmed, recovered, deaths, rt, dt)
+
+
+            forcast_data.append({
+                'date': day_str,
+                'confirmedCases': confirmed, 
+                'recoveredCases': recovered, 
+                'deaths': deaths, 
+                'Rt': rt, 
+                'DT': dt
+            })
+            day += datetime.timedelta(days = 1)
+        # forcast_data.reverse()
+        HomePageDataLoader.forcast_data = forcast_data 
+        return HomePageDataLoader.forcast_data

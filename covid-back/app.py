@@ -9,11 +9,12 @@ import plotly.express as px
 import plotly
 import plotly.express as px
 import plotly
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 from utils.BD_MapLoader import BD_MapLoader
 from utils.DistrictDataLoader import DistrictDataLoader
 from utils.HomePageDataLoader import HomePageDataLoader
+from utils.WorldMapLoader import WorldMapLoader
 
 app = Flask(__name__)
  
@@ -349,7 +350,11 @@ def get_dist():
 
 @app.route("/api/rt_forcast_table")
 def getForcastTable():
-    return jsonify(getRandom__ForcastData())
+    return jsonify(HomePageDataLoader.getForcastData())
+
+@app.route("/api/world_risk")
+def getWorldRisk():
+    return jsonify(WorldMapLoader.getWorldRisk())
 
 
 @app.route("/api/dist_plot_1/<district_name>")

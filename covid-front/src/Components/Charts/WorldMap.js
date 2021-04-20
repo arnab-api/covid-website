@@ -34,7 +34,7 @@ const geographyStyle = {
         stroke: '#000',
     },
     hover: {
-        fill: '#ff99ff',
+        fill: '#80aaff',
         transition: 'all 250ms',
         outline: 'none',
         strokeWidth: .5,
@@ -52,7 +52,7 @@ const BD_TOPO_JSON = require('../Data/bd_topo.json');
 const BD_DIST_TOPO = require('../Data/bd_dist_topo.json');
 const BD_DIST = require('../Data/bd-districts.json');
 
-const DEFAULT_COLOR = 'rgb(248, 140, 81, .6)';
+const DEFAULT_COLOR = '#EEE';
 // Red Variants
 const COLOR_RANGE = [
     '#ffedea',
@@ -87,12 +87,6 @@ const COLOR_RANGE = [
 // https://colordesigner.io/gradient-generator
 // https://www.w3schools.com/colors/colors_picker.asp
 
-// const COLOR_BUCKET = [
-//     '#54b45f',   // trivial
-//     // '#ecd424',   // Community spread
-//     '#f88c51',   // Accelerated spread
-//     '#c01a27',   // Tipping point
-// ]
 
 const COLOR_BUCKET = [
     'rgb(84, 180, 95, .6)',   // trivial
@@ -121,8 +115,8 @@ export const WorldMap = ({
     const [heatmap_date, setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
     const [projection_config, setProjectionConfig] = useState({
-        rotate: [-10, 0, 0],
-        scale: 200
+        scale: 40,
+        center: [90.412518, 23.810332] 
     });
 
     const onMouseLeave = () => {
@@ -136,10 +130,11 @@ export const WorldMap = ({
         // console.log(enter_count, "current >> ", current, geo.properties)
         // enter_count += 1
         // onMouseClick(geo, current)
-        // console.log(current)
+        // console.log(enter_count, ">>> ", current)
         // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
+        // setTooltipContent(current.name)
         return () => {
-            setTooltipContent(`${current.dist}: ${current.value}`);
+            setTooltipContent(`${current.name}`);
         };
     }
 
@@ -152,18 +147,7 @@ export const WorldMap = ({
         // })
     };
 
-    // const getHeatMapData = () => {
-    //     setDistrictData({}); //****** added *******/
-    //     console.log("refreshing heat map data")
-    //     fetch('/api/heat_map').then(response => {
-    //         if (response.ok) {
-    //             return response.json()
-    //         }
-    //     }).then(data => {
-    //         // console.log(data)
-    //         setHeatMap(data)
-    //     })
-    // }
+
 
     const colorScale = scaleQuantile()
         .domain(heatmap.map(d => d.value))
@@ -171,6 +155,7 @@ export const WorldMap = ({
 
     const my_colorScale = (value) => {
         // console.log("---> ", value)
+        if (value == -1) return DEFAULT_COLOR;
         if (value < bins[0]) return COLOR_BUCKET[0];
         if (value < bins[1]) return COLOR_BUCKET[1];
         if (value < bins[2]) return COLOR_BUCKET[2];
@@ -178,12 +163,12 @@ export const WorldMap = ({
     }
 
     useEffect(() => {
-        fetch('/api/heat_map').then(response => {
+        fetch('/api/world_risk').then(response => {
             if (response.ok) {
                 return response.json()
             }
         }).then(data => {
-            // console.log(" >>> checking input", data)
+            console.log(" >>> checking input", data)
             setHeatMap(data.heat_map)
             setHeatMap_date(data.date)
             // console.log("heat map", heatmap)
@@ -202,7 +187,7 @@ export const WorldMap = ({
                 // projection="geoMercator"
                 width={800}
                 height={400}
-                style={{ width: "80%", height: "60%" }} 
+                style={{ width: "80%", height: "60%" }}
             >
 
                 {/* {
@@ -214,20 +199,20 @@ export const WorldMap = ({
                         </Marker>
                     ))
                 } */}
-                <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
-                <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
+                {/* <Sphere stroke="#E4E5E6" strokeWidth={0.5} /> */}
+                {/* <Graticule stroke="#E4E5E6" strokeWidth={0.5} /> */}
                 <Geographies geography={geoUrl}>
                     {({ geographies }) =>
                         geographies.map(geo => {
-                            const current = heatmap.find(s => s.id === geo.id);
+                            const current = heatmap.find(s => s.name === geo.properties.NAME);
                             return (
                                 <Geography
                                     key={geo.rsmKey}
                                     geography={geo}
                                     style={geographyStyle}
                                     // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
-                                    // fill= {current ? my_colorScale(current.value) : DEFAULT_COLOR}
-                                    fill={DEFAULT_COLOR}
+                                    fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
+                                    // fill={DEFAULT_COLOR}
                                     onMouseEnter={onMouseEnter(geo, current)}
                                     onMouseLeave={onMouseLeave}
                                     onClick={handleClick(geo)}
@@ -239,12 +224,12 @@ export const WorldMap = ({
 
             </ComposableMap>
             {/* <div><LinearGradient data={gradientData} /></div> */}
-            <ul style={{position:'absolute',right:'5rem',top:'10rem', 'list-style': "none"}}>
-                <li><span style={{'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0]}}>__</span> <strong>Trivial</strong></li>
-                <li><span style={{'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1]}}>__</span> <strong>Community Spread</strong></li>
-                <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
-                <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
-            </ul> 
+            <ul style={{ position: 'absolute', right: '5rem', top: '10rem', 'list-style': "none" }}>
+                <li><span style={{ 'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0] }}>__</span> <strong>Trivial</strong></li>
+                <li><span style={{ 'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1] }}>__</span> <strong>Community Spread</strong></li>
+                <li><span style={{ 'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2] }}>__</span> <strong>Accelerated Spread</strong></li>
+                <li><span style={{ 'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3] }}>__</span> <strong>Tipping Point</strong></li>
+            </ul>
             {/* <div style={{'text-align': 'center'}}>
                 <strong> {heatmap_date} </strong>
             </div> */}

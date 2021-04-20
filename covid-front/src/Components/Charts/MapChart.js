@@ -32,7 +32,7 @@ const geographyStyle = {
         stroke: '#000',
     },
     hover: {
-        fill: '#ff99ff',
+        fill: '#80aaff',
         transition: 'all 250ms',
         outline: 'none',
         strokeWidth: .003,
@@ -150,7 +150,7 @@ export const MapChart = ( {
         // console.log(enter_count, "current >> ", current, geo.properties)
         // enter_count += 1
         // onMouseClick(geo, current)
-        // console.log(current)
+        // console.log(enter_count, current)
         // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
         return () => {
             setTooltipContent(`Confirmed cases in ${current.dist}: ${current.confirmed}`);
