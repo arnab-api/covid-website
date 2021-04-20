@@ -374,6 +374,10 @@ def latest_rt():
 def before_15_rt__arnab():
     return jsonify(DistrictDataLoader.get_rt_before_15())
 
+# @app.route("/api/before_15_rt_arnab_new")
+# def before_15_rt__arnab_new():
+#     return jsonify(DistrictDataLoader.get_rt_before_15__new())
+
 @app.route("/api/rt_value")
 def get_rt_value():
     file_name = 'Rt/static/data/data.json'

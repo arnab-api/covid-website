@@ -16,6 +16,15 @@ from .BD_MapLoader import BD_MapLoader
 class DistrictDataLoader:
 
     DATA_PATH = "Data/CSV/"
+    district_real = pd.read_csv(DATA_PATH + "districts_real.csv")
+    district_real = district_real.sort_values(by=['date'], ascending= False)
+    present = district_real['date'].iloc[0]
+    present = datetime.fromisoformat(present)
+    past = present - timedelta(days=7)
+    future = present + timedelta(days=7)
+    present = present.strftime('%Y-%m-%d')
+    past = past.strftime('%Y-%m-%d')
+    future = future.strftime('%Y-%m-%d')
 
     csv_districts = ['Nilphamari', 'Chandpur', 'BOGURA', 'Natore', 'Khulna', 'Patuakhali', 'Rangpur', 'Satkhira', 'CUMILLA', 'CHATTOGRAM', 'CHAPAINABABGANJ', 'Lalmonirhat', 'Gaibandha', 'Jhenaidah', 'Dhaka', 'Panchagarh', 'Thakurgaon', 'Habiganj', 'Khagrachhari', 'Sunamganj', 'Joypurhat', 'Kurigram', 'Tangail', 'Sirajganj', 'Rangamati', 'Lakshmipur', 'COXS BAZAR', 'Feni', 'Magura', 'Bagerhat', 'Narail', 'Moulvibazar', 'KISHOREGANJ', 'Noakhali', 'Pabna', 'Rajshahi', 'Sherpur', 'BARISHAL', 'Bandarban', 'Sylhet', 'Bhola', 'Gazipur', 'Naogaon', 'Narsingdi', 'Chuadanga', 'Netrakona', 'Faridpur', 'Manikganj', 'Jamalpur', 'Munshiganj', 'Kushtia', 'Shariatpur', 'Pirojpur', 'Madaripur', 'Gopalganj', 'Jhalokati', 'Dinajpur', 'Barguna', 'Brahmanbaria', 'Meherpur', 'Narayanganj', 'JASHORE', 'Rajbari', 'Mymensingh']
     replace_name_ = {
@@ -30,12 +39,12 @@ class DistrictDataLoader:
         'CHAPAI': 'CHAPAINABABGANJ',
         'MAULVIBAZAR': 'MOULVIBAZAR'
     }
-    this_week = datetime.today() - timedelta(days=1)
-    last_week = pd.to_datetime(this_week) - timedelta(days=7)
-    next_week = pd.to_datetime(this_week) + timedelta(days=7)
-    this_week = this_week.strftime('%Y-%m-%d')
-    last_week = last_week.strftime('%Y-%m-%d')
-    next_week = next_week.strftime('%Y-%m-%d')
+    # this_week = datetime.today() - timedelta(days=1)
+    # last_week = pd.to_datetime(this_week) - timedelta(days=7)
+    # next_week = pd.to_datetime(this_week) + timedelta(days=7)
+    # this_week = this_week.strftime('%Y-%m-%d')
+    # last_week = last_week.strftime('%Y-%m-%d')
+    # next_week = next_week.strftime('%Y-%m-%d')
     risk_data = None
 
     @staticmethod
@@ -55,13 +64,13 @@ class DistrictDataLoader:
         if(DistrictDataLoader.risk_data == None):
             df_risk = pd.read_csv(DistrictDataLoader.DATA_PATH + 'zone_risk_value.csv')
             df_risk = df_risk[['district', 
-                                DistrictDataLoader.this_week, 
-                                DistrictDataLoader.last_week, 
-                                DistrictDataLoader.next_week]]
+                                DistrictDataLoader.present, 
+                                DistrictDataLoader.past, 
+                                DistrictDataLoader.future]]
             risk_data = {}
-            this_week = DistrictDataLoader.this_week
-            last_week = DistrictDataLoader.last_week
-            next_week = DistrictDataLoader.next_week
+            this_week = DistrictDataLoader.present
+            last_week = DistrictDataLoader.past
+            next_week = DistrictDataLoader.future
             for index, row in df_risk.iterrows():
                 risk_data[row['district']] = {
                         this_week: row[this_week],
@@ -71,10 +80,17 @@ class DistrictDataLoader:
             DistrictDataLoader.risk_data = risk_data
 
         return DistrictDataLoader.risk_data
+
+    @staticmethod
+    def loadConfirmedCases__for(district, day):
+        print(district, day)
+        df = DistrictDataLoader.district_real[DistrictDataLoader.district_real['district'] == district]
+        # df = df[df['date'] == day]
+        return int(df['confirmed'].iloc[0])
     
     @staticmethod
     def get_risk_for(day):
-        dist_dict = dist_dict = BD_MapLoader.getDistrictData()
+        dist_dict = BD_MapLoader.getDistrictData()
         risk_data = DistrictDataLoader.get_risk_data()
         heat_map = []
         for dist in dist_dict:
@@ -85,9 +101,11 @@ class DistrictDataLoader:
                 }
                 if dist == 'Indian Chhitmahal in Bangladesh':
                     obj['value'] = 0
-                    continue
-                dist_name = DistrictDataLoader.get_CSV_districtname(dist)
-                obj['value']= round(risk_data[dist_name][day], 2)
+                else:
+                    dist_name = DistrictDataLoader.get_CSV_districtname(dist)
+                    obj['value']= round(risk_data[dist_name][day], 2)
+                    if(day == DistrictDataLoader.present):
+                        obj['confirmed'] = DistrictDataLoader.loadConfirmedCases__for(dist_name, day)
                 heat_map.append(obj)
         return {
             'date': day,
@@ -96,15 +114,15 @@ class DistrictDataLoader:
     
     @staticmethod
     def getRiskMap__present():
-        return DistrictDataLoader.get_risk_for(DistrictDataLoader.this_week)
+        return DistrictDataLoader.get_risk_for(DistrictDataLoader.present)
 
     @staticmethod
     def getRiskMap__past():
-        return DistrictDataLoader.get_risk_for(DistrictDataLoader.last_week)
+        return DistrictDataLoader.get_risk_for(DistrictDataLoader.past)
     
     @staticmethod
     def getRiskMap__future():
-        return DistrictDataLoader.get_risk_for(DistrictDataLoader.next_week)
+        return DistrictDataLoader.get_risk_for(DistrictDataLoader.future)
     
 
     @staticmethod
@@ -386,32 +404,32 @@ class DistrictDataLoader:
                 'date': row['date'],
                 'ML': row['ML'],
                 'Low_90': row['Low_90'],
-                'High_90': row['High_90'],
+                'High_90': row['High_90'] - row['Low_90'],
                 'district': row['district']
             })
         return rt_latest
 
-    @staticmethod
-    def get_rt_before_15():
-        rt_latest = DistrictDataLoader.get_latest_rt()
-        date_now = datetime.fromisoformat(rt_latest[0]['date'])
-        date_15 = date_now - timedelta(days= 15)
-        date_15 = date_15.strftime('%Y-%m-%d')
+    # @staticmethod
+    # def get_rt_before_15():
+    #     rt_latest = DistrictDataLoader.get_latest_rt()
+    #     date_now = datetime.fromisoformat(rt_latest[0]['date'])
+    #     date_15 = date_now - timedelta(days= 15)
+    #     date_15 = date_15.strftime('%Y-%m-%d')
 
-        df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
-        df_15 = df_real[df_real['date'] <= date_15].sort_values(by=['date'], ascending= False)
-        df_15 = df_15.drop_duplicates('district')
+    #     df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
+    #     df_15 = df_real[df_real['date'] <= date_15].sort_values(by=['date'], ascending= False)
+    #     df_15 = df_15.drop_duplicates('district')
 
-        rt_old = []
-        for latest_rt in rt_latest:
-            district = latest_rt['district']
-            old_rt = df_15[df_15['district'] == district]
-            old_rt_json = old_rt[['date','ML','Low_90','High_90', 'district']].to_json(orient="records")
-            old_rt_json = json.loads(old_rt_json)
-            old_rt_json = old_rt_json[0]
-            rt_old.append(old_rt_json)
+    #     rt_old = []
+    #     for latest_rt in rt_latest:
+    #         district = latest_rt['district']
+    #         old_rt = df_15[df_15['district'] == district]
+    #         old_rt_json = old_rt[['date','ML','Low_90','High_90', 'district']].to_json(orient="records")
+    #         old_rt_json = json.loads(old_rt_json)
+    #         old_rt_json = old_rt_json[0]
+    #         rt_old.append(old_rt_json)
 
-        return rt_old
+    #     return rt_old
     
     @staticmethod
     def get_rt_value():
@@ -453,6 +471,32 @@ class DistrictDataLoader:
     def get_rt_value__For(district):
         DistrictDataLoader.load_rt_dictionary()
         return DistrictDataLoader.rt_dict[district]
+
+    @staticmethod
+    def get_rt_before_15():
+        DistrictDataLoader.load_rt_dictionary()
+        latest_rt = DistrictDataLoader.get_latest_rt()
+
+        date_now = datetime.fromisoformat(latest_rt[0]['date'])
+        date_15 = date_now - timedelta(days= 15)
+        date_15 = date_15.strftime('%Y-%m-%d')
+
+        rt_15 = []
+        for rt_latest in latest_rt:
+            district = rt_latest['district']
+            found = False
+            for rt_val in DistrictDataLoader.rt_dict[district]:
+                if(rt_val['Date'] <= date_15):
+                    rt_15.append({
+                        'date': rt_val['Date'],
+                        'district': rt_val['district'],
+                        'ML': rt_val['ML'],
+                        'Low_90': rt_val['Low_90'],
+                        'High_90': rt_val['High_90'] - rt_val['Low_90']
+                    })
+                    found = True
+                    break
+        return rt_15
 
     dt_dict = {}
     @staticmethod
