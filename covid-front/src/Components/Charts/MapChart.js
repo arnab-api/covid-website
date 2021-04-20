@@ -153,7 +153,7 @@ export const MapChart = ( {
         // console.log(current)
         // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
         return () => {
-            setTooltipContent(`${current.dist}: ${current.value}`);
+            setTooltipContent(`Confirmed cases in ${current.dist}: ${current.confirmed}`);
         };
     }
 

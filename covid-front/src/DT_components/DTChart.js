@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Flex, Text, Image, Heading } from "@chakra-ui/core";
 import CombinedPlot from "./CombinedPlot";
+import CombinedPlot_present from "./CombinedPlot_present";
 import { GridPlot } from "./GridPlot";
 
 // export default function RtChart(props) {
@@ -55,7 +56,7 @@ export const DTChart = ( {data, dateNow, dataPast, datePast} ) => {
               Doubling time (D<sub>t</sub>) values of {dateNow}
             </h2>
           </Text>
-          <CombinedPlot width={width} data={data} />
+          <CombinedPlot_present width={width} data={data} dataPast={dataPast}/>
           <br />
           <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
             <h2>

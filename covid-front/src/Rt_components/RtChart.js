@@ -65,7 +65,7 @@ export const RtChart = ( {data, dateNow, dataPast, datePast} ) => {
               R<sub>t</sub> value of {datePast}
             </h2>
           </Text>
-          <CombinedPlotPast width={width} data={dataPast} />
+          <CombinedPlot width={width} data={dataPast} />
           <br />
           <br />
           <br />

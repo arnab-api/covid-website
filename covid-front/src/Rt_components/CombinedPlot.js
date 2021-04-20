@@ -96,7 +96,7 @@ export default function CombinedPlot(props) {
         orientation="left"
         axisLine={false}
         tickMargin={10}
-        domain={[0, 3]}
+        domain={[0.75, 1.5]}
         type="number"
       />
 
@@ -122,7 +122,7 @@ export default function CombinedPlot(props) {
       <ReferenceLine
         y={1}
         stroke="red"
-        strokeWidth={0.7}
+        strokeWidth={1.0}
         label={{
           // value: "Rt=1",
           position: "left",

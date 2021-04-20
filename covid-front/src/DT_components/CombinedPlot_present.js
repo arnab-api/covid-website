@@ -14,8 +14,9 @@ import {
   BarChart
 } from "recharts";
 
-export default function CombinedPlot(props) {
+export default function CombinedPlot_prsent(props) {
   const dataBar = props.data;
+  const dataPast = props.dataPast
 
   console.log("inside combined plot >>> ", props)
 
@@ -95,7 +96,7 @@ export default function CombinedPlot(props) {
         axisLine={false}
         tickMargin={10}
         domain={[
-          Math.floor(Math.min.apply(Math, dataBar.map(function(o) { return o.doubling_time; }))/100)*100,
+          Math.floor(dataBar[0].doubling_time/100)*100,
           Math.ceil(Math.max.apply(Math, dataBar.map(function(o) { return o.doubling_time; }))/100)*100
         ]}
         type="number"
@@ -106,9 +107,12 @@ export default function CombinedPlot(props) {
             // radius={[100, 100, 100, 100]} 
             label={<CustomizedLabel />}
             >
-        {dataBar.map((entry, index) => (
-          <Cell fill={"#8080ff"}></Cell>
-        ))}
+        {dataBar.map((entry, index) => {
+          // console.log('>>>>>>>>>> combined plot present >> ', entry, index, entry.doubling_time, dataPast[index].doubling_time)
+          let color = "#ff8787"
+          if(entry.doubling_time > dataPast[index].doubling_time) color = "#7fefa0"
+          return <Cell fill={color}></Cell>
+        })}
       </Bar>
       <Tooltip content={<CustomTooltip />} />
     </ComposedChart>
