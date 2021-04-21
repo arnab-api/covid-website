@@ -30,26 +30,26 @@ const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-map
 const geographyStyle = {
     default: {
         outline: 'none',
-        strokeWidth: .005,
+        strokeWidth: .5,
         stroke: '#000',
     },
     hover: {
         fill: '#80aaff',
         transition: 'all 250ms',
         outline: 'none',
-        strokeWidth: .005,
+        strokeWidth: .5,
         stroke: '#000',
     },
     pressed: {
         fill: '#4B0082',
         outline: 'none',
-        strokeWidth: .005,
+        strokeWidth: .5,
         stroke: '#000',
     }
 };
 
 // const BD_TOPO_JSON = require('../Data/bd_topo.json');
-const BD_DIST_TOPO = require('../Data/bd_dist_topo.json');
+const BD_DIST_TOPO = require('../Data/bd_dist_topo_simple.json');
 const WORLD_TOPO = require('../Data/world_110_topo.json');
 // const BD_DIST = require('../Data/bd-districts.json');
 
@@ -175,7 +175,7 @@ export const WorldMap = ({
                                     key={geo.rsmKey}
                                     geography={geo}
                                     style={geographyStyle}
-                                    // fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
+                                    fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
                                     onMouseEnter={onMouseEnter(geo, current)}
                                     onMouseLeave={onMouseLeave}
                                     onClick={handleClick(geo)}
