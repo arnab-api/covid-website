@@ -15,12 +15,12 @@ table {
   margin: 0 auto;
   background: white;
   border-collapse: collapse;
-  width: 80%;
+  width: 90%;
 }
 
 td,
 th {
-  border: 1px solid #dddddd;
-  text-align: left;
+  border: 2px solid #dddddd;
+  text-align: center;
   padding: 8px;
 }

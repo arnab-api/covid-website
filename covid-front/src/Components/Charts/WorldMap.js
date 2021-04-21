@@ -106,9 +106,10 @@ export const WorldMap = ({
 
     // var enter_count = 0
     const onMouseEnter = (geo, current = { value: 'NA' }) => {
+        // console.log(" >>> ", geo, current)
         return () => {
             ReactTooltip.rebuild()
-            setTooltipContent(`${geo.properties.NAME}`);
+            setTooltipContent(` >> ${geo.properties.NAME}: ${current.value}`);
         };
     }
 
@@ -125,7 +126,7 @@ export const WorldMap = ({
         return COLOR_BUCKET[3];
     }
 
-    console.log(" >>>>>>>>>> inside worldmap >>>>>>>>>>>>> ", heatmap_date, heatmap)
+    // console.log(" >>>>>>>>>> inside worldmap >>>>>>>>>>>>> ", heatmap_date, heatmap)
 
     // useEffect(() => {
     //     ReactTooltip.rebuild();
@@ -139,12 +140,12 @@ export const WorldMap = ({
     //         setHeatMap_date(data.date)
     //         // console.log("heat map", heatmap)
     //     })
-        
+
     // }, [])
 
     return (
         <div>
-            <ReactTooltip></ReactTooltip>
+            <ReactTooltip html={true}></ReactTooltip>
             <ComposableMap
                 projectionConfig={{
                     scale: 160,
@@ -153,9 +154,9 @@ export const WorldMap = ({
                 // projection="geoMercator"
                 width={800}
                 height={400}
-                style={{ width: "60%", height: "40%" }}
+                style={{ width: "80%", height: "60%" }}
             >
-            {/* <ComposableMap
+                {/* <ComposableMap
                 projectionConfig={projection_config}
                 projection="geoMercator"
                 width={5}
@@ -172,7 +173,8 @@ export const WorldMap = ({
                             return (
                                 <Geography
                                     key={geo.rsmKey}
-                                    data-tip={geo.properties.NAME}
+                                    // data-tip={geo.properties.NAME}
+                                    data-tip={current ? (`<strong>${geo.properties.NAME}</strong><br/>Risk: ${current.value.toFixed(2)}`) : geo.properties.NAME}
                                     geography={geo}
                                     style={geographyStyle}
                                     fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
@@ -186,7 +188,7 @@ export const WorldMap = ({
                 </Geographies>
 
             </ComposableMap>
-            <ul style={{ position: 'absolute', right: '5rem', top: '10rem', 'list-style': "none" }}>
+            <ul style={{ position: 'absolute', right: '5rem', top: '15rem', 'list-style': "none" }}>
                 <li><span style={{ 'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0] }}>__</span> <strong>Trivial</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1] }}>__</span> <strong>Community Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2] }}>__</span> <strong>Accelerated Spread</strong></li>

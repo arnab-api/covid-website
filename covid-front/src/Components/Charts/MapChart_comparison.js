@@ -112,7 +112,7 @@ export const MapChart_comparison = ( {
     // var enter_count = 0
     const onMouseEnter = (geo, current = { value: 'NA' }) => {
         return () => {
-            setTooltipContent(`${current.dist}: ${current.value}`);
+            setTooltipContent(`<strong>${current.dist}</strong><br/>Risk: ${current.value}`);
         };
     }
 
@@ -134,7 +134,7 @@ export const MapChart_comparison = ( {
 
     return (
         <div>
-            <ReactTooltip>{tooltipContent}</ReactTooltip>
+            <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
             <ComposableMap
                 projectionConfig={projection_config}
                 projection="geoMercator"

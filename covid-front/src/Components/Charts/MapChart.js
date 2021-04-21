@@ -19,9 +19,18 @@ import './MapChart.css'
 
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
+import styled from 'styled-components';
 
+export const ReactTooltipStyled = styled(ReactTooltip)`
+  &.type-dark.place-top {
+    background-color: black;
+    padding: 0.3rem 1rem;
 
-
+    &:after { 
+      border-top-color: black;
+    }
+  }
+`;
 
 const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json"
 
@@ -153,7 +162,7 @@ export const MapChart = ( {
         // console.log(enter_count, current)
         // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
         return () => {
-            setTooltipContent(`Confirmed cases in ${current.dist}: ${current.confirmed}`);
+            setTooltipContent(`<strong>${current.dist}</strong><br/> Confirmed cases: ${current.confirmed}`);
         };
     }
 
@@ -209,7 +218,8 @@ export const MapChart = ( {
 
     return (
         <div>
-            <ReactTooltip>{tooltipContent}</ReactTooltip>
+            <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
+            {/* <ReactTooltipStyled>{tooltipContent}</ReactTooltipStyled> */}
             <ComposableMap
                 projectionConfig={projection_config}
                 projection="geoMercator"

@@ -10,6 +10,9 @@ import plotly
 import plotly.express as px
 import plotly
 from datetime import date, timedelta, datetime
+import copy
+from operator import itemgetter
+
 
 from utils.BD_MapLoader import BD_MapLoader
 from utils.DistrictDataLoader import DistrictDataLoader
@@ -341,6 +344,19 @@ def getheatmap__past():
 def getheatmap__future():
     mapdata = DistrictDataLoader.getRiskMap__future()
     return jsonify(mapdata)
+
+@app.route("/api/heat_map_combined")
+def getheatmap__combined():
+    # mapdata = BD_MapLoader.getRandomHeatMap()
+    mapdata = DistrictDataLoader.get_risk_data()
+    mapdata_list = []
+    for district in mapdata:
+        obj = copy.deepcopy(mapdata[district])
+        obj['district'] = district
+        mapdata_list.append(obj)
+
+    mapdata_list = sorted(mapdata_list, key=itemgetter(DistrictDataLoader.present), reverse=True) 
+    return jsonify(mapdata_list)
 
 @app.route("/api/dist_2_id")
 def get_dist():
