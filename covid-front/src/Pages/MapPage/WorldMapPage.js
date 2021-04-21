@@ -30,12 +30,12 @@ export const WorldMapPage = ({
     useEffect(() => {
         axios.get("/api/world_risk")
             .then((response) => {
-                console.log(" heat_map >>> ", response.data);
+                console.log(" heat_map >>> ", typeof(response.data));
                 setRiskMap_present(response.data);
                 setRiskMap(response.data)
                 axios.get("/api/world_risk_past")
                     .then((response) => {
-                        console.log(" past_heat_map >>> ", response.data)
+                        console.log(" past_heat_map >>> ", typeof(response.data))
                         setRiskMap_past(response.data);
                         setLoading(false)
                         // axios.get("/api/future_heat_map")

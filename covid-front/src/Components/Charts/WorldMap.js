@@ -100,7 +100,7 @@ export const WorldMap = ({
 
     const onMouseLeave = () => {
         // console.log("mouse leaving", '<', tooltipContent, '>')
-        setTooltipContent('');
+        // setTooltipContent('');
     };
 
 
@@ -109,7 +109,7 @@ export const WorldMap = ({
         // console.log(" >>> ", geo, current)
         return () => {
             ReactTooltip.rebuild()
-            setTooltipContent(` >> ${geo.properties.NAME}: ${current.value}`);
+            // setTooltipContent(` >> ${geo.properties.NAME}: ${current.value}`);
         };
     }
 
@@ -124,6 +124,19 @@ export const WorldMap = ({
         if (value < bins[1]) return COLOR_BUCKET[1];
         if (value < bins[2]) return COLOR_BUCKET[2];
         return COLOR_BUCKET[3];
+    }
+
+    const checkValue = (value) => {
+        if(value == -1) return "N/A";
+        return value.toFixed(2)
+    }
+
+    const getFormattedTooltip = (geo, current) => {
+        let elem = `<strong>${geo.properties.NAME}</strong><br/>`
+        elem += `Risk: ${checkValue(current.value)}<br/>`
+        elem += `R<sub>t</sub>: ${checkValue(current.rt.value)} `
+        elem += `(${current.rt.date})`
+        return elem
     }
 
     // console.log(" >>>>>>>>>> inside worldmap >>>>>>>>>>>>> ", heatmap_date, heatmap)
@@ -154,7 +167,7 @@ export const WorldMap = ({
                 // projection="geoMercator"
                 width={800}
                 height={400}
-                style={{ width: "80%", height: "60%" }}
+                style={{ width: "70%", height: "60%" }}
             >
                 {/* <ComposableMap
                 projectionConfig={projection_config}
@@ -165,7 +178,7 @@ export const WorldMap = ({
             > */}
                 <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
                 <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
-                <Geographies geography={WORLD_TOPO} disableOptimization={true}>
+                <Geographies geography={WORLD_TOPO}>
                     {/* disableOptimization={true} */}
                     {({ geographies }) =>
                         geographies.map(geo => {
@@ -174,7 +187,8 @@ export const WorldMap = ({
                                 <Geography
                                     key={geo.rsmKey}
                                     // data-tip={geo.properties.NAME}
-                                    data-tip={current ? (`<strong>${geo.properties.NAME}</strong><br/>Risk: ${current.value.toFixed(2)}`) : geo.properties.NAME}
+                                    // data-tip={current ? (`<strong>${geo.properties.NAME}</strong><br/>Risk: ${checkValue(current.value)}<br/>R<sub>t</sub>: ${checkValue(current.rt.value)} (${current.rt.date})`) : geo.properties.NAME}
+                                    data-tip = {current ? getFormattedTooltip(geo, current) : geo.properties.NAME}
                                     geography={geo}
                                     style={geographyStyle}
                                     fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
