@@ -356,6 +356,10 @@ def getForcastTable():
 def getWorldRisk():
     return jsonify(WorldMapLoader.getWorldRisk())
 
+@app.route("/api/world_risk_past")
+def getWorldRisk__past():
+    return jsonify(WorldMapLoader.getWorldRisk__past())
+
 
 @app.route("/api/dist_plot_1/<district_name>")
 def getDistPlot1__For(district_name):

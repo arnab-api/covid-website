@@ -33,3 +33,30 @@ class WorldMapLoader:
             "heat_map": heat_map
         }
         return WorldMapLoader.world_risk
+
+    world_risk_past = []
+    @staticmethod
+    def getWorldRisk__past():
+        if(len(WorldMapLoader.world_risk_past) != 0):
+            print("World Risk PAST >> data already loaded and cached >> returning")
+            return WorldMapLoader.world_risk_past
+        
+        print("World Risk >> data not loaded >> loading data")
+        key_list = list(WorldMapLoader.world_df.keys())
+        latest_day = key_list[-8]
+        heat_map = []
+        for index, row in WorldMapLoader.world_df.iterrows():
+            value = row[latest_day]
+            if(math.isnan(value)):
+                value = -1
+            heat_map.append(
+                {
+                    'name': row['name'],
+                    'value': value
+                }
+            )
+        WorldMapLoader.world_risk_past = {
+            "date": latest_day,
+            "heat_map": heat_map
+        }
+        return WorldMapLoader.world_risk_past

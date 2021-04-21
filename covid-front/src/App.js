@@ -558,7 +558,7 @@ function App() {
                         <MapPage />
                     </Route>
                     <Route path='/world'>
-                        <WorldMapPage/>
+                        <WorldMapPage />
                     </Route>
                     <Route path='/about'>
                         <AboutPage></AboutPage>

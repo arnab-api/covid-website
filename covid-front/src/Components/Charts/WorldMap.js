@@ -85,10 +85,12 @@ const bins = [1, 9, 24]
 // };
 
 export const WorldMap = ({
+    heatmap,
+    heatmap_date
 }) => {
     const [tooltipContent, setTooltipContent] = useState("");
-    const [heatmap, setHeatMap] = useState([]);
-    const [heatmap_date, setHeatMap_date] = useState("")
+    // const [heatmap, setHeatMap] = useState([]);
+    // const [heatmap_date, setHeatMap_date] = useState("")
     const [projection_config, setProjectionConfig] = useState({
         scale: 40,
         center: [90.412518, 23.810332]
@@ -97,22 +99,13 @@ export const WorldMap = ({
     // console.log('<', tooltipContent, '>')
 
     const onMouseLeave = () => {
-        console.log("mouse leaving", '<', tooltipContent, '>')
+        // console.log("mouse leaving", '<', tooltipContent, '>')
         setTooltipContent('');
     };
 
 
     // var enter_count = 0
     const onMouseEnter = (geo, current = { value: 'NA' }) => {
-        // console.log(enter_count, "current >> ", current, geo.properties)
-        // enter_count += 1
-        // onMouseClick(geo, current)
-        // console.log(enter_count, ">>> ", current)
-        // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
-        // setTooltipContent(current.name)
-        // console.log("calling tip")
-        // tip.show("Something")
-        // setTooltipContent(`${geo.properties.NAME}`);
         return () => {
             ReactTooltip.rebuild()
             setTooltipContent(`${geo.properties.NAME}`);
@@ -132,20 +125,22 @@ export const WorldMap = ({
         return COLOR_BUCKET[3];
     }
 
-    useEffect(() => {
-        ReactTooltip.rebuild();
-        fetch('/api/world_risk').then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-        }).then(data => {
-            console.log(" >>> checking input", data)
-            setHeatMap(data.heat_map)
-            setHeatMap_date(data.date)
-            // console.log("heat map", heatmap)
-        })
+    console.log(" >>>>>>>>>> inside worldmap >>>>>>>>>>>>> ", heatmap_date, heatmap)
+
+    // useEffect(() => {
+    //     ReactTooltip.rebuild();
+    //     fetch('/api/world_risk').then(response => {
+    //         if (response.ok) {
+    //             return response.json()
+    //         }
+    //     }).then(data => {
+    //         console.log(" >>> checking input", data)
+    //         setHeatMap(data.heat_map)
+    //         setHeatMap_date(data.date)
+    //         // console.log("heat map", heatmap)
+    //     })
         
-    }, [])
+    // }, [])
 
     return (
         <div>
