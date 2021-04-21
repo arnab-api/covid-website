@@ -30,27 +30,28 @@ const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-map
 const geographyStyle = {
     default: {
         outline: 'none',
-        strokeWidth: .5,
+        strokeWidth: .005,
         stroke: '#000',
     },
     hover: {
         fill: '#80aaff',
         transition: 'all 250ms',
         outline: 'none',
-        strokeWidth: .5,
+        strokeWidth: .005,
         stroke: '#000',
     },
     pressed: {
         fill: '#4B0082',
         outline: 'none',
-        strokeWidth: .5,
+        strokeWidth: .005,
         stroke: '#000',
     }
 };
 
-const BD_TOPO_JSON = require('../Data/bd_topo.json');
+// const BD_TOPO_JSON = require('../Data/bd_topo.json');
 const BD_DIST_TOPO = require('../Data/bd_dist_topo.json');
-const BD_DIST = require('../Data/bd-districts.json');
+const WORLD_TOPO = require('../Data/world_110_topo.json');
+// const BD_DIST = require('../Data/bd-districts.json');
 
 const DEFAULT_COLOR = '#EEE';
 // Red Variants
@@ -65,28 +66,6 @@ const COLOR_RANGE = [
     '#9a311f',
     '#782618'
 ];
-
-// green to red
-// const COLOR_RANGE = [
-//     '#07fd69',
-//     '#54f24a',
-//     '#74e625',
-//     '#8ada00',
-//     '#9cce00',
-//     '#abc100',
-//     '#b9b300',
-//     '#c4a500',
-//     '#ce9600',
-//     '#d78600',
-//     '#de7600',
-//     '#e36300',
-//     '#e74f00',
-//     '#e93600',
-//     '#e90a0a'
-// ]
-// https://colordesigner.io/gradient-generator
-// https://www.w3schools.com/colors/colors_picker.asp
-
 
 const COLOR_BUCKET = [
     'rgb(84, 180, 95, .6)',   // trivial
@@ -107,10 +86,7 @@ const gradientData = {
 
 export const WorldMap = ({
 }) => {
-
-    // console.log(BD_DIST)
-
-    const [tooltipContent, setTooltipContent] = useState('');
+    const [tooltipContent, setTooltipContent] = useState("HI");
     const [heatmap, setHeatMap] = useState([]);
     const [heatmap_date, setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
@@ -119,8 +95,10 @@ export const WorldMap = ({
         center: [90.412518, 23.810332] 
     });
 
+    // console.log('<', tooltipContent, '>')
+
     const onMouseLeave = () => {
-        // console.log("mouse leaving")
+        console.log("mouse leaving", '<', tooltipContent, '>')
         setTooltipContent('');
     };
 
@@ -133,25 +111,15 @@ export const WorldMap = ({
         // console.log(enter_count, ">>> ", current)
         // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
         // setTooltipContent(current.name)
-        return () => {
-            setTooltipContent(`${current.name}`);
+        return () => {        
+            setTooltipContent(`${geo.properties.NAME}`);
+            ReactTooltip.rebuild();
         };
     }
 
     const handleClick = geo => () => {
-        setDistrictData(geo.properties)
         console.log(geo);
-        // setProjectionConfig({
-        //     scale: 70,
-        //     center: [91.8697894, 24.8897956] 
-        // })
     };
-
-
-
-    const colorScale = scaleQuantile()
-        .domain(heatmap.map(d => d.value))
-        .range(COLOR_RANGE);
 
     const my_colorScale = (value) => {
         // console.log("---> ", value)
@@ -173,7 +141,7 @@ export const WorldMap = ({
             setHeatMap_date(data.date)
             // console.log("heat map", heatmap)
         })
-
+        ReactTooltip.rebuild();
     }, [])
 
     return (
@@ -189,19 +157,16 @@ export const WorldMap = ({
                 height={400}
                 style={{ width: "80%", height: "60%" }}
             >
-
-                {/* {
-                    BD_DIST.districts.map( dist => (
-                        <Marker coordinates={[dist.long, dist.lat]} fill="#000">
-                            <text class="unselectable" y=".03" x=".01" fontSize={.06} font-weight={900} textAnchor="middle">
-                                {dist.name.substring(0,3).toUpperCase()}
-                            </text>
-                        </Marker>
-                    ))
-                } */}
+            {/* <ComposableMap
+                projectionConfig={projection_config}
+                projection="geoMercator"
+                width={5}
+                height={5}
+                data-tip=""
+            > */}
                 {/* <Sphere stroke="#E4E5E6" strokeWidth={0.5} /> */}
                 {/* <Graticule stroke="#E4E5E6" strokeWidth={0.5} /> */}
-                <Geographies geography={geoUrl}>
+                <Geographies geography={WORLD_TOPO}>
                     {({ geographies }) =>
                         geographies.map(geo => {
                             const current = heatmap.find(s => s.name === geo.properties.NAME);
@@ -210,9 +175,7 @@ export const WorldMap = ({
                                     key={geo.rsmKey}
                                     geography={geo}
                                     style={geographyStyle}
-                                    // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
-                                    fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
-                                    // fill={DEFAULT_COLOR}
+                                    // fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
                                     onMouseEnter={onMouseEnter(geo, current)}
                                     onMouseLeave={onMouseLeave}
                                     onClick={handleClick(geo)}
@@ -223,26 +186,12 @@ export const WorldMap = ({
                 </Geographies>
 
             </ComposableMap>
-            {/* <div><LinearGradient data={gradientData} /></div> */}
             <ul style={{ position: 'absolute', right: '5rem', top: '10rem', 'list-style': "none" }}>
                 <li><span style={{ 'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0] }}>__</span> <strong>Trivial</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1] }}>__</span> <strong>Community Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2] }}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3] }}>__</span> <strong>Tipping Point</strong></li>
             </ul>
-            {/* <div style={{'text-align': 'center'}}>
-                <strong> {heatmap_date} </strong>
-            </div> */}
-            {/* <Button 
-            variant="outlined"
-             startIcon={<CachedIcon/>} 
-             onClick={getHeatMapData} 
-             style={{position:'absolute',right:'1rem',top:'1rem'}}
-             >
-                Refresh
-            </Button> */}
-
-            {/* </div> */}
         </div>
     )
 }
