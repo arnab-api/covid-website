@@ -14,9 +14,9 @@ import {
     Sphere,
     Graticule
 } from "react-simple-maps"
-import Button from '@material-ui/core/Button';
-import CachedIcon from '@material-ui/icons/Cached';  // ******added******
-import { useBetween } from 'use-between';
+// import Button from '@material-ui/core/Button';
+// import CachedIcon from '@material-ui/icons/Cached';  // ******added******
+// import { useBetween } from 'use-between';
 import './MapChart.css'
 
 import LinearGradient from './LinearGradient.js';
@@ -77,22 +77,21 @@ const bins = [1, 9, 24]
 
 
 
-const gradientData = {
-    fromColor: COLOR_RANGE[0],
-    toColor: COLOR_RANGE[COLOR_RANGE.length - 1],
-    min: 0,
-    max: 100
-};
+// const gradientData = {
+//     fromColor: COLOR_RANGE[0],
+//     toColor: COLOR_RANGE[COLOR_RANGE.length - 1],
+//     min: 0,
+//     max: 100
+// };
 
 export const WorldMap = ({
 }) => {
-    const [tooltipContent, setTooltipContent] = useState("HI");
+    const [tooltipContent, setTooltipContent] = useState("");
     const [heatmap, setHeatMap] = useState([]);
     const [heatmap_date, setHeatMap_date] = useState("")
-    const [districtData, setDistrictData] = useContext(DistrictDataContext);
     const [projection_config, setProjectionConfig] = useState({
         scale: 40,
-        center: [90.412518, 23.810332] 
+        center: [90.412518, 23.810332]
     });
 
     // console.log('<', tooltipContent, '>')
@@ -111,9 +110,12 @@ export const WorldMap = ({
         // console.log(enter_count, ">>> ", current)
         // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
         // setTooltipContent(current.name)
-        return () => {        
+        // console.log("calling tip")
+        // tip.show("Something")
+        // setTooltipContent(`${geo.properties.NAME}`);
+        return () => {
+            ReactTooltip.rebuild()
             setTooltipContent(`${geo.properties.NAME}`);
-            ReactTooltip.rebuild();
         };
     }
 
@@ -131,6 +133,7 @@ export const WorldMap = ({
     }
 
     useEffect(() => {
+        ReactTooltip.rebuild();
         fetch('/api/world_risk').then(response => {
             if (response.ok) {
                 return response.json()
@@ -141,12 +144,12 @@ export const WorldMap = ({
             setHeatMap_date(data.date)
             // console.log("heat map", heatmap)
         })
-        ReactTooltip.rebuild();
+        
     }, [])
 
     return (
         <div>
-            <ReactTooltip>{tooltipContent}</ReactTooltip>
+            <ReactTooltip></ReactTooltip>
             <ComposableMap
                 projectionConfig={{
                     scale: 160,
@@ -155,7 +158,7 @@ export const WorldMap = ({
                 // projection="geoMercator"
                 width={800}
                 height={400}
-                style={{ width: "80%", height: "60%" }}
+                style={{ width: "60%", height: "40%" }}
             >
             {/* <ComposableMap
                 projectionConfig={projection_config}
@@ -164,15 +167,17 @@ export const WorldMap = ({
                 height={5}
                 data-tip=""
             > */}
-                {/* <Sphere stroke="#E4E5E6" strokeWidth={0.5} /> */}
-                {/* <Graticule stroke="#E4E5E6" strokeWidth={0.5} /> */}
-                <Geographies geography={WORLD_TOPO}>
+                <Sphere stroke="#E4E5E6" strokeWidth={0.5} />
+                <Graticule stroke="#E4E5E6" strokeWidth={0.5} />
+                <Geographies geography={WORLD_TOPO} disableOptimization={true}>
+                    {/* disableOptimization={true} */}
                     {({ geographies }) =>
                         geographies.map(geo => {
                             const current = heatmap.find(s => s.name === geo.properties.NAME);
                             return (
                                 <Geography
                                     key={geo.rsmKey}
+                                    data-tip={geo.properties.NAME}
                                     geography={geo}
                                     style={geographyStyle}
                                     fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
@@ -192,6 +197,9 @@ export const WorldMap = ({
                 <li><span style={{ 'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2] }}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3] }}>__</span> <strong>Tipping Point</strong></li>
             </ul>
+            <div style={{ 'text-align': 'center' }}>
+                <strong> {heatmap_date} </strong>
+            </div>
         </div>
     )
 }

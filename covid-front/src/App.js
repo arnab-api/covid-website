@@ -22,7 +22,7 @@ import { WorldMap } from './Components/Charts/WorldMap'
 
 // style imports
 import './App.css';
-import { Flex } from '@chakra-ui/core';
+import { Flex, SimpleGrid } from '@chakra-ui/core';
 
 export const DistrictDataContext = createContext();
 // const TITLE = 'COVID-19 in Bangladesh'
@@ -558,11 +558,7 @@ function App() {
                         <MapPage />
                     </Route>
                     <Route path='/world'>
-                        <div style={{
-                            background: '#fff'
-                        }}>
-                            <WorldMap />
-                        </div>
+                        <WorldMapPage/>
                     </Route>
                     <Route path='/about'>
                         <AboutPage></AboutPage>
