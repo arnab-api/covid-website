@@ -470,7 +470,7 @@ class DistrictDataLoader:
     @staticmethod
     def get_rt_value__For(district):
         DistrictDataLoader.load_rt_dictionary()
-        return DistrictDataLoader.rt_dict[district]
+        return DistrictDataLoader.rt_dict[district][0::7]
 
     @staticmethod
     def get_rt_before_15():
@@ -525,7 +525,7 @@ class DistrictDataLoader:
     @staticmethod
     def get_dt_value__For(district):
         DistrictDataLoader.load_dt_dictionary()
-        return DistrictDataLoader.dt_dict[district]
+        return DistrictDataLoader.dt_dict[district][0::7]
     
     @staticmethod
     def get_latest_dt():

@@ -565,7 +565,7 @@ function App() {
                     </Route>
                 </Switch>
             </Router>
-            {/* <Footer/> */}
+            <Footer/>
         </DistrictDataContext.Provider>
     );
 }

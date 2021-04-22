@@ -73,6 +73,12 @@ const COLOR_BUCKET = [
     'rgb(248, 140, 81, .6)',   // Accelerated spread
     'rgb(192, 26, 39, .6)',   // Tipping point
 ]
+const COLOR_BUCKET_tooltip = [
+    'rgb(84, 180, 95, 1)',   // trivial
+    'rgb(236, 212, 36, 1)',
+    'rgb(248, 140, 81, 1)',   // Accelerated spread
+    'rgb(192, 26, 39, 1)',   // Tipping point
+]
 const bins = [1, 9, 24]
 
 
@@ -117,13 +123,15 @@ export const WorldMap = ({
         console.log(geo);
     };
 
-    const my_colorScale = (value) => {
+    const my_colorScale = (value, for_tooltip = false) => {
         // console.log("---> ", value)
-        if (value == -1) return DEFAULT_COLOR;
-        if (value < bins[0]) return COLOR_BUCKET[0];
-        if (value < bins[1]) return COLOR_BUCKET[1];
-        if (value < bins[2]) return COLOR_BUCKET[2];
-        return COLOR_BUCKET[3];
+        let bucket = COLOR_BUCKET;
+        if(for_tooltip == true) bucket = COLOR_BUCKET_tooltip
+        if(value == -1) return DEFAULT_COLOR;
+        if(value < bins[0]) return bucket[0];
+        if(value < bins[1]) return bucket[1];
+        if(value < bins[2]) return bucket[2];
+        return bucket[3];
     }
 
     const checkValue = (value) => {
@@ -132,11 +140,14 @@ export const WorldMap = ({
     }
 
     const getFormattedTooltip = (geo, current) => {
-        let elem = `<strong>${geo.properties.NAME}</strong><br/>`
+        let color_box = `<svg width="12" height="12">`
+        color_box += `<rect width="20" height="20" style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"/>`
+        let elem = `<strong style="color:white;">&nbsp;${geo.properties.NAME}</strong><br/>`
         elem += `Risk: ${checkValue(current.value)}<br/>`
-        elem += `R<sub>t</sub>: ${checkValue(current.rt.value)} `
-        elem += `(${current.rt.date})`
-        return elem
+        let rt = checkValue(current.rt.value)
+        elem += `R<sub>t</sub>: ${rt} `
+        if(rt !== 'N/A') elem += `(${current.rt.date})`
+        return color_box + elem
     }
 
     // console.log(" >>>>>>>>>> inside worldmap >>>>>>>>>>>>> ", heatmap_date, heatmap)
@@ -167,7 +178,7 @@ export const WorldMap = ({
                 // projection="geoMercator"
                 width={800}
                 height={400}
-                style={{ width: "70%", height: "60%" }}
+                style={{ width: "80%", height: "60%" }}
             >
                 {/* <ComposableMap
                 projectionConfig={projection_config}

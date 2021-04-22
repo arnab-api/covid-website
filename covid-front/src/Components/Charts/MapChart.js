@@ -107,6 +107,12 @@ const COLOR_BUCKET = [
     'rgb(248, 140, 81, .6)',   // Accelerated spread
     'rgb(192, 26, 39, .6)',   // Tipping point
 ]
+const COLOR_BUCKET_tooltip = [
+    'rgb(84, 180, 95, 1)',   // trivial
+    'rgb(236, 212, 36, 1)',
+    'rgb(248, 140, 81, 1)',   // Accelerated spread
+    'rgb(192, 26, 39, 1)',   // Tipping point
+]
 const bins = [1, 9, 24]
 
 
@@ -153,6 +159,16 @@ export const MapChart = ( {
         setTooltipContent('');
     };
 
+    const getFormattedTooltip = (geo, current) => {
+        let color_box = `<svg width="12" height="12">`
+        color_box += `<rect width="20" height="20" style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"/>`
+        let elem = `<strong style="color:white;">&nbsp;${current.dist}</strong><br/>`
+        elem += `Risk: ${current.value}<br/>`
+        // let rt = checkValue(current.rt.value)
+        // elem += `R<sub>t</sub>: ${rt}<br/>`
+        elem += `Confirmed cases: ${current.confirmed}`
+        return color_box + elem
+    }
 
     // var enter_count = 0
     const onMouseEnter = (geo, current = { value: 'NA' }) => {
@@ -162,7 +178,8 @@ export const MapChart = ( {
         // console.log(enter_count, current)
         // console.log("====> ", colorScale(current.value), my_colorScale(current.value))
         return () => {
-            setTooltipContent(`<strong>${current.dist}</strong><br/> Confirmed cases: ${current.confirmed}<br/>Risk: ${current.value}`);
+            // setTooltipContent(`<strong>${current.dist}</strong><br/> Confirmed cases: ${current.confirmed}<br/>Risk: ${current.value}`);
+            setTooltipContent(getFormattedTooltip(geo, current))
         };
     }
 
@@ -194,12 +211,14 @@ export const MapChart = ( {
         .domain(heatmap.map(d => d.value))
         .range(COLOR_RANGE);
 
-    const my_colorScale = (value) => {
+    const my_colorScale = (value, for_tooltip = false) => {
         // console.log("---> ", value)
-        if(value < bins[0]) return COLOR_BUCKET[0];
-        if(value < bins[1]) return COLOR_BUCKET[1];
-        if(value < bins[2]) return COLOR_BUCKET[2];
-        return COLOR_BUCKET[3];
+        let bucket = COLOR_BUCKET;
+        if(for_tooltip == true) bucket = COLOR_BUCKET_tooltip
+        if(value < bins[0]) return bucket[0];
+        if(value < bins[1]) return bucket[1];
+        if(value < bins[2]) return bucket[2];
+        return bucket[3];
     }
 
     useEffect(() => {

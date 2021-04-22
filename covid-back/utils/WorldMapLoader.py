@@ -1,7 +1,8 @@
 import pandas as pd
 import datetime
 import math
-import math
+from operator import itemgetter
+
 
 class WorldMapLoader:
 
@@ -45,7 +46,8 @@ class WorldMapLoader:
             )
             # print(row['name']," >>> OK", rt, rt_date)
         print("heat map loaded")
-        return heat_map
+        return sorted(heat_map, key=itemgetter("value"), reverse=True)
+        # return heat_map
 
     @staticmethod
     def getWorldRisk__for(day):
