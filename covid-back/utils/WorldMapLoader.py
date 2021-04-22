@@ -23,27 +23,48 @@ class WorldMapLoader:
             # print(" ---------------_> ", row['reproduction_rate'], row['date'])
             return row['reproduction_rate'], row['date']
         return -1, day
+    
+    @staticmethod
+    def loadCountryRtFor(day):
+        owid_day = WorldMapLoader.owid[WorldMapLoader.owid['date'] == day][['date','location', 'reproduction_rate']]
+        country_rt = {}
+        for index, row in owid_day.iterrows():
+            country_rt[row['location']] = {
+                'value': row['reproduction_rate'],
+                'date': day
+            }
+        return country_rt
 
     @staticmethod
     def get_heat_map(day):
         heat_map = []
+
         print("loading world heat map >>> ", day)
+        country_rt = WorldMapLoader.loadCountryRtFor(day)
         for index, row in WorldMapLoader.world_df.iterrows():
-            rt, rt_date = WorldMapLoader.getRtValue(row['name'], day)
+            # rt, rt_date = WorldMapLoader.getRtValue(row['name'], day)
             # print(row['name']," >>>>>>>>>>>> OK", rt, rt_date)
+            country = row['name']
             value = row[day]
             if(math.isnan(value)):
                 value = -1
-            heat_map.append(
-                {
-                    'name': row['name'],
-                    'value': value,
-                    'rt': {
-                        'value': rt,
-                        'date': rt_date 
-                    }
+            
+            obj = {
+                    'name': country,
+                    'value': value
                 }
-            )
+            rt = {
+                    'value': -1, #rt,
+                    'date': "tobeupdated" #rt_date 
+                }
+            if(country in country_rt):
+                rt_val = country_rt[country]['value']
+                if(math.isnan(rt_val) == False):
+                    rt = country_rt[country]
+            
+            obj['rt'] = rt
+
+            heat_map.append(obj)
             # print(row['name']," >>> OK", rt, rt_date)
         print("heat map loaded")
         return sorted(heat_map, key=itemgetter("value"), reverse=True)
@@ -84,3 +105,24 @@ class WorldMapLoader:
         past_day = key_list[-8]
         WorldMapLoader.world_risk_past = WorldMapLoader.getWorldRisk__for(past_day)
         return WorldMapLoader.world_risk_past
+
+    risk_map_arr = []
+    @staticmethod
+    def getWorldRiskMap__Array(limit = 100):
+        if(len(WorldMapLoader.risk_map_arr) != 0):
+            print("World Risk << ARRAY >> data already loaded and cached >> returning")
+            return WorldMapLoader.risk_map_arr
+        
+        risk_map_arr  =[]
+        key_list = list(WorldMapLoader.world_df.keys())
+        limit = 100
+        counter = 0
+        while(counter < limit):
+            day = key_list[-(counter+1)]
+            risk_map = WorldMapLoader.getWorldRisk__for(day)
+            risk_map_arr.append(risk_map)
+
+            counter += 1
+
+        WorldMapLoader.risk_map_arr = risk_map_arr[::-1]
+        return WorldMapLoader.risk_map_arr

@@ -17,7 +17,9 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography'
+import Slider from '@material-ui/core/Slider';
 
+// tab styles
 const useStyles = makeStyles({
     root: {
       flexGrow: 1,
@@ -31,6 +33,11 @@ const useStyles = makeStyles({
     content: {
         height: 150
     },
+    slider_root: {
+        width: '80%',
+        margin: 10,
+
+    }
   });
 
 const COLOR_BUCKET = [
@@ -54,49 +61,33 @@ export const WorldMapPage = ({
 
     const [riskmap, setRiskMap] = useState({})
     const [riskmap_present, setRiskMap_present] = useState({})
-    const [riskmap_past, setRiskMap_past] = useState({})
+    const [riskmap_arr, setRiskMap_Array] = useState([])
     // const [riskmap_future, setRiskMap_future] = useState({})
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get("/api/world_risk")
+        axios.get("/api/world_risk_arr")
             .then((response) => {
-                console.log(" heat_map >>> ", typeof(response.data));
-                setRiskMap_present(response.data);
-                setRiskMap(response.data)
-                axios.get("/api/world_risk_past")
-                    .then((response) => {
-                        console.log(" past_heat_map >>> ", typeof(response.data))
-                        setRiskMap_past(response.data);
-                        setLoading(false)
-                        // axios.get("/api/future_heat_map")
-                        //     .then((response) => {
-                        //         console.log(" future_heat_map >>> ", response.data)
-                        //         setRiskMap_future(response.data)
-                        //         setLoading(false)
-                        //     }).catch((error) => {
-                        //         setRiskMap_future({})
-                        //         setLoading(false)
-                        //     });
-                    }).catch((error) => {
-                        setRiskMap_past({})
-                        setLoading(false)
-                    });
+                console.log(" heat_map array >>> ", response.data, response.data.length);
+                // setRiskMap_present(response.data);
+                setRiskMap_Array(response.data)
+                setRiskMap(response.data[0])
+                setLoading(false)
             }).catch((error) => {
                 setRiskMap_present({})
                 setLoading(false)
             });
     }, []);
 
-    const classes = useStyles();
+    const classes = useStyles(); 
     const [value, setValue] = React.useState(0);
   
-    const handleChange = (event, newValue) => {
-        console.log(" >>>> ", event, newValue)
-        if(newValue == 1) setRiskMap(riskmap_past)
-        else setRiskMap(riskmap_present)
-        setValue(newValue);
-    };
+    // const handleChange = (event, newValue) => {
+    //     console.log(" >>>> ", event, newValue)
+    //     if(newValue == 1) setRiskMap(riskmap_past)
+    //     else setRiskMap(riskmap_present)
+    //     setValue(newValue);
+    // };
 
     const my_colorScale = (value, for_tooltip = false) => {
         // console.log("---> ", value)
@@ -114,6 +105,20 @@ export const WorldMapPage = ({
         return value.toFixed(2)
     }
 
+    const [seekValue, setSeekValue] = useState("seek value!!!")
+    const sliderText = (value) => {
+        return `slider value: ${value}`
+    }
+
+    const sliderToolTipValue = (value) => {
+        return `slider value: ${value}`
+    }
+
+    const handleSliderValueChage = (event, value) => {
+        console.log("slider value >>> ", event, value)
+        setRiskMap(riskmap_arr[value])
+    }
+
     return (
         <ThemeProvider>
             <section>
@@ -123,7 +128,7 @@ export const WorldMapPage = ({
                         <Spinner size="xl" color="green.300" />
                     </Flex>) : (
                     <div>
-                        <Paper className={classes.root}>
+                        {/* <Paper className={classes.root}>
                             <Tabs
                                 value={value}
                                 onChange={handleChange}
@@ -134,10 +139,31 @@ export const WorldMapPage = ({
                                 <Tab label= {<strong>{"Present (" + riskmap_present.date + ")"} </strong>} />
                                 <Tab label= {<strong>{"Past (" + riskmap_past.date + ")"}</strong>} />
                             </Tabs>
-                        </Paper>
+                        </Paper> */}
                         <div style={{background: '#fff'}}>
                             <WorldMap heatmap={riskmap.heat_map} heatmap_date={riskmap.date}/>
+                            <br/>
+                            <Flex wrap="wrap" width="100%" justify="center" align="center">
+                                <div className={classes.slider_root}>
+                                    <Slider 
+                                        defaultValue={riskmap_arr.length-1}
+                                        getAriaValueText={sliderText}
+                                        aria-labelledby="discrete-slider"
+                                        valueLabelDisplay="on"
+                                        valueLabelFormat={value => ``}
+                                        step={1}
+                                        marks
+                                        min={0}
+                                        max={riskmap_arr.length-1}
+                                        onChange={handleSliderValueChage}
+                                    />
+                                </div>
+                            </Flex>
+                            <div style={{ 'text-align': 'center' }}>
+                                <strong> {riskmap.date} </strong>
+                            </div>
                         </div>
+
                         <br/>
                         <br/>
                         <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">

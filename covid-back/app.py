@@ -376,6 +376,10 @@ def getWorldRisk():
 def getWorldRisk__past():
     return jsonify(WorldMapLoader.getWorldRisk__past())
 
+@app.route("/api/world_risk_arr")
+def getWorldRisk__array():
+    return jsonify(WorldMapLoader.getWorldRiskMap__Array())
+
 
 @app.route("/api/dist_plot_1/<district_name>")
 def getDistPlot1__For(district_name):

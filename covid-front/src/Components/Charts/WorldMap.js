@@ -178,7 +178,7 @@ export const WorldMap = ({
                 // projection="geoMercator"
                 width={800}
                 height={400}
-                style={{ width: "80%", height: "60%" }}
+                style={{ width: "70%", height: "60%" }}
             >
                 {/* <ComposableMap
                 projectionConfig={projection_config}
@@ -219,9 +219,9 @@ export const WorldMap = ({
                 <li><span style={{ 'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2] }}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3] }}>__</span> <strong>Tipping Point</strong></li>
             </ul>
-            <div style={{ 'text-align': 'center' }}>
+            {/* <div style={{ 'text-align': 'center' }}>
                 <strong> {heatmap_date} </strong>
-            </div>
+            </div> */}
         </div>
     )
 }
