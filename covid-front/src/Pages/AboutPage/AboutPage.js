@@ -31,6 +31,7 @@ const useStyles = makeStyles({
   def_root: {
     margin: 2,
     width: '40%',
+    height: 200,
     display: 'flex'
   },
   pub_root: {
@@ -40,6 +41,8 @@ const useStyles = makeStyles({
   },
   media: {
     height: 430,
+    width: '100%',
+    objectFit: 'cover'
     // height: 350,
     // paddingTop: '56.25%', // 16:9,
     // marginTop:'30'

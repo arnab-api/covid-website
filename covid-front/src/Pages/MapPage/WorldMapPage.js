@@ -6,7 +6,7 @@ import { MapChart_comparison } from '../../Components/Charts/MapChart_comparison
 import axios from "axios";
 import { WorldMap } from '../../Components/Charts/WorldMap';
 
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -18,6 +18,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 // tab styles
 const useStyles = makeStyles({
@@ -55,6 +56,46 @@ const COLOR_BUCKET_tooltip = [
 const bins = [1, 9, 24]
 const DEFAULT_COLOR = '#EEE';
 
+const PrettoSlider = withStyles({
+    root: {
+      color: '#006699',
+      height: 8,
+      width: '80%'
+    },
+    thumb: {
+      height: 24,
+      width: 24,
+      backgroundColor: '#fff',
+      border: '2px solid currentColor',
+      marginTop: -8,
+      marginLeft: -12,
+      '&:focus, &:hover, &$active': {
+        boxShadow: 'inherit',
+      },
+    },
+    active: {},
+    valueLabel: {
+      left: 'calc(-50% + 4px)',
+    },
+    track: {
+      height: 8,
+      borderRadius: 4,
+    },
+    rail: {
+      height: 8,
+      borderRadius: 4,
+    },
+    mark: {
+      backgroundColor: '#bfbfbf',
+      height: 16,
+      width: 1,
+      marginTop: -3,
+    },
+    markActive: {
+      opacity: 1,
+      backgroundColor: 'currentColor',
+    },
+  })(Slider);
 
 export const WorldMapPage = ({
 }) => {
@@ -71,7 +112,7 @@ export const WorldMapPage = ({
                 console.log(" heat_map array >>> ", response.data, response.data.length);
                 // setRiskMap_present(response.data);
                 setRiskMap_Array(response.data)
-                setRiskMap(response.data[0])
+                setRiskMap(response.data[response.data.length-1])
                 setLoading(false)
             }).catch((error) => {
                 setRiskMap_present({})
@@ -144,7 +185,7 @@ export const WorldMapPage = ({
                             <WorldMap heatmap={riskmap.heat_map} heatmap_date={riskmap.date}/>
                             <br/>
                             <Flex wrap="wrap" width="100%" justify="center" align="center">
-                                <div className={classes.slider_root}>
+                                {/* <div className={classes.slider_root}>
                                     <Slider 
                                         defaultValue={riskmap_arr.length-1}
                                         getAriaValueText={sliderText}
@@ -157,7 +198,20 @@ export const WorldMapPage = ({
                                         max={riskmap_arr.length-1}
                                         onChange={handleSliderValueChage}
                                     />
-                                </div>
+                                </div> */}
+                                <PrettoSlider 
+                                    valueLabelDisplay="on" 
+                                    aria-label="pretto slider" 
+                                    aria-labelledby="discrete-slider"
+                                    defaultValue={riskmap_arr.length-1}
+                                    getAriaValueText={sliderText}
+                                    valueLabelFormat={value => ``}
+                                    step={1}
+                                    marks
+                                    min={0}
+                                    max={riskmap_arr.length-1}
+                                    onChange={handleSliderValueChage}
+                                />
                             </Flex>
                             <div style={{ 'text-align': 'center' }}>
                                 <strong> {riskmap.date} </strong>
