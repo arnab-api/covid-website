@@ -11,16 +11,22 @@ import TableRow from '@material-ui/core/TableRow';
 
 const columns = [
   { 
+    id: 'rank', 
+    label: '#', 
+    // minWidth: 170,
+    // maxWidth: 170, 
+  },
+  { 
     id: 'name', 
     label: 'Name', 
     minWidth: 170,
-    maxWidth: 170, 
+    // maxWidth: 170, 
   },
   {
     id: 'risk',
     label: 'Risk Value',
-    minWidth: 170,
-    width: 170,
+    // minWidth: 170,
+    // width: 170,
     align: 'right',
     format: (value) => value.toFixed(2),
   },

@@ -137,6 +137,7 @@ export const WorldMapPage = ({
         let row_data = []
         for(let i = 0; i < cur_risk_map.heat_map.length; i++){
             row_data.push({
+                "rank": (i+1),
                 "name": cur_risk_map.heat_map[i].name,
                 "risk": cur_risk_map.heat_map[i].value
             })
