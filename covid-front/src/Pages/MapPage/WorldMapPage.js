@@ -99,7 +99,10 @@ const PrettoSlider = withStyles({
   })(Slider);
 
 export const WorldMapPage = ({
+    setPageName
 }) => {
+
+    setPageName("COVID-19 crisis");
 
     const [riskmap, setRiskMap] = useState({})
     const [riskmap_present, setRiskMap_present] = useState({})
@@ -263,7 +266,7 @@ export const WorldMapPage = ({
 
                         <br/>
                         <br/>
-                        <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
+                        {/* <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
                             <h2>
                                 Countries sorted in the descending ordrer of risk value (calculated for the data avalible on {riskmap.date})
                             </h2>
@@ -288,7 +291,7 @@ export const WorldMapPage = ({
                                         <Typography gutterBottom variant="body2" component="h2">
                                             Risk Value: {checkValue(country.value)} <br/>
                                             R<sub>t</sub>: {checkValue(country.rt.value)}
-                                            {/* ({country.rt.date}) */}
+                                            
                                             {(checkValue(country.rt.value) !== 'N/A') ? 
                                                 " (" + country.rt.date + ")"    
                                                 : ""
@@ -298,7 +301,7 @@ export const WorldMapPage = ({
                                 </Card>
                                 ))
                             }
-                        </Flex>
+                        </Flex> */}
                     </div>
                 )
             }

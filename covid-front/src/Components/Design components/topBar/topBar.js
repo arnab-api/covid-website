@@ -6,6 +6,7 @@ import SearchBar from '../searchBar/searchBar';
 import styles from './topBar.module.css';
 
 const TopBar = ({
+        page_name,
         dist_2_id, 
         area, setArea,
         updateCharts, updateCharts__For
@@ -17,7 +18,7 @@ const TopBar = ({
 
     return (
         <div className={styles.topBar}>
-            <Link to='/'><div className={styles.brand}>Covid 19 in Bangladesh</div></Link>
+            <Link to='/'><div className={styles.brand}>{page_name}</div></Link>
             <div className={styles.grow} />
             {
                 location.pathname == '/'? 
@@ -33,7 +34,7 @@ const TopBar = ({
                 {/* <li className={styles.catItem}><Link to='/'>Home</Link></li> */}
                 <li className={styles.catItem}><Link to='/rt'>R<sub>t</sub></Link></li>
                 <li className={styles.catItem}><Link to='/dt'>D<sub>t</sub></Link></li>
-                <li className={styles.catItem}><Link to='/maps'>Maps</Link></li>
+                <li className={styles.catItem}><Link to='/maps'>BD-Maps</Link></li>
                 <li className={styles.catItem}><Link to='/world'>World</Link></li>
                 <li className={styles.catItem}><Link to='/about'>MISC</Link></li>
             </ul>

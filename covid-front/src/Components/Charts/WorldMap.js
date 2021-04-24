@@ -22,6 +22,7 @@ import { WorldPageTable } from '../Tables/WorldPageTable'
 
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
+import { Flex } from "@chakra-ui/core"
 
 
 
@@ -221,7 +222,8 @@ export const WorldMap = ({
                 <li><span style={{ 'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2] }}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3] }}>__</span> <strong>Tipping Point</strong></li>
             </ul> */}
-            <div>
+            {/* <div> */}
+            <Flex wrap="wrap" width="100%" justify="center" align="center">
                 <svg width="50" height="12">
                 <rect width="50" height="12" 
                     // style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"
@@ -231,7 +233,7 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>Trivial</strong>
+                </svg> <strong>&nbsp;Trivial</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
@@ -243,7 +245,7 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>Community Spread</strong>
+                </svg> <strong>&nbsp;Community Spread</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
@@ -255,7 +257,7 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>Accelerated Spread</strong>
+                </svg> <strong>&nbsp;Accelerated Spread</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
@@ -267,8 +269,9 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>Tipping Point</strong>
-            </div>
+                </svg> <strong>&nbsp;Tipping Point</strong>
+            </Flex>
+            {/* </div> */}
             {/* <div style={{ 'text-align': 'center' }}>
                 <strong> {heatmap_date} </strong>
             </div> */}

@@ -7,7 +7,10 @@ import { TableMap } from '../../Components/Design components/Table/TableMap'
 import axios from "axios";
 
 export const MapPage = ({
+    setPageName
 }) => {
+
+    setPageName("COVID-19 in Bangladesh")
 
     const [riskmap_present, setRiskMap_present] = useState({})
     const [riskmap_past, setRiskMap_past] = useState({})

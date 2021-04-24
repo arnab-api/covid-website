@@ -33,8 +33,12 @@ export const HomePage = ({
     updateCaseEstimationData,
     updateRareImpactData,
     updateCharts, updateCharts__For,
-    updateDist_cum_rt_Data
+    updateDist_cum_rt_Data,
+    setPageName
 }) => {
+
+    setPageName("COVID-19 in Bangladesh")
+
     const [districtData, setDistrictData] = useContext(DistrictDataContext)
 
     const checkArea = () => {

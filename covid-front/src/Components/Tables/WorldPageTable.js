@@ -32,7 +32,14 @@ const columns = [
   },
 ];
 
-
+const COLOR_BUCKET_tooltip = [
+  'rgb(84, 180, 95, 1)',   // trivial
+  'rgb(236, 212, 36, 1)',
+  'rgb(248, 140, 81, 1)',   // Accelerated spread
+  'rgb(192, 26, 39, 1)',   // Tipping point
+]
+const bins = [1, 9, 24]
+const DEFAULT_COLOR = '#EEE';
 
 const useStyles = makeStyles({
   root: {
@@ -58,6 +65,21 @@ export const WorldPageTable = ({rows}) => {
     setPage(0);
   };
 
+  const my_colorScale = (value) => {
+      // console.log("---> ", value)
+      let bucket = COLOR_BUCKET_tooltip
+      if(value == -1) return DEFAULT_COLOR;
+      if(value < bins[0]) return bucket[0];
+      if(value < bins[1]) return bucket[1];
+      if(value < bins[2]) return bucket[2];
+      return bucket[3];
+  }
+
+  const checkValue = (value) => {
+    if(value == -1) return "N/A";
+    return value.toFixed(2)
+  }
+
   return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
@@ -80,12 +102,34 @@ export const WorldPageTable = ({rows}) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                      </TableCell>
-                    );
+                    let value = row[column.id];
+                    if(column.id == 'risk'){
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                            {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
+                            {checkValue(value)}
+                        </TableCell>
+                      );
+                    }
+                    else if(column.id == 'name'){
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          <svg width="15" height="15">
+                              <rect width="20" height="20" style={{
+                                  fill: my_colorScale(row['risk']),
+                                  strokeWidth:1,
+                                  stroke: 'rgb(0,0,0)'
+                              }}/>
+                          </svg>
+                          <strong>&nbsp;&nbsp;{value}</strong>
+                        </TableCell>
+                      )
+                    }
+                    else{
+                      return (
+                        <TableCell key={column.id} align={column.align}>{value}</TableCell>
+                      )
+                    }
                   })}
                 </TableRow>
               );

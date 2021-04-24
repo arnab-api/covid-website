@@ -5,7 +5,10 @@ import { DTChart } from '../../DT_components/DTChart'
 
 import axios from "axios";
 
-export const DT_info = () => {
+export const DT_info = ({setPageName}) => {
+
+  setPageName("COVID-19 in Bangladesh")
+
   const [data, setData] = useState({});
   const [dataPast, setDataPast] = useState(null);
   const [dateNow, setDateNow] = useState("")

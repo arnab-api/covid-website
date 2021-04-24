@@ -49,6 +49,7 @@ function App() {
 
     // const [districtData, setDistrictData] = useContext(DistrictDataContext)
     const [area, setArea] = useState("")
+    const [page_name, setPageName] = useState("Covid-19 in Bangladesh")
 
 
 
@@ -518,6 +519,8 @@ function App() {
                     area={area}
                     setArea={setArea}
                     updateCharts={updateCharts} updateCharts__For={updateCharts__For}
+                    page_name={page_name}
+                    setPageName={setPageName}
                 />
                 <Switch>
                     <Route exact path='/'>
@@ -543,25 +546,26 @@ function App() {
                             updateRareImpactData={updateRareImpactData}
                             updateCharts={updateCharts} updateCharts__For={updateCharts__For}
                         //   updateDist_cum_rt_Data = {updateDist_cum_rt_Data}
+                            setPageName={setPageName}
                         />
                     </Route>
-                    <Route path='/home'>
-                        <HomePage />
-                    </Route>
+                    {/* <Route path='/home'>
+                        <HomePage setPageName={setPageName}/>
+                    </Route> */}
                     <Route path='/rt'>
-                        <Rt_info />
+                        <Rt_info setPageName={setPageName}/>
                     </Route>
                     <Route path='/dt'>
-                        <DT_info />
+                        <DT_info setPageName={setPageName}/>
                     </Route>
                     <Route path='/maps'>
-                        <MapPage />
+                        <MapPage setPageName={setPageName}/>
                     </Route>
                     <Route path='/world'>
-                        <WorldMapPage />
+                        <WorldMapPage setPageName={setPageName}/>
                     </Route>
                     <Route path='/about'>
-                        <AboutPage></AboutPage>
+                        <AboutPage setPageName={setPageName}/>
                     </Route>
                 </Switch>
             </Router>

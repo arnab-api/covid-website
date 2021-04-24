@@ -18,6 +18,7 @@ import dhrubo_sir_img from "./images/dhrubo_sir.jpg"
 import api_img from "./images/api.jpg"
 
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import SemanticCard from "./SemanticCard"
 
 
 
@@ -25,8 +26,10 @@ const useStyles = makeStyles({
   root: {
     margin: 2,
     width: '24%',
-    height: 530,
-    display: 'flex'
+    height: 600,
+    display: 'flex',
+    alignItems: "center",
+    justifyContent: "center"
   },
   def_root: {
     margin: 2,
@@ -40,9 +43,9 @@ const useStyles = makeStyles({
     display: 'flex'
   },
   media: {
-    height: 430,
+    height: 500,
     width: '100%',
-    objectFit: 'cover'
+    // objectFit: 'cover'
     // height: 350,
     // paddingTop: '56.25%', // 16:9,
     // marginTop:'30'
@@ -55,7 +58,10 @@ const useStyles = makeStyles({
   }
 });
 
-const AboutPage = () => {
+const AboutPage = ({setPageName}) => {
+
+  setPageName("COVID-19 in Bangladesh")
+
   const classes = useStyles();
 
   const about_us_info = [
@@ -133,7 +139,7 @@ const AboutPage = () => {
     //   </div>
     // </div>
     <>
-    <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
+    {/* <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
       <h2>
           Some definitions
       </h2>
@@ -156,9 +162,9 @@ const AboutPage = () => {
       }
     </Flex>
     <br/>
-    <br/>
+    <br/> */}
 
-    <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
+    {/* <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
       <h2>
           Publication list
       </h2>
@@ -178,7 +184,7 @@ const AboutPage = () => {
       }
     </Flex>
     <br/>
-    <br/>
+    <br/> */}
 
     <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
       <h2>
@@ -194,6 +200,7 @@ const AboutPage = () => {
                 <CardMedia
                   className={classes.media}
                   image={person.image_path}
+                  // src={'covid-front/src/Pages/AboutPage/images/api.jpg'}
                   title="Contemplative Reptile"
                 />
                 <CardContent className={classes.content}>
@@ -222,6 +229,16 @@ const AboutPage = () => {
           ))
         }
     </Flex>
+    <br/>
+    <br/>
+    {/* <Flex wrap="wrap" width="100%" height="100%" justify="center" align="center">
+        <SemanticCard />
+        <SemanticCard />
+        <SemanticCard />
+        <SemanticCard />
+    </Flex> */}
+    <br/>
+    <br/>
     </>
   );
 };

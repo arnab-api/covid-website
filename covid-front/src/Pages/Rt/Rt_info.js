@@ -5,7 +5,10 @@ import { RtChart } from '../../Rt_components/RtChart'
 
 import axios from "axios";
 
-export const Rt_info = () => {
+export const Rt_info = ({setPageName}) => {
+
+  setPageName("COVID-19 in Bangladesh")
+
   const [data, setData] = useState({});
   const [dataPast, setDataPast] = useState(null);
   const [dateNow, setDateNow] = useState("")
