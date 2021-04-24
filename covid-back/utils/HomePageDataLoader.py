@@ -7,7 +7,7 @@ import datetime
 class HomePageDataLoader:
 
     DATA_PATH = "Data/CSV/"
-    # DATA_PATH = "/u/erdos/students/mjonyh/public_html/data/"
+    # DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     @staticmethod
     def get_num(num):

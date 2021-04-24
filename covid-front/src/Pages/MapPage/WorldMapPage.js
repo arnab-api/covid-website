@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import styles from './mapPage.module.css';
+import styles from './worldPage.module.css';
 import { ThemeProvider, Spinner, Flex, SimpleGrid, Box, Text } from "@chakra-ui/core";
 import { MapChart_comparison } from '../../Components/Charts/MapChart_comparison';
 
@@ -19,6 +19,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { WorldPageTable } from '../../Components/Tables/WorldPageTable'
 
 // tab styles
 const useStyles = makeStyles({
@@ -106,6 +107,43 @@ export const WorldMapPage = ({
     // const [riskmap_future, setRiskMap_future] = useState({})
     const [loading, setLoading] = useState(true);
 
+    function createTableEntry(name, risk) {
+        return { 
+            'name': name, 
+            'risk': risk
+          };
+      }
+      
+      const [tablerows, setTableRows] = useState([
+        createTableEntry('India', 324171354/3287263),
+        createTableEntry('China', 1403500365/9596961),
+        // createTableEntry('Italy', 'IT', 60483973, 301340),
+        // createTableEntry('United States', 'US', 327167434, 9833520),
+        // createTableEntry('Canada', 'CA', 37602103, 9984670),
+        // createTableEntry('Australia', 'AU', 25475400, 7692024),
+        // createTableEntry('Germany', 'DE', 83019200, 357578),
+        // createTableEntry('Ireland', 'IE', 4857000, 70273),
+        // createTableEntry('Mexico', 'MX', 126577691, 1972550),
+        // createTableEntry('Japan', 'JP', 126317000, 377973),
+        // createTableEntry('France', 'FR', 67022000, 640679),
+        // createTableEntry('United Kingdom', 'GB', 67545757, 242495),
+        // createTableEntry('Russia', 'RU', 146793744, 17098246),
+        // createTableEntry('Nigeria', 'NG', 200962417, 923768),
+        // createTableEntry('Brazil', 'BR', 210147125, 8515767),
+      ]);
+
+    
+    const updateTableRows = (cur_risk_map) => {
+        let row_data = []
+        for(let i = 0; i < cur_risk_map.heat_map.length; i++){
+            row_data.push({
+                "name": cur_risk_map.heat_map[i].name,
+                "risk": cur_risk_map.heat_map[i].value
+            })
+        }
+        setTableRows(row_data)
+    }
+
     useEffect(() => {
         axios.get("/api/world_risk_arr")
             .then((response) => {
@@ -113,6 +151,7 @@ export const WorldMapPage = ({
                 // setRiskMap_present(response.data);
                 setRiskMap_Array(response.data)
                 setRiskMap(response.data[response.data.length-1])
+                updateTableRows(response.data[response.data.length-1])
                 setLoading(false)
             }).catch((error) => {
                 setRiskMap_present({})
@@ -158,6 +197,7 @@ export const WorldMapPage = ({
     const handleSliderValueChage = (event, value) => {
         console.log("slider value >>> ", event, value)
         setRiskMap(riskmap_arr[value])
+        updateTableRows(riskmap_arr[value])
     }
 
     return (
@@ -169,20 +209,22 @@ export const WorldMapPage = ({
                         <Spinner size="xl" color="green.300" />
                     </Flex>) : (
                     <div>
-                        {/* <Paper className={classes.root}>
-                            <Tabs
-                                value={value}
-                                onChange={handleChange}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                centered
-                            >
-                                <Tab label= {<strong>{"Present (" + riskmap_present.date + ")"} </strong>} />
-                                <Tab label= {<strong>{"Past (" + riskmap_past.date + ")"}</strong>} />
-                            </Tabs>
-                        </Paper> */}
-                        <div style={{background: '#fff'}}>
+                        {/* <div className={styles.mapContainer}>
                             <WorldMap heatmap={riskmap.heat_map} heatmap_date={riskmap.date}/>
+                        </div>
+                        <div className={styles.chartsContainer}>
+                            <WorldPageTable/>
+                        </div> */}
+                        <div style={{background: '#fff'}}>
+                            <WorldMap 
+                                heatmap={riskmap.heat_map} 
+                                heatmap_date={riskmap.date}
+                                rows={tablerows}
+                            />
+                        </div>
+                        
+                        <div style={{background: '#fff'}}>
+                            <br/>
                             <br/>
                             <Flex wrap="wrap" width="100%" justify="center" align="center">
                                 {/* <div className={classes.slider_root}>

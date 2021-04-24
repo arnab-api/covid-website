@@ -18,6 +18,7 @@ import {
 // import CachedIcon from '@material-ui/icons/Cached';  // ******added******
 // import { useBetween } from 'use-between';
 import './MapChart.css'
+import { WorldPageTable } from '../Tables/WorldPageTable'
 
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
@@ -92,7 +93,8 @@ const bins = [1, 9, 24]
 
 export const WorldMap = ({
     heatmap,
-    heatmap_date
+    heatmap_date,
+    rows
 }) => {
     const [tooltipContent, setTooltipContent] = useState("");
     // const [heatmap, setHeatMap] = useState([]);
@@ -213,15 +215,67 @@ export const WorldMap = ({
                 </Geographies>
 
             </ComposableMap>
-            <ul style={{ position: 'absolute', right: '5rem', top: '15rem', 'list-style': "none" }}>
+            {/* <ul style={{ position: 'absolute', right: '5rem', top: '15rem', 'list-style': "none" }}>
                 <li><span style={{ 'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0] }}>__</span> <strong>Trivial</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1] }}>__</span> <strong>Community Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2] }}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{ 'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3] }}>__</span> <strong>Tipping Point</strong></li>
-            </ul>
+            </ul> */}
+            <div>
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    // style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[0],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>Trivial</strong>
+                &nbsp; &nbsp;
+
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    // style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[1],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>Community Spread</strong>
+                &nbsp; &nbsp;
+
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    // style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[2],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>Accelerated Spread</strong>
+                &nbsp; &nbsp;
+
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    // style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[3],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>Tipping Point</strong>
+            </div>
             {/* <div style={{ 'text-align': 'center' }}>
                 <strong> {heatmap_date} </strong>
             </div> */}
+            
+            <div style={{ position: 'absolute', right: '0rem', top: '8rem'}}>
+                <WorldPageTable rows={rows}/>
+            </div>
         </div>
     )
 }

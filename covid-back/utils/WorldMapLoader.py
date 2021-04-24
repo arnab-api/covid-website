@@ -7,7 +7,7 @@ from operator import itemgetter
 class WorldMapLoader:
 
     DATA_PATH = "Data/CSV/"
-    # DATA_PATH = "/u/erdos/students/mjonyh/public_html/data/"
+    # DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     world_df = pd.read_csv(DATA_PATH + "world_risk_value.csv")
     owid = pd.read_csv(DATA_PATH + "owid-covid-data.csv")
