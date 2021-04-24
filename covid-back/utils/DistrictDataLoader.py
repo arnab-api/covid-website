@@ -16,7 +16,8 @@ from .BD_MapLoader import BD_MapLoader
 class DistrictDataLoader:
 
     # DATA_PATH = "Data/CSV/"
-    DATA_PATH = "/u/erdos/students/mjonyh/public_html/data"
+    DATA_PATH = "/u/erdos/students/mjonyh/public_html/data/"
+    
     district_real = pd.read_csv(DATA_PATH + "districts_real.csv")
     district_real = district_real.sort_values(by=['date'], ascending= False)
     present = district_real['date'].iloc[0]
