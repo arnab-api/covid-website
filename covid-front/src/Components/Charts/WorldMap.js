@@ -181,7 +181,7 @@ export const WorldMap = ({
                 // projection="geoMercator"
                 width={800}
                 height={400}
-                style={{ width: "70%", height: "60%" }}
+                style={{ width: "95%", height: "60%" }}
             >
                 {/* <ComposableMap
                 projectionConfig={projection_config}
@@ -276,9 +276,14 @@ export const WorldMap = ({
                 <strong> {heatmap_date} </strong>
             </div> */}
             
-            <div style={{ position: 'absolute', right: '0rem', top: '8rem'}}>
+            {/* <div style={{ 
+                    position: 'absolute', 
+                    right: '0rem', 
+                    top: '8rem',
+                    height: '50%'
+                }}>
                 <WorldPageTable rows={rows}/>
-            </div>
+            </div> */}
         </div>
     )
 }

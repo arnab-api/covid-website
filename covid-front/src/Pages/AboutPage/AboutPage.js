@@ -73,7 +73,7 @@ const AboutPage = ({setPageName}) => {
     },
     {
       "name": "Dr. Md Enamul Hoque", 
-      "designation": "Assistant Professor",
+      "designation": "Associate Professor",
       "institution": "Shahjalal University of Science and Technology",
       "image_path": jonyh_sir_img
     },

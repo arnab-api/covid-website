@@ -43,10 +43,10 @@ const DEFAULT_COLOR = '#EEE';
 
 const useStyles = makeStyles({
   root: {
-    width: '100%',
+    width: '25%',
   },
   container: {
-    maxHeight: 550,
+    maxHeight: 600,
   },
 });
 
@@ -100,12 +100,21 @@ export const WorldPageTable = ({rows}) => {
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                <TableRow 
+                  hover role="checkbox" 
+                  tabIndex={-1} 
+                  key={row.code}
+                  padding='none'
+                >
                   {columns.map((column) => {
                     let value = row[column.id];
                     if(column.id == 'risk'){
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell 
+                          key={column.id} 
+                          align={column.align}
+                          size='small'
+                        >
                             {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
                             {checkValue(value)}
                         </TableCell>
@@ -113,9 +122,14 @@ export const WorldPageTable = ({rows}) => {
                     }
                     else if(column.id == 'name'){
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell 
+                          key={column.id} 
+                          align={column.align}
+                          // padding='none'
+                          size='small'
+                        >
                           <svg width="15" height="15">
-                              <rect width="20" height="20" style={{
+                              <rect width="15" height="15" style={{
                                   fill: my_colorScale(row['risk']),
                                   strokeWidth:1,
                                   stroke: 'rgb(0,0,0)'
@@ -127,7 +141,14 @@ export const WorldPageTable = ({rows}) => {
                     }
                     else{
                       return (
-                        <TableCell key={column.id} align={column.align}>{value}</TableCell>
+                        <TableCell 
+                          key={column.id} 
+                          align={column.align}
+                          // padding='none'
+                          size='small'
+                        >
+                          {value}
+                        </TableCell>
                       )
                     }
                   })}

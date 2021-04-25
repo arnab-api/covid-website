@@ -212,20 +212,25 @@ export const WorldMapPage = ({
                     <Flex direction="column" align="center" justify="center" height="100vh">
                         <Spinner size="xl" color="green.300" />
                     </Flex>) : (
-                    <div>
+                    <div style={{background: '#fff'}}>
                         {/* <div className={styles.mapContainer}>
                             <WorldMap heatmap={riskmap.heat_map} heatmap_date={riskmap.date}/>
                         </div>
                         <div className={styles.chartsContainer}>
                             <WorldPageTable/>
                         </div> */}
-                        <div style={{background: '#fff'}}>
+                        {/* <div style={{background: '#fff'}}> */}
+                        <Flex wrap="wrap" width="100%" justify="center" align="center">
+                        <div className={styles.mapContainer}>
                             <WorldMap 
                                 heatmap={riskmap.heat_map} 
                                 heatmap_date={riskmap.date}
                                 rows={tablerows}
                             />
-                        </div>
+                            </div>
+                            <WorldPageTable rows={tablerows}/>
+                        </Flex>
+                        {/* </div> */}
                         
                         <div style={{background: '#fff'}}>
                             <br/>
