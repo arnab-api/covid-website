@@ -20,6 +20,8 @@ import './MapChart.css'
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
 import styled from 'styled-components';
+import { Flex } from "@chakra-ui/core"
+
 
 export const ReactTooltipStyled = styled(ReactTooltip)`
   &.type-dark.place-top {
@@ -125,7 +127,7 @@ const gradientData = {
 };
 
 const PROJECTION_CONFIG = {
-    scale: 40,
+    scale: 50,
     center: [90.412518, 23.810332] // always in [East Latitude, North Longitude]
 };
 
@@ -150,7 +152,7 @@ export const MapChart = ( {
     const [heatmap_date ,setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
     const [projection_config, setProjectionConfig] = useState({
-        scale: 40,
+        scale: 42,
         center: [90.412518, 23.810332] 
     });
 
@@ -162,12 +164,13 @@ export const MapChart = ( {
     const getFormattedTooltip = (geo, current) => {
         let color_box = `<svg width="12" height="12">`
         color_box += `<rect width="20" height="20" style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"/>`
+        let rank = `<strong>&nbsp;${current.rank}.</strong>`
         let elem = `<strong style="color:white;">&nbsp;${current.dist}</strong><br/>`
         elem += `Risk: ${current.value}<br/>`
         // let rt = checkValue(current.rt.value)
         // elem += `R<sub>t</sub>: ${rt}<br/>`
         elem += `Confirmed cases: ${current.confirmed}`
-        return color_box + elem
+        return color_box + rank + elem
     }
 
     // var enter_count = 0
@@ -243,8 +246,12 @@ export const MapChart = ( {
                 projectionConfig={projection_config}
                 projection="geoMercator"
                 width={5}
-                height={3}
+                height={4.2}
                 data-tip=""
+                // style={{ 
+                //     width: "100%", 
+                //     height: "100%" 
+                // }}
             >
 
                 {
@@ -279,12 +286,57 @@ export const MapChart = ( {
 
             </ComposableMap>
             {/* <div><LinearGradient data={gradientData} /></div> */}
-            <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>
+            {/* <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>
                 <li><span style={{'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0]}}>__</span> <strong>Trivial</strong></li>
                 <li><span style={{'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1]}}>__</span> <strong>Community Spread</strong></li>
                 <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
                 <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
-            </ul> 
+            </ul>  */}
+            <Flex wrap="wrap" width="100%" justify="center" align="center">
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[0],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>&nbsp;Trivial</strong>
+                &nbsp; &nbsp;
+
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[1],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>&nbsp;Community Spread</strong>
+                &nbsp; &nbsp;
+
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[2],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>&nbsp;Accelerated Spread</strong>
+                &nbsp; &nbsp;
+
+                <svg width="50" height="12">
+                <rect width="50" height="12" 
+                    style={{
+                        fill: COLOR_BUCKET_tooltip[3],
+                        strokeWidth:3,
+                        stroke:"rgb(0,0,0)"
+                    }}
+                />
+                </svg> <strong>&nbsp;Tipping Point</strong>
+            </Flex>
+            <br/>
             <div style={{'text-align': 'center'}}>
                 <strong> {heatmap_date} </strong>
             </div>

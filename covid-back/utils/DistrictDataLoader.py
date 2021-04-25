@@ -109,6 +109,10 @@ class DistrictDataLoader:
                     if(day == DistrictDataLoader.present):
                         obj['confirmed'] = DistrictDataLoader.loadConfirmedCases__for(dist_name, day)
                 heat_map.append(obj)
+
+        heat_map = sorted(heat_map, key=itemgetter("value"), reverse=True)
+        for i in range(len(heat_map)):
+            heat_map[i]['rank'] = i+1
         return {
             'date': day,
             'heat_map': heat_map

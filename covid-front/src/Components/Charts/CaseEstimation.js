@@ -33,7 +33,13 @@ export const CaseEstimation = ({chartData, chartOptions, area, updateCaseEstimat
                 <h2>
                     Estimation of the cases: {area}
                 </h2>
-                <div class="container" style={{ display: 'flex', alignItems: 'center' }}>
+                <div class="container" 
+                        style={{ 
+                            display: 'flex', 
+                            alignItems: 'center',
+                            width: "100%", 
+                            height: "100%"  
+                        }}>
                     <Line data={chartData} options={chartOptions} width={600} height={300} />
                 </div>
                 {/* <button onClick={refreshChartData}>Refresh</button> */}

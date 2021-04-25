@@ -12,6 +12,51 @@ import styles from './homePage.module.css';
 import Table from '../Components/Design components/Table/Table';
 import OptionBar from '../Components/Design components/OptionBar/OptionBar';
 import { DistrictDataContext } from '../App';
+import { ThemeProvider, Spinner, Flex, SimpleGrid, Box, Text } from "@chakra-ui/core";
+
+import Grid from '@material-ui/core/Grid';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+
+
+
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+//       flexGrow: 1,
+//     },
+//     paper: {
+//       height: 500,
+//       width: 100,
+//     },
+//     control: {
+//       padding: theme.spacing(2),
+//     },
+//   }));
+
+const useStyles = makeStyles({
+    mapContainer: {
+      margin: 3,
+      width: '49%',
+      height: 804,
+      display: 'flex',
+      alignItems: "center",
+      justifyContent: "center",
+      background: '#fff'
+    },
+    chartContainer: {
+        margin: 3,
+        width: '49%',
+        height: 400,
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+        background: '#fff'
+    }
+})
 
 export const HomePage = ({
     area, setArea,
@@ -40,6 +85,8 @@ export const HomePage = ({
     setPageName("COVID-19 in Bangladesh")
 
     const [districtData, setDistrictData] = useContext(DistrictDataContext)
+    const classes = useStyles();
+
 
     const checkArea = () => {
         // console.log('<',area,">")
@@ -48,7 +95,6 @@ export const HomePage = ({
     
     return (
         <section>
-        <div className={styles.homePage}>
             <div className={styles.options}>
                 <OptionBar
                     area = {area}
@@ -57,14 +103,72 @@ export const HomePage = ({
                 />
             </div>
 
-            <div className={styles.mapContainer}>
+            <Flex wrap="wrap" width="100%" justify="center" align="center">
+                    <Box className={classes.mapContainer}>
+                        <MapChart 
+                            setArea = {setArea}  
+                            updateCharts__For = {updateCharts__For}
+                        />
+                    </Box>
+                    <Flex wrap="wrap" width="50%" justify="center" align="center">
+                        <Box width='100%' className={classes.chartContainer}>
+                            { 
+                                checkArea() ? (
+                                    <CaseEstimation
+                                        chartData = {caseEstimationData}
+                                        chartOptions = {caseEstimationOptions}
+                                        area = {area}
+                                        updateCaseEstimationData = {updateCaseEstimationData}
+                                    />
+                                ) : (
+                                    <PlotlyChart
+                                        data = {plotlyData}
+                                        layout = {plotlyLayout}
+                                    />
+                                )
+                            }
+                            </Box>
+                        <Box width='100%' className={classes.chartContainer}> 
+                            {
+                                checkArea() ? (
+                                    <RareImpact
+                                        chartData = {rareImpactData}
+                                        chartOptions = {rareImpactOptions}
+                                        area = {area}
+                                        updateRareImpactData = {updateRareImpactData} 
+                                    />
+                                ) : (
+                                    <PlotlyChart__2
+                                        data = {plotlyData__2}
+                                        layout = {plotlyLayout__2}
+                                    />
+                                )
+                            }
+                        </Box>
+                    </Flex>
+            </Flex>
+
+            <Table/>
+
+        {/* <div className={styles.homePage}>
+            <div className={styles.options}>
+                <OptionBar
+                    area = {area}
+                    setArea = {setArea}  
+                    updateCharts = {updateCharts}
+                />
+            </div> */}
+
+            
+
+            {/* <div className={styles.mapContainer}>
                 <MapChart 
                     setArea = {setArea}  
                     updateCharts__For = {updateCharts__For}
                 />
-            </div>
+            </div> */}
 
-            <div className={styles.chartsContainer}>
+            {/* <div className={styles.chartsContainer}>
                 <div className={styles.chart}>
                     { 
                         checkArea() ? (
@@ -80,7 +184,7 @@ export const HomePage = ({
                                 layout = {plotlyLayout}
                             />
                         )
-                    }
+                    } */}
                         {/* <SucceptiblePopulation 
                             chartData={succeptiblePopulationData} 
                             // setChartData={setSucceptiblePopulationData}
@@ -94,7 +198,7 @@ export const HomePage = ({
                                                                                 chartData={succeptiblePopulationData} 
                                                                                 setChartData={setSucceptiblePopulationData}></SucceptiblePopulation>
                     } */}
-                </div>
+                {/* </div>
                 <div className={styles.chart}>
                     {
                         checkArea() ? (
@@ -110,15 +214,15 @@ export const HomePage = ({
                                 layout = {plotlyLayout__2}
                             />
                         )
-                    }
+                    } */}
                     {/* <ObservableImpact></ObservableImpact> */}
-                </div>
-            </div>
-            <Table/>
-        </div>
-        <div>
+                {/* </div> */}
+            {/* // </div> */}
+            {/* // <Table/> */}
+        {/* // </div> */}
+        {/* // <div> */}
             
-        </div>
+        {/* // </div> */}
         </section>
     )
 }
