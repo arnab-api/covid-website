@@ -11,6 +11,8 @@ from plotly.subplots import make_subplots
 class BD_MapLoader:
     bd_geo = None
     graphJson = None
+    DATA_PATH = "Data/CSV/"
+
 
     @staticmethod
     def loadBangladeshMap():
@@ -64,131 +66,6 @@ class BD_MapLoader:
         # print(graphJSON)
 
         return graphJSON
-
-    @staticmethod
-    def testPlotly():
-
-        df_cases_real = pd.read_csv('Data/District/districts_real.csv')
-        df_cases_sim = pd.read_csv('Data/District/districts_sim.csv')
-
-        df_rt_real = pd.read_csv('Data/District/districts_real_rt_gr_dt.csv')
-        df_rt_sim = pd.read_csv('Data/District/districts_sim_rt_gr_dt.csv')
-
-        df_cases_real.date = pd.to_datetime(df_cases_real.date)
-        df_cases_sim.days_sim = pd.to_datetime(df_cases_sim.days_sim)
-        df_rt_real.date = pd.to_datetime(df_rt_real.date)
-        df_rt_sim.date = pd.to_datetime(df_rt_sim.date)
-
-
-        ### select district_name from Bangladesh map by clicking on the district
-        district_name = 'BARISHAL'
-
-        df_district_real = df_cases_real[df_cases_real.district == district_name]
-        df_district_sim = df_cases_sim[df_cases_sim.district == district_name]
-        df_district_rt_real = df_rt_real[df_rt_real.district == district_name]
-        df_district_rt_sim = df_rt_sim[df_rt_sim.district == district_name]
-
-        # fig = go.Figure(data=go.Scatter(x=df_district_real['date'], 
-        #                         y=df_district_real['confirmed'], 
-        #                         mode='lines+markers', 
-        #                         line_color='#ff0000'))
-        # fig.update_yaxes(type="log")
-
-        fig = make_subplots(specs=[[{"secondary_y": True}]])
-
-        # Add traces
-        fig.add_trace(
-            go.Scatter(
-                x=df_district_real['date'], 
-                y=df_district_real['confirmed'], 
-                name="Cumulative Cases",
-                mode='lines+markers',
-                line_color='#ff0000'
-            ),
-            secondary_y=False,
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=df_district_sim['days_sim'], 
-                y=df_district_sim['confirmed_sim'], 
-                name="Cumulative Cases SIM",
-                mode='lines',
-                line_color='#ff0000',
-                showlegend=False
-            ),
-            secondary_y=False,
-        )
-        fig.update_layout(yaxis1=dict(type='log'))
-
-        fig.add_trace(
-            go.Scatter(
-                x=df_district_rt_real.date, 
-                y=df_district_rt_real.ML, 
-                name="Rt",
-                mode='lines+markers',
-                line_color='#0000ff'
-            ),
-            secondary_y=True,
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=df_district_rt_sim.date, 
-                y=df_district_rt_sim.High_90, 
-                name="Rt_hi",
-                mode='lines',
-                line_color='#0000ff',
-                showlegend = False
-            ),
-            secondary_y=True,
-        )
-
-        fig.add_trace(
-            go.Scatter(
-                x=df_district_rt_real.date, 
-                y=df_district_rt_real.Low_90, 
-                name="Rt_lo",
-                mode='lines',
-                line_color="rgba(0, 0, 255, .5)",
-                fill='tonexty',
-                fillcolor="rgba(0, 0, 255, .2)",
-                showlegend=False
-            ),
-            secondary_y=True,
-        )
-        fig.update_traces(line_width=1)
-
-        # Add figure title
-        fig.update_layout(
-            title_text="Cumulative Cases vs Rt"
-        )
-
-        # Set x-axis title
-        fig.update_xaxes(title_text="<b>Date</b>")
-
-        # Set y-axes titles
-        fig.update_yaxes(title_text="<b>Cumulative Cases</b>", secondary_y=False)
-        fig.update_yaxes(title_text="<b>Rt</b>", secondary_y=True)
-
-        fig.update_layout(
-            autosize=False,
-            width=700,
-            height=400,
-        )
-
-        fig.update_layout(legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-
-        graphs = [fig]
-        graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-
-        return graphJSON
-
 
     @staticmethod
     def getRandomHeatMap():

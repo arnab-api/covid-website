@@ -65,20 +65,20 @@ class DistrictDataLoader:
     def get_risk_data():
         if(DistrictDataLoader.risk_data == None):
             df_risk = pd.read_csv(DistrictDataLoader.DATA_PATH + 'zone_risk_value.csv')
-            df_risk = df_risk[['district', 
-                                DistrictDataLoader.present, 
-                                DistrictDataLoader.past, 
-                                DistrictDataLoader.future]]
+
+            keys = list(df_risk.keys())
+            days = keys[1:]
+
             risk_data = {}
-            this_week = DistrictDataLoader.present
-            last_week = DistrictDataLoader.past
-            next_week = DistrictDataLoader.future
             for index, row in df_risk.iterrows():
-                risk_data[row['district']] = {
-                        this_week: row[this_week],
-                        last_week: row[last_week],
-                        next_week: row[next_week]
-                    }
+                data_obj = {}
+                for day in days:
+                    value = row[day]
+                    if(math.isnan(value)):
+                        value = -1
+                    data_obj[day] = value
+                risk_data[row['district']] = data_obj
+
             DistrictDataLoader.risk_data = risk_data
 
         return DistrictDataLoader.risk_data
@@ -117,6 +117,24 @@ class DistrictDataLoader:
             'date': day,
             'heat_map': heat_map
         }
+
+    bd_risk_arr = []
+    @staticmethod
+    def getRiskMap__Array():
+        if(len(DistrictDataLoader.bd_risk_arr) == 0):
+            print("Risk array not yet loaded >> loading data")
+            day = datetime.fromisoformat(DistrictDataLoader.present)
+            limit = 100
+            bd_risk_arr = []
+            while(limit > 0):
+                day_iso = day.strftime('%Y-%m-%d')
+                print("loading bd risk data for >> ", day_iso)
+                bd_risk_arr.append(DistrictDataLoader.get_risk_for(day_iso))
+                day = day - timedelta(days=1)
+                limit -= 1
+            DistrictDataLoader.bd_risk_arr = bd_risk_arr
+
+        return DistrictDataLoader.bd_risk_arr[::-1]
     
     @staticmethod
     def getRiskMap__present():

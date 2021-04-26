@@ -78,11 +78,11 @@ class HomePageDataLoader:
                     diff = df_real['confirmed'][i] - df_real['confirmed'][i-1]
                 # print(type(diff))
                 growth_real.append(int(diff))
-            else:
-                active_real.append(None)
-                confirmed_real.append(None)
-                death_real.append(None)
-                growth_real.append(None)
+            # else:
+            #     active_real.append(None)
+            #     confirmed_real.append(None)
+            #     death_real.append(None)
+            #     growth_real.append(None)
         
         web_plot_1['values'] = [
             { 'value': active_real, 'label': 'Active Real', 'color': "black", 'showLine': False },

@@ -345,6 +345,11 @@ def getheatmap__future():
     mapdata = DistrictDataLoader.getRiskMap__future()
     return jsonify(mapdata)
 
+@app.route("/api/heat_map_array")
+def getheatmap__array():
+    mapdata = DistrictDataLoader.getRiskMap__Array()
+    return jsonify(mapdata)
+
 @app.route("/api/heat_map_combined")
 def getheatmap__combined():
     # mapdata = BD_MapLoader.getRandomHeatMap()
