@@ -171,7 +171,7 @@ function App() {
                 // 'pointRadius': 2,
                 'fill': false,
                 'fillOpacity': .3,
-                'spanGaps': true,
+                // 'spanGaps': false,
                 // 'showLine': data[i]['showLine']
             }
             if (data[i]['showLine']) {
@@ -217,10 +217,14 @@ function App() {
         }
 
         var chartOptions = {
+            // skipNulls: true,
             annotation: {
                 annotations: annotation_formatted
             },
             scales: {
+                x: {
+                    beginAtZero: true
+                  },
                 xAxes: [{
                     ticks: {
                         userCallback: function (item, index) {

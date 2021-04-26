@@ -20,8 +20,53 @@ import './MapChart.css'
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
 import styled from 'styled-components';
-import { Flex } from "@chakra-ui/core"
+import { Box, Flex, Text } from "@chakra-ui/core"
+import Plot from 'react-plotly.js';
+import Tooltip from '../Tooltip/Tooltip'
+import Slider from '@material-ui/core/Slider';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
+
+const PrettoSlider = withStyles({
+    root: {
+      color: '#006699',
+      height: 8,
+      width: '100%'
+    },
+    thumb: {
+      height: 24,
+      width: 24,
+      backgroundColor: '#fff',
+      border: '2px solid currentColor',
+      marginTop: -8,
+      marginLeft: -12,
+      '&:focus, &:hover, &$active': {
+        boxShadow: 'inherit',
+      },
+    },
+    active: {},
+    valueLabel: {
+      left: 'calc(-50% + 4px)',
+    },
+    track: {
+      height: 8,
+      borderRadius: 4,
+    },
+    rail: {
+      height: 8,
+      borderRadius: 4,
+    },
+    mark: {
+      backgroundColor: '#bfbfbf',
+      height: 16,
+      width: 1,
+      marginTop: -3,
+    },
+    markActive: {
+      opacity: 1,
+      backgroundColor: 'currentColor',
+    },
+  })(Slider);
 
 export const ReactTooltipStyled = styled(ReactTooltip)`
   &.type-dark.place-top {
@@ -140,20 +185,47 @@ const PROJECTION_CONFIG = {
 //     "long": "91.8697894"
 //   }
 
-export const MapChart = ( {
-            setArea,
-            updateCharts__For
-    }) => {
+export const MapChart = ({
+    setArea,
+    updateCharts__For
+}) => {
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active) {
+            console.log(" >>>>> ", active, payload, label)
+            return (
+                <Box
+                    background="white"
+                    boxShadow="0px 0px 5px rgba(1,1,1,0.3)"
+                    px={3}
+                    py={3}
+                    borderRadius={10}
+                    lineHeight={0.6}
+                    opacity={0.9}
+                    fontFamily="Baloo Da 2"
+                >
+                    <h2>
+                        D<sub>t</sub>: {payload[0].value.toFixed(2)}
+                        {/* {payload['DT'].toFixed(2)} */}
+                        {/* {payload[2].value.toFixed(2)} */}
+                    </h2>
+                    <br />
+                    <Text color="green.800" fontWeight="bold">{label}</Text>
+                </Box>
+            );
+        }
 
+        return null;
+    };
     // console.log(BD_DIST)
 
     const [tooltipContent, setTooltipContent] = useState('');
+    const [riskmap_arr, setRiskMap] = useState([]);
     const [heatmap, setHeatMap] = useState([]);
-    const [heatmap_date ,setHeatMap_date] = useState("")
+    const [heatmap_date, setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
     const [projection_config, setProjectionConfig] = useState({
         scale: 42,
-        center: [90.412518, 23.810332] 
+        center: [90.412518, 23.810332]
     });
 
     const onMouseLeave = () => {
@@ -169,7 +241,7 @@ export const MapChart = ( {
         elem += `Risk: ${current.value}<br/>`
         // let rt = checkValue(current.rt.value)
         // elem += `R<sub>t</sub>: ${rt}<br/>`
-        elem += `Confirmed cases: ${current.confirmed}`
+        // elem += `Confirmed cases: ${current.confirmed}`
         return color_box + rank + elem
     }
 
@@ -217,48 +289,62 @@ export const MapChart = ( {
     const my_colorScale = (value, for_tooltip = false) => {
         // console.log("---> ", value)
         let bucket = COLOR_BUCKET;
-        if(for_tooltip == true) bucket = COLOR_BUCKET_tooltip
-        if(value < bins[0]) return bucket[0];
-        if(value < bins[1]) return bucket[1];
-        if(value < bins[2]) return bucket[2];
+        if (for_tooltip == true) bucket = COLOR_BUCKET_tooltip
+        if (value < bins[0]) return bucket[0];
+        if (value < bins[1]) return bucket[1];
+        if (value < bins[2]) return bucket[2];
         return bucket[3];
     }
 
     useEffect(() => {
-        fetch('/api/heat_map').then(response => {
+        fetch('/api/heat_map_array').then(response => {
             if (response.ok) {
                 return response.json()
             }
         }).then(data => {
-            // console.log(" >>> checking input", data)
-            setHeatMap(data.heat_map)
-            setHeatMap_date(data.date)
+            console.log(" >>> checking input", data.length)
+            setRiskMap(data)
+            setHeatMap(data[data.length-1].heat_map)
+            setHeatMap_date(data[data.length-1].date)
             // console.log("heat map", heatmap)
         })
 
     }, [])
 
+    const handleSliderValueChage = (event, value) => {
+        console.log("slider value >>> ", event, value, riskmap_arr.length-1)
+        
+        setHeatMap(riskmap_arr[value].heat_map)
+        setHeatMap_date(riskmap_arr[value].date)
+    }
+
     return (
         <div>
+            <div style={{ 'text-align': 'center' }}>
+                <strong> {heatmap_date} </strong>
+            </div>
+            {/* <Tooltip content="Yee-haw!" direction="right">
+                <strong>test</strong>
+            </Tooltip> */}
             <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
-            {/* <ReactTooltipStyled>{tooltipContent}</ReactTooltipStyled> */}
+
             <ComposableMap
                 projectionConfig={projection_config}
                 projection="geoMercator"
                 width={5}
                 height={4.2}
                 data-tip=""
-                // style={{ 
-                //     width: "100%", 
-                //     height: "100%" 
-                // }}
+            // style={{ 
+            //     width: "100%", 
+            //     height: "100%" 
+            // }}
             >
 
                 {
-                    BD_DIST.districts.map( dist => (
+                    BD_DIST.districts.map(dist => (
                         <Marker coordinates={[dist.long, dist.lat]} fill="#000">
                             <text class="unselectable" y=".03" x=".01" fontSize={.06} font-weight={900} textAnchor="middle">
-                                {dist.name.substring(0,3).toUpperCase()}
+                                {dist.name.substring(0, 3).toUpperCase()}
                             </text>
                         </Marker>
                     ))
@@ -273,7 +359,7 @@ export const MapChart = ( {
                                     geography={geo}
                                     style={geographyStyle}
                                     // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
-                                    fill= {current ? my_colorScale(current.value) : DEFAULT_COLOR}
+                                    fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
                                     // fill= {DEFAULT_COLOR}
                                     onMouseEnter={onMouseEnter(geo, current)}
                                     onMouseLeave={onMouseLeave}
@@ -294,52 +380,66 @@ export const MapChart = ( {
             </ul>  */}
             <Flex wrap="wrap" width="100%" justify="center" align="center">
                 <svg width="50" height="12">
-                <rect width="50" height="12" 
-                    style={{
-                        fill: COLOR_BUCKET_tooltip[0],
-                        strokeWidth:3,
-                        stroke:"rgb(0,0,0)"
-                    }}
-                />
+                    <rect width="50" height="12"
+                        style={{
+                            fill: COLOR_BUCKET_tooltip[0],
+                            strokeWidth: 3,
+                            stroke: "rgb(0,0,0)"
+                        }}
+                    />
                 </svg> <strong>&nbsp;Trivial</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
-                <rect width="50" height="12" 
-                    style={{
-                        fill: COLOR_BUCKET_tooltip[1],
-                        strokeWidth:3,
-                        stroke:"rgb(0,0,0)"
-                    }}
-                />
+                    <rect width="50" height="12"
+                        style={{
+                            fill: COLOR_BUCKET_tooltip[1],
+                            strokeWidth: 3,
+                            stroke: "rgb(0,0,0)"
+                        }}
+                    />
                 </svg> <strong>&nbsp;Community Spread</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
-                <rect width="50" height="12" 
-                    style={{
-                        fill: COLOR_BUCKET_tooltip[2],
-                        strokeWidth:3,
-                        stroke:"rgb(0,0,0)"
-                    }}
-                />
+                    <rect width="50" height="12"
+                        style={{
+                            fill: COLOR_BUCKET_tooltip[2],
+                            strokeWidth: 3,
+                            stroke: "rgb(0,0,0)"
+                        }}
+                    />
                 </svg> <strong>&nbsp;Accelerated Spread</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
-                <rect width="50" height="12" 
-                    style={{
-                        fill: COLOR_BUCKET_tooltip[3],
-                        strokeWidth:3,
-                        stroke:"rgb(0,0,0)"
-                    }}
-                />
+                    <rect width="50" height="12"
+                        style={{
+                            fill: COLOR_BUCKET_tooltip[3],
+                            strokeWidth: 3,
+                            stroke: "rgb(0,0,0)"
+                        }}
+                    />
                 </svg> <strong>&nbsp;Tipping Point</strong>
             </Flex>
-            <br/>
-            <div style={{'text-align': 'center'}}>
-                <strong> {heatmap_date} </strong>
-            </div>
+            <br />
+            {/* <br /> */}
+            <Flex wrap="wrap" width="100%" justify="center" align="center">
+                <PrettoSlider 
+                    valueLabelDisplay="off" 
+                    aria-label="pretto slider" 
+                    aria-labelledby="discrete-slider"
+                    defaultValue={99}
+                    // getAriaValueText={sliderText}
+                    valueLabelFormat={value => ``}
+                    step={1}
+                    marks
+                    min={0}
+                    max={riskmap_arr.length-1}
+                    onChange={handleSliderValueChage}
+                />
+            </Flex>
+
             {/* <Button 
             variant="outlined"
              startIcon={<CachedIcon/>} 
@@ -348,7 +448,7 @@ export const MapChart = ( {
              >
                 Refresh
             </Button> */}
-            
+
             {/* </div> */}
         </div>
     )

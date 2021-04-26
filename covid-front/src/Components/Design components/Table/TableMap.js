@@ -32,6 +32,7 @@ const my_colorScale = (value) => {
               return response.json()
           }
       }).then(data => {
+          console.log(" table map >>>>>>>>> ", data)
           setTableData(data)
       })
   }, []);
