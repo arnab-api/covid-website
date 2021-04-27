@@ -85,16 +85,18 @@ class HomePageDataLoader:
             #     growth_real.append(None)
         
         web_plot_1['values'] = [
+            { 'value': hospitals_required, 'label': 'Hospitals Required', 'color': "green", 'showLine': True },
+
+
             { 'value': active_real, 'label': 'Active Real', 'color': "black", 'showLine': False },
-            { 'value': confirmed_real, 'label': 'Confirmed Real', 'color': "#0000cc", 'showLine': False },
-            { 'value': death_real, 'label': 'Death Real', 'color': "#cc0000", 'showLine': False },
+            { 'value': confirmed_real, 'label': 'Confirmed Real', 'color': "#8080ff", 'showLine': False },
+            { 'value': death_real, 'label': 'Death Real', 'color': "#ff6666", 'showLine': False },
             { 'value': growth_real, 'label': 'Growth Real', 'color': "#b300b3", 'showLine': False },
 
             { 'value': active_cases, 'label': 'Active Cases', 'color': "black", 'showLine': True },
-            { 'value': hospitals_required, 'label': 'Hospitals Required', 'color': "green", 'showLine': True },
-            { 'value': deaths, 'label': 'Deaths', 'color': "#cc0000", 'showLine': True },
-            { 'value': total_cases, 'label': 'Total Cases', 'color': "#0000cc", 'showLine': True },
-            { 'value': daily_cases, 'label': 'Daily Cases', 'color': "#b300b3", 'showLine': True },
+            { 'value': deaths, 'label': 'Deaths', 'color': "#ff8080", 'showLine': True },
+            { 'value': total_cases, 'label': 'Total Cases', 'color': "#8080ff", 'showLine': True },
+            { 'value': daily_cases, 'label': 'Daily Cases', 'color': "#ff99ff", 'showLine': True },
         ]
 
         HomePageDataLoader.web_plot_1 = web_plot_1
@@ -246,9 +248,9 @@ class HomePageDataLoader:
             'x_labels': date_arr,
             'values': [
                 { 'value': mobility_drop, 'label': 'Drops in Mobility (x10)', 'color': "black"},
-                { 'value': daily_cases, 'label': 'Daily Cases (x1K)', 'color': "#0000cc"},
+                { 'value': daily_cases, 'label': 'Daily Cases (x1K)', 'color': "#8080ff"},
                 { 'value': test_positive, 'label': 'Test Positive Rate (x10 in %)', 'color': "green" },
-                { 'value': rt_1, 'label': 'R_t_1', 'color': "#cc0000" },
+                { 'value': rt_1, 'label': 'R_t', 'color': "#ff8080" },
                 # { 'value': rt_2, 'label': 'R_t_2', 'color': "rgba(235, 9, 28, .5)" },
                 { 'value': rt_1_low_90, 'label': 'R_t Low', 'color': "rgba(235, 9, 28, .35)" },
                 { 'value': rt_1_high_90, 'label': 'R_t High', 'color': "rgba(235, 9, 28, .35)" },

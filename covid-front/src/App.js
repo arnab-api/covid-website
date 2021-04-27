@@ -183,7 +183,7 @@ function App() {
                 data_obj['pointRadius'] = 2
             }
             // if (data[i]['label'] == 'R_t0') data_obj['fill'] = '+1'
-            if (data[i]['label'] == 'Hospitals Required') data_obj['borderWidth'] = 2
+            if (data[i]['label'] == 'Hospitals Required') data_obj['borderWidth'] = 3
 
             // console.log(data[i]['label'], data_obj['fill'])
 

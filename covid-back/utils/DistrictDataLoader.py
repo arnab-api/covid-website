@@ -178,7 +178,7 @@ class DistrictDataLoader:
         df_district_real, df_district_sim, df_district_rt_real, df_district_rt_sim = DistrictDataLoader.loadDistrictData__plot1(district_name)
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        cumulative_cases_color = '#cc0000'
+        cumulative_cases_color = '#ff8080'
         # Add traces
         fig.add_trace(
             go.Scatter(
@@ -203,7 +203,7 @@ class DistrictDataLoader:
         )
         fig.update_layout(yaxis1=dict(type='log', color=cumulative_cases_color))
 
-        rt_color = '#0000cc'
+        rt_color = '#8080ff'
         fig.add_trace(
             go.Scatter(
                 x=df_district_rt_real.date, 
@@ -305,7 +305,7 @@ class DistrictDataLoader:
     def makePlot2__For(district_name):
         df_district_rt_real, df_district_rt_sim = DistrictDataLoader.loadDistrictData__plot2(district_name)
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        growth_rate_color = '#cc0000'
+        growth_rate_color = '#ff8080'
 
         # Add traces
         fig.add_trace(
@@ -331,7 +331,7 @@ class DistrictDataLoader:
         )
         fig.update_layout(yaxis1=dict(type='log', color=growth_rate_color))
         
-        doubling_time_color = '#0000cc'
+        doubling_time_color = '#8080ff'
         fig.add_trace(
             go.Scatter(
                 x=df_district_rt_real['date'], 
