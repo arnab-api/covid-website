@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Table.css'
 
-const Table = () => {
+const TableDistrictForcast = ({ area }) => {
   const [tableData, setTableData] = useState([{ date: '12/1/21', confirmedCases: 38, recoveredCases: 12, deaths: 0, Rt: 2, DT: 1.9 }])
 
   // useEffect(() => {
   //   setTableData([])
   // }, [])
+  console.log(" >>>>>>>>>>>>>>>>>>> ", area)
   useEffect(() => {
-      fetch('/api/rt_forcast_table').then(response => {
-          if (response.ok) {
-              return response.json()
-          }
-      }).then(data => {
-          setTableData(data)
-      })
+    fetch('/api/forcast_table/' + area).then(response => {
+      if (response.ok) {
+        console.log(response.data)
+        return response.json()
+      }
+    }).then(data => {
+      console.log(" >>>>>>>>>>>>>>>>>>>>>>> ", data)
+      setTableData(data)
+    })
   }, [])
 
   return (
     <div className='tableContainer'>
-      <h1>Forecasting SERS-CoV-2 in Bangladesh</h1>
+      <h1>Forecasting SERS-CoV-2 for {area}</h1>
       <table>
         <thead>
           <tr>
             <th>Date</th>
             <th>Confirmed Cases</th>
             <th>Daily Confirmed</th>
-            <th>Recoverd Cases</th>
-            <th>Daily Recoverd</th>
-            <th>Deaths</th>
-            <th>Daily Deaths</th>
             <th>Rt</th>
             <th>DT</th>
           </tr>
@@ -38,15 +37,11 @@ const Table = () => {
           {
             tableData.map((rowData, i) => (
               <tr key={i}>
-                <td>{rowData.date}</td>
-                <td>{rowData.confirmedCases}</td>
+                <td>{rowData.day}</td>
+                <td>{rowData.confirmed}</td>
                 <td>{rowData.confirmedDaily}</td>
-                <td>{rowData.recoveredCases}</td>
-                <td>{rowData.recoveredDaily}</td>
-                <td>{rowData.deaths}</td>
-                <td>{rowData.deathsDaily}</td>
-                <td>{rowData.Rt.toFixed(2)}</td>
-                <td>{rowData.DT.toFixed(2)}</td>
+                <td>{rowData.rt}</td>
+                <td>{rowData.dt}</td>
               </tr>
             ))
           }
@@ -56,4 +51,4 @@ const Table = () => {
   );
 };
 
-export default Table;
+export default TableDistrictForcast;

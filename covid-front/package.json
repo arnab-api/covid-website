@@ -33,6 +33,7 @@
     "react-scripts": "4.0.3",
     "react-simple-maps": "^2.3.0",
     "react-tooltip": "^4.2.17",
+    "reactjs-mappletooltip": "^1.4.63",
     "recharts": "^2.0.9",
     "redux-tooltip": "^0.7.3",
     "semantic-ui-react": "^2.0.3",

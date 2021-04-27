@@ -18,6 +18,12 @@ class DistrictDataLoader:
     # DATA_PATH = "Data/CSV/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
+    df_cases_real = pd.read_csv(DATA_PATH + 'districts_real.csv')
+    df_cases_sim = pd.read_csv(DATA_PATH + 'districts_sim.csv')
+
+    df_real = pd.read_csv(DATA_PATH + 'districts_real_rt_gr_dt.csv')
+    df_sim = pd.read_csv(DATA_PATH + 'districts_sim_rt_gr_dt.csv')
+
     district_real = pd.read_csv(DATA_PATH + "districts_real.csv")
     district_real = district_real.sort_values(by=['date'], ascending= False)
     present = district_real['date'].iloc[0]
@@ -170,7 +176,27 @@ class DistrictDataLoader:
         df_district_rt_real = df_real[df_real.district == district_name]
         df_district_rt_sim = df_sim[df_sim.district == district_name]
 
+        df_district_real['daily cases'] = df_district_real['confirmed'].diff()
+        df_district_sim['daily cases'] = df_district_sim['confirmed_sim'].diff()
+
         return df_district_real, df_district_sim, df_district_rt_real, df_district_rt_sim
+
+    @staticmethod
+    def loadDistrictData__plot2(district_name):
+        df_real = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_real_rt_gr_dt.csv')
+        df_sim = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_sim_rt_gr_dt.csv')
+
+        df_real.date = pd.to_datetime(df_real.date)
+        df_sim.date = pd.to_datetime(df_sim.date)
+
+
+        # ### select district_name from Bangladesh map by clicking on the district
+        # district_name = 'Dhaka'
+
+        df_district_rt_real = df_real[df_real.district == district_name]
+        df_district_rt_sim = df_sim[df_sim.district == district_name]
+
+        return df_district_rt_real, df_district_rt_sim
 
     
     @staticmethod
@@ -183,8 +209,8 @@ class DistrictDataLoader:
         fig.add_trace(
             go.Scatter(
                 x=df_district_real['date'], 
-                y=df_district_real['confirmed'], 
-                name="Cumulative Cases",
+                y=df_district_real['daily cases'], 
+                name="Daily Cases",
                 mode='lines+markers',
                 line_color=cumulative_cases_color
             ),
@@ -193,15 +219,16 @@ class DistrictDataLoader:
         fig.add_trace(
             go.Scatter(
                 x=df_district_sim['days_sim'], 
-                y=df_district_sim['confirmed_sim'], 
-                name="Cumulative Cases SIM",
+                y=df_district_sim['daily cases'], 
+                name="Daily Cases SIM",
                 mode='lines',
                 line_color=cumulative_cases_color,
                 showlegend=False
             ),
             secondary_y=False,
         )
-        fig.update_layout(yaxis1=dict(type='log', color=cumulative_cases_color))
+        # fig.update_layout(yaxis1=dict(type='log', color=cumulative_cases_color))
+        fig.update_layout(yaxis1=dict(color=cumulative_cases_color))
 
         rt_color = '#8080ff'
         fig.add_trace(
@@ -246,14 +273,14 @@ class DistrictDataLoader:
 
         # Add figure title
         fig.update_layout(
-            title_text="Cumulative Cases vs Rt >> {}".format(district_name)
+            title_text="Daily Cases vs Rt >> {}".format(district_name)
         )
 
         # Set x-axis title
         fig.update_xaxes(title_text="<b>Date</b>")
 
         # Set y-axes titles
-        fig.update_yaxes(title_text="<b>Cumulative Cases</b>", secondary_y=False)
+        fig.update_yaxes(title_text="<b>Daily Cases</b>", secondary_y=False)
         fig.update_yaxes(title_text="<b>Rt</b>", secondary_y=True)
 
         fig.update_layout(
@@ -281,24 +308,6 @@ class DistrictDataLoader:
         csv_name = DistrictDataLoader.get_CSV_districtname(district_name)
         print("{} found in csv file as {}".format(district_name, csv_name))
         return DistrictDataLoader.makePlot1__For(csv_name)
-
-
-    @staticmethod
-    def loadDistrictData__plot2(district_name):
-        df_real = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_real_rt_gr_dt.csv')
-        df_sim = pd.read_csv(DistrictDataLoader.DATA_PATH + 'districts_sim_rt_gr_dt.csv')
-
-        df_real.date = pd.to_datetime(df_real.date)
-        df_sim.date = pd.to_datetime(df_sim.date)
-
-
-        # ### select district_name from Bangladesh map by clicking on the district
-        # district_name = 'Dhaka'
-
-        df_district_rt_real = df_real[df_real.district == district_name]
-        df_district_rt_sim = df_sim[df_sim.district == district_name]
-
-        return df_district_rt_real, df_district_rt_sim
 
     
     @staticmethod
@@ -579,3 +588,49 @@ class DistrictDataLoader:
                     found = True
                     break
         return dt_15
+    
+    @staticmethod
+    def getForcastTable__For(district_name):
+
+        print(" >> loading forcast table for >> ", district_name)
+        csv_name = DistrictDataLoader.get_CSV_districtname(district_name)
+        print(" {} found in csv as {} ".format(district_name, csv_name))
+        district_name = csv_name
+
+        df_district_real, df_district_sim, df_district_rt_real, df_district_rt_sim = DistrictDataLoader.loadDistrictData__plot1(district_name)
+        
+        today = datetime.today()
+        today_str = today.strftime("%Y-%m-%d")
+        max_limit = today + timedelta(days=10)
+        max_limit_str = max_limit.strftime("%Y-%m-%d")
+
+
+        forcast_data = []
+
+
+        day = today
+        while(day < max_limit):
+            day_str = day.strftime("%Y-%m-%d")
+            # print(day_str)
+            try:
+                df_sim = df_district_sim[df_district_sim['days_sim'] == day_str]
+                confirmed = df_sim['confirmed_sim'].iloc[0]
+                confirmedDaily = int(df_sim['daily cases'].iloc[0])
+
+                df_rt_sim = df_district_rt_sim[df_district_rt_sim['date'] == day_str]
+                rt = df_rt_sim['ML'].iloc[0]
+                dt = df_rt_sim['doubling_time_ML'].iloc[0]
+            except:
+                print("could not get data for {} --- index error >> returning data".format(day_str))
+                break
+            
+            forcast_data.append({
+                'day': day_str,
+                'confirmed': int(confirmed),
+                'confirmedDaily': int(confirmedDaily),
+                'rt': round(rt, 2),
+                'dt': round(dt, 2)
+            })
+            day += timedelta(days = 1)
+
+        return forcast_data

@@ -273,7 +273,7 @@ class HomePageDataLoader:
         bd_rt = pd.read_csv(DATA_PATH + "rt_sim.csv")
         bd_dt = pd.read_csv(DATA_PATH + "doublingtimes_sim.csv")
 
-        today = datetime.datetime.today()
+        today = datetime.datetime.today() - datetime.timedelta(days=1)
         today_str = today.strftime("%Y-%m-%d")
         max_limit = today + datetime.timedelta(days=10)
         max_limit_str = max_limit.strftime("%Y-%m-%d")
@@ -290,6 +290,9 @@ class HomePageDataLoader:
         forcast_data = []
 
         day = today
+        prev_confirmed = -1
+        prev_recovered = -1
+        prev_deaths = -1
         while(day <= max_limit):
             day_str = day.strftime("%Y-%m-%d")
             bd = bd_df[bd_df['date'] == day_str]
@@ -301,16 +304,24 @@ class HomePageDataLoader:
 
             print(day, " >> ", confirmed, recovered, deaths, rt, dt)
 
+            if(prev_deaths != -1):
+                forcast_data.append({
+                    'date': day_str,
+                    'confirmedCases': confirmed, 
+                    'confirmedDaily': confirmed - prev_confirmed,
+                    'recoveredCases': recovered, 
+                    'recoveredDaily': recovered - prev_recovered,
+                    'deaths': deaths, 
+                    'deathsDaily': deaths - prev_deaths,
+                    'Rt': rt, 
+                    'DT': dt
+                })
 
-            forcast_data.append({
-                'date': day_str,
-                'confirmedCases': confirmed, 
-                'recoveredCases': recovered, 
-                'deaths': deaths, 
-                'Rt': rt, 
-                'DT': dt
-            })
             day += datetime.timedelta(days = 1)
+            prev_confirmed = confirmed
+            prev_recovered = recovered
+            prev_deaths = deaths
+
         # forcast_data.reverse()
         HomePageDataLoader.forcast_data = forcast_data 
         return HomePageDataLoader.forcast_data

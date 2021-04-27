@@ -8,13 +8,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import MappleToolTip from 'reactjs-mappletooltip';
+import ReactTooltip from 'react-tooltip'
+import "./WorldPageTable.css"
+
 
 const columns = [
   { 
     id: 'rank', 
     label: '#', 
-    // minWidth: 170,
-    // maxWidth: 170, 
+    align: 'right',
+    minWidth: 100, 
   },
   { 
     id: 'name', 
@@ -25,7 +29,7 @@ const columns = [
   {
     id: 'risk',
     label: 'Risk Value',
-    // minWidth: 170,
+    minWidth: 130,
     // width: 170,
     align: 'right',
     format: (value) => value.toFixed(2),
@@ -51,7 +55,7 @@ const useStyles = makeStyles({
 });
 
 // export default function WorldPageTable() {
-export const WorldPageTable = ({rows}) => {
+export const WorldPageTable = ({rows, rows__pastweek}) => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(rows.length);
@@ -80,6 +84,31 @@ export const WorldPageTable = ({rows}) => {
     return value.toFixed(2)
   }
 
+  const getPastWeekData = (cur_data) => {
+    for(let i = 0; i < rows__pastweek.length; i++){
+      if(rows__pastweek[i].name == cur_data.name) return rows__pastweek[i];
+    }
+    return null;
+  }
+
+  const riskCompare = (cur_risk, past_risk) => {
+    if(cur_risk == past_risk) return "equal";
+    if(cur_risk > past_risk) return "up";
+    if(cur_risk < past_risk) return "down"; // green down
+  }
+
+  const rankCompare = (cur_risk, past_risk) => {
+    if(cur_risk == past_risk) return "equal";
+    if(cur_risk > past_risk) return "up";
+    if(cur_risk < past_risk) return "down"; // green down
+  }
+
+  const riskTooltip = (cur_risk, past_risk) => {
+    let ret = `<strong>Risk is going ${riskCompare(cur_risk, past_risk)}</strong><br/>`;
+    ret += `Risk 7 days ago was ${past_risk.toFixed(2)}`;
+    return ret;
+  }
+
   return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
@@ -99,6 +128,8 @@ export const WorldPageTable = ({rows}) => {
           </TableHead>
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+              let past_data = getPastWeekData(row)
+              // console.log("inside row map function >> ", row, past_data)
               return (
                 <TableRow 
                   hover role="checkbox" 
@@ -108,6 +139,7 @@ export const WorldPageTable = ({rows}) => {
                 >
                   {columns.map((column) => {
                     let value = row[column.id];
+                    let cmp = riskCompare(row['risk'], past_data['risk'])
                     if(column.id == 'risk'){
                       return (
                         <TableCell 
@@ -116,7 +148,38 @@ export const WorldPageTable = ({rows}) => {
                           size='small'
                         >
                             {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
-                            {checkValue(value)}
+                            {checkValue(value)} &nbsp;
+                            <span
+                              class="unselectable"
+                            >
+                            {cmp=='equal' ? ( 
+                              <>
+                              </>
+                            ):(
+                                cmp=='up' ? (
+                                  <>
+                                    <span 
+                                      style={{color: 'red'}} 
+                                      // data-tip={riskTooltip(row['risk'], past_data['risk'])} 
+                                    >
+                                      &#9650;
+                                    </span>
+                                    {/* <ReactTooltip html={true}/> */}
+                                  </>
+                                ) : (
+                                  <>
+                                  <span 
+                                    style={{color: 'green'}}
+                                    // data-tip={riskTooltip(row['risk'], past_data['risk'])} 
+                                  >
+                                    &#9660;
+                                  </span>
+                                  {/* <ReactTooltip html={true}/> */}
+                                  </>
+                                )
+                            )
+                            }
+                            </span>
                         </TableCell>
                       );
                     }
@@ -139,7 +202,8 @@ export const WorldPageTable = ({rows}) => {
                         </TableCell>
                       )
                     }
-                    else{
+                    else if(column.id == 'rank'){
+                      let cmp = rankCompare(row['rank'], past_data['rank'])
                       return (
                         <TableCell 
                           key={column.id} 
@@ -147,6 +211,23 @@ export const WorldPageTable = ({rows}) => {
                           // padding='none'
                           size='small'
                         >
+                          
+                          {cmp=='equal' ? ( 
+                            <span>
+                              
+                            </span> 
+                          ):(
+                              cmp=='up' ? (
+                                <span style={{color: 'red'}}>
+                                  &#9650;
+                                </span>
+                              ) : (
+                                <span style={{color: 'green'}}>
+                                  &#9660;
+                                </span>
+                              )
+                          )
+                          } &nbsp;
                           {value}
                         </TableCell>
                       )

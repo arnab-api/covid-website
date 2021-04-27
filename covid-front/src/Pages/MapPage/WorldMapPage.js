@@ -120,19 +120,10 @@ export const WorldMapPage = ({
       const [tablerows, setTableRows] = useState([
         createTableEntry('India', 324171354/3287263),
         createTableEntry('China', 1403500365/9596961),
-        // createTableEntry('Italy', 'IT', 60483973, 301340),
-        // createTableEntry('United States', 'US', 327167434, 9833520),
-        // createTableEntry('Canada', 'CA', 37602103, 9984670),
-        // createTableEntry('Australia', 'AU', 25475400, 7692024),
-        // createTableEntry('Germany', 'DE', 83019200, 357578),
-        // createTableEntry('Ireland', 'IE', 4857000, 70273),
-        // createTableEntry('Mexico', 'MX', 126577691, 1972550),
-        // createTableEntry('Japan', 'JP', 126317000, 377973),
-        // createTableEntry('France', 'FR', 67022000, 640679),
-        // createTableEntry('United Kingdom', 'GB', 67545757, 242495),
-        // createTableEntry('Russia', 'RU', 146793744, 17098246),
-        // createTableEntry('Nigeria', 'NG', 200962417, 923768),
-        // createTableEntry('Brazil', 'BR', 210147125, 8515767),
+      ]);
+      const [tablerows__pastweek, setTableRows__pastweek] = useState([
+        createTableEntry('India', 324171354/3287263),
+        createTableEntry('China', 1403500365/9596961),
       ]);
 
     
@@ -148,6 +139,18 @@ export const WorldMapPage = ({
         setTableRows(row_data)
     }
 
+    const updateTableRows__pastweek = (cur_risk_map) => {
+        let row_data = []
+        for(let i = 0; i < cur_risk_map.heat_map.length; i++){
+            row_data.push({
+                "rank": (i+1),
+                "name": cur_risk_map.heat_map[i].name,
+                "risk": cur_risk_map.heat_map[i].value
+            })
+        }
+        setTableRows__pastweek(row_data)
+    }
+
     useEffect(() => {
         axios.get("/api/world_risk_arr")
             .then((response) => {
@@ -156,6 +159,7 @@ export const WorldMapPage = ({
                 setRiskMap_Array(response.data)
                 setRiskMap(response.data[response.data.length-1])
                 updateTableRows(response.data[response.data.length-1])
+                updateTableRows__pastweek(response.data[response.data.length-8])
                 setLoading(false)
             }).catch((error) => {
                 setRiskMap_present({})
@@ -200,8 +204,9 @@ export const WorldMapPage = ({
 
     const handleSliderValueChage = (event, value) => {
         console.log("slider value >>> ", event, value)
-        setRiskMap(riskmap_arr[value])
-        updateTableRows(riskmap_arr[value])
+        setRiskMap(riskmap_arr[value+7])
+        updateTableRows(riskmap_arr[value+7])
+        updateTableRows__pastweek(riskmap_arr[value])
     }
 
     return (
@@ -228,7 +233,10 @@ export const WorldMapPage = ({
                                 rows={tablerows}
                             />
                             </div>
-                            <WorldPageTable rows={tablerows}/>
+                            <WorldPageTable 
+                                rows = {tablerows}
+                                rows__pastweek = {tablerows__pastweek}
+                            />
                         </Flex>
                         {/* </div> */}
                         
@@ -254,13 +262,13 @@ export const WorldMapPage = ({
                                     valueLabelDisplay="on" 
                                     aria-label="pretto slider" 
                                     aria-labelledby="discrete-slider"
-                                    defaultValue={riskmap_arr.length-1}
+                                    defaultValue={riskmap_arr.length-8}
                                     getAriaValueText={sliderText}
                                     valueLabelFormat={value => ``}
                                     step={1}
                                     marks
                                     min={0}
-                                    max={riskmap_arr.length-1}
+                                    max={riskmap_arr.length-8}
                                     onChange={handleSliderValueChage}
                                 />
                             </Flex>

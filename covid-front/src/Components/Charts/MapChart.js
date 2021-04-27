@@ -318,10 +318,28 @@ export const MapChart = ({
         setHeatMap_date(riskmap_arr[value].date)
     }
 
+    const getFormattedDate = (date) => {
+        date = date.split("-");
+        let date_present = new Date(date[0], date[1] - 1, date[2]);
+        let days = 6;
+        let date_past = new Date(date_present.getTime() - (days * 24 * 60 * 60 * 1000))
+        let date_present_str = date_present.toLocaleDateString("en-BD", {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        let date_past_str = date_past.toLocaleDateString("en-BD", {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        return date_past_str + " - " + date_present_str
+    }
+
     return (
         <div>
             <div style={{ 'text-align': 'center' }}>
-                <strong> {heatmap_date} </strong>
+                <strong> {getFormattedDate(heatmap_date)} </strong>
             </div>
             {/* <Tooltip content="Yee-haw!" direction="right">
                 <strong>test</strong>

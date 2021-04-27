@@ -399,6 +399,10 @@ def getDistPlot1__For(district_name):
 def getDistPlot2__For(district_name):
     return DistrictDataLoader.getPlot2__For(district_name)
 
+@app.route("/api/forcast_table/<district_name>")
+def getForcastTable__For(district_name):
+    return jsonify(DistrictDataLoader.getForcastTable__For(district_name))
+
 ##################### RT ########################
 @app.route("/api/latest_rt_value")
 def latest_rt():

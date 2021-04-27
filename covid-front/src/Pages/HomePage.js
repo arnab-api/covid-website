@@ -22,6 +22,7 @@ import Radio from '@material-ui/core/Radio';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 
+import TableDistrictForcast from '../Components/Design components/Table/TableDistrictForcast';
 
 
 // const useStyles = makeStyles((theme) => ({
@@ -147,8 +148,14 @@ export const HomePage = ({
                         </Box>
                     </Flex>
             </Flex>
-
-            <Table/>
+            {
+                checkArea() ? (
+                    <Table/>
+                ) : (
+                    // <Table/>
+                     <TableDistrictForcast area={area}/>
+                )
+            }
 
         {/* <div className={styles.homePage}>
             <div className={styles.options}>

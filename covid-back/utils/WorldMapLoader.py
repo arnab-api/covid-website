@@ -110,14 +110,13 @@ class WorldMapLoader:
 
     risk_map_arr = []
     @staticmethod
-    def getWorldRiskMap__Array(limit = 100):
+    def getWorldRiskMap__Array(limit = 107):
         if(len(WorldMapLoader.risk_map_arr) != 0):
             print("World Risk << ARRAY >> data already loaded and cached >> returning")
             return WorldMapLoader.risk_map_arr
         
         risk_map_arr  =[]
         key_list = list(WorldMapLoader.world_df.keys())
-        limit = 100
         counter = 0
         while(counter < limit):
             day = key_list[-(counter+1)]
