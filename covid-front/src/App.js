@@ -475,12 +475,12 @@ function App() {
     // ###################################### rare impact ##########################################
 
 
-    // ###################################### District Cum Rt impact ##########################################
+    // ###################################### District Daily cases vs rt Rt ##########################################
     const [plotlyData, setPlotlyData] = useState({})
     const [plotlyLayout, setPlotlyLayout] = useState({})
 
     const getDistrictChart1__For = (geo) => {
-        console.log("refreshing estimation data for ", geo)
+        console.log("refreshing chart 1 data for ", geo)
         fetch('/api/dist_plot_1/' + geo).then(response => {
             if (response.ok) {
                 return response.json()
@@ -490,9 +490,9 @@ function App() {
             setPlotlyLayout(data[0].layout)
         })
     }
-    // ###################################### District Cum Rt impact ##########################################
+    // ###################################### District Daily cases vs rt Rt ##########################################
 
-    // ###################################### District Cum Rt impact ##########################################
+    // ###################################### District Growth Rate vs Dounling time ##########################################
     const [plotlyData__2, setPlotlyData__2] = useState({})
     const [plotlyLayout__2, setPlotlyLayout__2] = useState({})
 
@@ -507,7 +507,25 @@ function App() {
             setPlotlyLayout__2(data[0].layout)
         })
     }
-    // ###################################### District Cum Rt impact ##########################################
+    // ###################################### District Growth Rate vs Dounling time ##########################################
+
+
+    // ###################################### District Zone Risk timeline ##########################################
+    const [plotlyZoneRisk, setPlotlyZoneRisk] = useState({})
+    const [plotlyZoneRiskLayout, setPlotlyZoneRiskLayout] = useState({})
+
+    const getDistrictZoneRisk__For = (geo) => {
+        console.log("refreshing zone risk data for ", geo)
+        fetch('/api/risk_plot/' + geo).then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+        }).then(data => {
+            setPlotlyZoneRisk(data[0].data)
+            setPlotlyZoneRiskLayout(data[0].layout)
+        })
+    }
+    // ###################################### District Zone Risk timeline ##########################################
 
 
     const updateCharts = () => {
@@ -523,7 +541,8 @@ function App() {
         //   getRareImpact__For(geo)
         //   getSucceptiblePopulation__For(geo)
         getDistrictChart1__For(geo)
-        getDistrictChart2__For(geo)
+        // getDistrictChart2__For(geo)
+        getDistrictZoneRisk__For(geo)
     }
 
     return (
@@ -557,6 +576,8 @@ function App() {
                             plotlyLayout={plotlyLayout} setPlotlyLayout={setPlotlyLayout}
                             plotlyData__2={plotlyData__2} setPlotlyData__2={setPlotlyData__2}
                             plotlyLayout__2={plotlyLayout__2} setPlotlyLayout__2={setPlotlyLayout__2}
+                            plotlyZoneRisk = {plotlyZoneRisk} setPlotlyZoneRisk = {setPlotlyZoneRisk}
+                            plotlyZoneRiskLayout = {plotlyZoneRiskLayout} setPlotlyZoneRiskLayout = {setPlotlyZoneRiskLayout}
                             //   dist_cum_rt_Data = {dist_cum_rt_Data} dist_cum_rt_Options = {dist_cum_rt_Options}
 
                             updateSucceptiblePopulationData={updateSucceptiblePopulationData}

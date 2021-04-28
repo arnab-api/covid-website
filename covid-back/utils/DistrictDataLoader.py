@@ -634,3 +634,74 @@ class DistrictDataLoader:
             day += timedelta(days = 1)
 
         return forcast_data
+
+
+    colors = ['#54b45f', '#ecd424', '#f88c51', '#c01a27']
+    level_arr = [1, 9, 24, 1000]
+    zone_label = ['Trivial', 'Community', 'Accelerated', 'Tipping']
+    zone_risk_df = pd.read_csv(DATA_PATH + 'zone_risk_value.csv')
+
+    
+    @staticmethod
+    def getZoneRisk__For(district_name):
+
+        print("loading zone risk plot for >> ", district_name)
+        district = DistrictDataLoader.get_CSV_districtname(district_name)
+        print("{} found in csv as {}".format(district_name, district))
+
+
+        df_dist = DistrictDataLoader.zone_risk_df[DistrictDataLoader.zone_risk_df['district'] == district]
+        dates =  list(df_dist.keys())[1:]
+        if(DistrictDataLoader.present in dates):
+            dates = dates[0:dates.index(DistrictDataLoader.present)]
+
+        x_dates = []
+        risk_values = []
+        for date in dates:
+            # print(date, df_dist.iloc[0][date])
+            x_dates.append(date)
+            risk_values.append(df_dist.iloc[0][date])
+
+        colors = ['#54b45f', '#ecd424', '#f88c51', '#c01a27']
+        level_arr = [1, 9, 24, 1000]
+        zone_label = ['Trivial', 'Community', 'Accelerated', 'Tipping']
+
+        fig = make_subplots()
+
+        for i in range(len(level_arr)):
+            level = level_arr[i]
+            prev_level = -1
+            if(i > 0):
+                prev_level = level_arr[i-1] 
+            y_risk = [None]*len(x_dates)
+            for j in range(len(risk_values)):
+                risk = risk_values[j]
+                if(risk < level and risk >= prev_level):
+                    y_risk[j] = risk
+
+            fig.add_trace(
+                go.Scatter(
+                    x=x_dates, 
+                    y=y_risk, 
+                    name=zone_label[i],
+                    mode='markers',
+                    line_color=colors[i]
+                ),
+            )
+        
+        fig.update_layout(legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ))
+        fig.update_yaxes(title_text="<b>Risk Value</b>")
+        fig.update_layout(
+            title_text="Zone risk timeline >> {}".format(district)
+        )
+
+        graphs = [fig]
+        graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+        return graphJSON
+

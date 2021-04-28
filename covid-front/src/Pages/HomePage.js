@@ -73,6 +73,8 @@ export const HomePage = ({
     plotlyLayout, setPlotlyLayout,
     plotlyData__2, setPlotlyData__2,
     plotlyLayout__2, setPlotlyLayout__2,
+    plotlyZoneRisk, setPlotlyZoneRisk,
+    plotlyZoneRiskLayout, setPlotlyZoneRiskLayout,
     dist_cum_rt_Data, dist_cum_rt_Options,
 
     updateSucceptiblePopulationData,
@@ -136,8 +138,8 @@ export const HomePage = ({
                                     />
                                 ) : (
                                     <PlotlyChart
-                                        data = {plotlyData__2}
-                                        layout = {plotlyLayout__2}
+                                        data = {plotlyZoneRisk}
+                                        layout = {plotlyZoneRiskLayout}
                                     />
                                 )
                             }
