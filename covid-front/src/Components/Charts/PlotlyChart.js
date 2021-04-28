@@ -14,20 +14,11 @@ import Plot from 'react-plotly.js';
 export const PlotlyChart = ( { data, layout} ) => {
 
     return (
-        <>
-            {/* <div class="box" width="800" height="400">
-                <h2>
-                    PLotly Scatter plot
-                </h2> */}
-            {/* <div class="container"> */}
-            <div class="container" style={{ display: 'flex', alignItems: 'center' }}>
-                <Plot data={data} layout={layout} />
-            </div>
-            {/* </div> */}
-            {/* <div>
-                    <Button variant="contained" onClick={refreshChartData}>Refresh</Button>
-                </div> */}
-            {/* </div> */}
-        </>
+        <Plot 
+            data={data} 
+            layout={layout} 
+            useResizeHandler= {true}
+            style= {{width: "100%", height: "100%"}}
+        />
     )
 }

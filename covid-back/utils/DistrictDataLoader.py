@@ -283,11 +283,11 @@ class DistrictDataLoader:
         fig.update_yaxes(title_text="<b>Daily Cases</b>", secondary_y=False)
         fig.update_yaxes(title_text="<b>Rt</b>", secondary_y=True)
 
-        fig.update_layout(
-            autosize=False,
-            width=700,
-            height=400,
-        )
+        # fig.update_layout(
+        #     autosize=False,
+        #     width=850,
+        #     height=400,
+        # )
 
         fig.update_layout(legend=dict(
             orientation="h",
@@ -375,11 +375,11 @@ class DistrictDataLoader:
         fig.update_yaxes(title_text="<b>Doubling </b>", title_font=dict(color=doubling_time_color), secondary_y=True)
 
 
-        fig.update_layout(
-            autosize=False,
-            width=700,
-            height=400,
-        )
+        # fig.update_layout(
+        #     autosize=False,
+        #     width=850,
+        #     height=400,
+        # )
 
         fig.update_layout(legend=dict(
             orientation="h",

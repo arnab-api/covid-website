@@ -118,8 +118,6 @@ export const HomePage = ({
                                     <CaseEstimation
                                         chartData = {caseEstimationData}
                                         chartOptions = {caseEstimationOptions}
-                                        area = {area}
-                                        updateCaseEstimationData = {updateCaseEstimationData}
                                     />
                                 ) : (
                                     <PlotlyChart
@@ -132,14 +130,12 @@ export const HomePage = ({
                         <Box width='100%' className={classes.chartContainer}> 
                             {
                                 checkArea() ? (
-                                    <RareImpact
+                                    <CaseEstimation
                                         chartData = {rareImpactData}
                                         chartOptions = {rareImpactOptions}
-                                        area = {area}
-                                        updateRareImpactData = {updateRareImpactData} 
                                     />
                                 ) : (
-                                    <PlotlyChart__2
+                                    <PlotlyChart
                                         data = {plotlyData__2}
                                         layout = {plotlyLayout__2}
                                     />

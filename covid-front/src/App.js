@@ -19,6 +19,9 @@ import { Rt_info } from './Pages/Rt/Rt_info'
 import { DT_info } from './Pages/DT/DT_info'
 import ReactTooltip from 'react-tooltip';
 import { WorldMap } from './Components/Charts/WorldMap'
+import { Line, defaults } from 'react-chartjs-2'
+import 'chartjs-plugin-annotation';
+
 
 // style imports
 import './App.css';
@@ -44,6 +47,10 @@ function App() {
             setDist2ID(data)
             console.log(dist_2_id)
         })
+
+        updateCharts()
+        // updateCharts()
+        // updateCharts()
 
     }, [])
 
@@ -224,7 +231,7 @@ function App() {
             scales: {
                 x: {
                     beginAtZero: true
-                  },
+                },
                 xAxes: [{
                     ticks: {
                         userCallback: function (item, index) {
@@ -279,7 +286,12 @@ function App() {
                     }
                 }
             },
-            maintainAspectRatio: false
+            responsive: false,
+            maintainAspectRatio: false,
+            title: {
+                display: true,
+                text: 'Case Estimation Chart'
+            }
         }
 
         setCaseEstimationData(chartData)
@@ -429,7 +441,8 @@ function App() {
                     }
                 }
             },
-            maintainAspectRatio: false
+            responsive: false,
+            maintainAspectRatio: false,
         }
 
         setRareImpactData(chartData)
@@ -498,6 +511,7 @@ function App() {
 
 
     const updateCharts = () => {
+        console.log(" >>> update charts called")
         getEstimatedCases()
         getRareImpact()
         // getSucceptiblePopulation()
@@ -549,7 +563,7 @@ function App() {
                             updateCaseEstimationData={updateCaseEstimationData}
                             updateRareImpactData={updateRareImpactData}
                             updateCharts={updateCharts} updateCharts__For={updateCharts__For}
-                        //   updateDist_cum_rt_Data = {updateDist_cum_rt_Data}
+                            //   updateDist_cum_rt_Data = {updateDist_cum_rt_Data}
                             setPageName={setPageName}
                         />
                     </Route>
@@ -557,23 +571,23 @@ function App() {
                         <HomePage setPageName={setPageName}/>
                     </Route> */}
                     <Route path='/rt'>
-                        <Rt_info setPageName={setPageName}/>
+                        <Rt_info setPageName={setPageName} />
                     </Route>
                     <Route path='/dt'>
-                        <DT_info setPageName={setPageName}/>
+                        <DT_info setPageName={setPageName} />
                     </Route>
                     <Route path='/maps'>
-                        <MapPage setPageName={setPageName}/>
+                        <MapPage setPageName={setPageName} />
                     </Route>
                     <Route path='/world'>
-                        <WorldMapPage setPageName={setPageName}/>
+                        <WorldMapPage setPageName={setPageName} />
                     </Route>
                     <Route path='/about'>
-                        <AboutPage setPageName={setPageName}/>
+                        <AboutPage setPageName={setPageName} />
                     </Route>
                 </Switch>
             </Router>
-            <Footer/>
+            <Footer />
         </DistrictDataContext.Provider>
     );
 }
