@@ -30,6 +30,7 @@ export const CaseEstimation = ({
     //     })
     // }, [])
     chartOptions['responsive'] = true;
+    chartOptions['maintainAspectRatio'] = false;
 
     return (
         <>

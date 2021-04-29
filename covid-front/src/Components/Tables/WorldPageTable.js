@@ -201,7 +201,7 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                                   stroke: 'rgb(0,0,0)'
                               }}/>
                           </svg>
-                          &nbsp;&nbsp;{value}
+                          &nbsp;&nbsp;{value[0]+value.substr(1, value.length-1).toLowerCase()}
                         </TableCell>
                       )
                     }
