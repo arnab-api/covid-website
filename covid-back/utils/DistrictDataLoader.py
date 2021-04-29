@@ -15,8 +15,8 @@ from .BD_MapLoader import BD_MapLoader
 
 class DistrictDataLoader:
 
-    # DATA_PATH = "Data/CSV/"
-    DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
+    DATA_PATH = "Data/CSV/"
+    # DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     df_cases_real = pd.read_csv(DATA_PATH + 'districts_real.csv')
     df_cases_sim = pd.read_csv(DATA_PATH + 'districts_sim.csv')
@@ -273,7 +273,12 @@ class DistrictDataLoader:
 
         # Add figure title
         fig.update_layout(
-            title_text="Daily Cases vs Rt >> {}".format(district_name)
+            title_text="Daily Cases vs Rt >> {}".format(district_name),
+            font=dict(
+                # family="Courier New, monospace",
+                size=8,
+                # color="RebeccaPurple"
+            )
         )
 
         # Set x-axis title
@@ -296,6 +301,11 @@ class DistrictDataLoader:
             xanchor="right",
             x=1
         ))
+
+        fig.update_layout(
+            margin=dict(l=10, r=10, t=10, b=10),
+            # paper_bgcolor="LightSteelBlue",
+        )
 
         graphs = [fig]
         graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
@@ -365,7 +375,14 @@ class DistrictDataLoader:
         fig.update_layout(yaxis2=dict(color=doubling_time_color))
 
         # Add figure title
-        fig.update_layout( title_text="Growth Rare vs Doubling Time >> {}".format(district_name) )
+        fig.update_layout( 
+            title_text="Growth Rare vs Doubling Time >> {}".format(district_name),
+            font=dict(
+                # family="Courier New, monospace",
+                size=8,
+                # color="RebeccaPurple"
+            )
+        )
 
         # Set x-axis title
         fig.update_xaxes(title_text="<b>Date</b>")
@@ -698,7 +715,15 @@ class DistrictDataLoader:
         ))
         fig.update_yaxes(title_text="<b>Risk Value</b>")
         fig.update_layout(
-            title_text="Zone risk timeline >> {}".format(district)
+            title_text="Zone risk timeline >> {}".format(district),
+            font=dict(
+                size=8,
+            )
+        )
+
+        fig.update_layout(
+            margin=dict(l=10, r=10, t=25, b=10),
+            # paper_bgcolor="LightSteelBlue",
         )
 
         graphs = [fig]

@@ -245,6 +245,7 @@ function App() {
                             return null;
                         },
                         autoSkip: false,
+                        fontSize: 8,
                         // color: 'rgba(0, 0, 0, 1)'
                     },
                     display: true
@@ -283,14 +284,16 @@ function App() {
                     filter: function (item, chart) {
                         // Logic to remove a particular legend item goes here
                         return !item.text.includes('Real');
-                    }
+                    },
+                    fontSize: 8
                 }
             },
             responsive: false,
             maintainAspectRatio: false,
             title: {
                 display: true,
-                text: 'Case Estimation Chart'
+                text: 'Case Estimation Chart',
+                fontSize: 10
             }
         }
 
@@ -427,9 +430,10 @@ function App() {
                             return null;
                         },
                         autoSkip: false,
+                        fontSize: 8
                         // color: 'rgba(0, 0, 0, 1)'
                     },
-                    display: true
+                    display: true,
                 }],
             },
             legend: {
@@ -438,7 +442,8 @@ function App() {
                         // Logic to remove a particular legend item goes here
                         return !item.text.includes('Low') &&
                             !item.text.includes('High');
-                    }
+                    },
+                    fontSize: 8
                 }
             },
             responsive: false,

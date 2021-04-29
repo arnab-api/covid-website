@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   root: {
     margin: 2,
     width: '24%',
-    height: 600,
+    height: 520,
     display: 'flex',
     alignItems: "center",
     justifyContent: "center"
@@ -43,7 +43,7 @@ const useStyles = makeStyles({
     display: 'flex'
   },
   media: {
-    height: 500,
+    height: 400,
     width: '100%',
     // objectFit: 'cover'
     // height: 350,
@@ -51,7 +51,7 @@ const useStyles = makeStyles({
     // marginTop:'30'
   },
   content: {
-    height: 100
+    height: 120
   },
   pub_content: {
     // height: 150

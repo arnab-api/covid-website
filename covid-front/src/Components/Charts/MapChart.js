@@ -419,7 +419,7 @@ export const MapChart = ({
                             />
                         <div flex='1' className={classes.mapContainer}>
 
-                            <ReactTooltip html={true}></ReactTooltip>
+                            <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
                             <ComposableMap
                                 projectionConfig={{
                                     scale: 36,
