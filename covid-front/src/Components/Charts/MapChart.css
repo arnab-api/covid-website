@@ -8,9 +8,9 @@
 }
 
 .mapContainer {
-    background-color: #fff;
+    background-color: #222;
     border-radius: 0.5rem;
-    height: 85rem;
+    /* height: 85rem; */
     /* width: 90rem; */
     position: relative;
   }

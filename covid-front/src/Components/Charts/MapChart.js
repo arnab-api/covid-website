@@ -70,6 +70,27 @@ const PrettoSlider = withStyles({
     },
   })(Slider);
 
+  const useStyles = makeStyles({
+    mapContainer: {
+      margin: 1,
+      width: '65%',
+      height: 550,
+      display: 'flex',
+      alignItems: "right",
+      justifyContent: "right",
+      background: '#fff'
+    },
+    chartContainer: {
+        margin: 3,
+        width: '49%',
+        height: 320,
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+        background: '#fff'
+    }
+})
+
 export const ReactTooltipStyled = styled(ReactTooltip)`
   &.type-dark.place-top {
     background-color: black;
@@ -173,10 +194,6 @@ const gradientData = {
     max: 100
 };
 
-const PROJECTION_CONFIG = {
-    scale: 50,
-    center: [90.412518, 23.810332] // always in [East Latitude, North Longitude]
-};
 
 // {
 //     "id": "54",
@@ -192,16 +209,13 @@ export const MapChart = ({
     updateCharts__For
 }) => {
     // console.log(BD_DIST)
+    const classes = useStyles()
 
     const [tooltipContent, setTooltipContent] = useState('');
     const [riskmap_arr, setRiskMap] = useState([]);
     const [heatmap, setHeatMap] = useState([]);
     const [heatmap_date, setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
-    const [projection_config, setProjectionConfig] = useState({
-        scale: 36,
-        center: [90.412518, 23.810332]
-    });
     const [loading, setLoading] = useState(true);
 
     function createTableEntry(name, risk) {
@@ -375,6 +389,11 @@ export const MapChart = ({
         setTableRows__pastweek(row_data)
     }
 
+    const [projection_config, setProjectionConfig] = useState({
+        scale: 36,
+        center: [90.412518, 23.810332]
+    });
+
     return (
         <ThemeProvider>
         <section>
@@ -383,7 +402,7 @@ export const MapChart = ({
                 <Flex direction="column" align="center" justify="center" height="100vh">
                     <Spinner size="xl" color="green.300" />
                 </Flex>) : (
-                <div>
+                <div width="100%">
                     {/* <Tooltip content="Yee-haw!" direction="right">
                         <strong>test</strong>
                     </Tooltip> */}
@@ -391,25 +410,29 @@ export const MapChart = ({
                     <div style={{ 'text-align': 'center' }}>
                         <strong> {getFormattedDate(heatmap_date)} </strong>
                     </div>
+ 
                     
-                    <Flex wrap="wrap" width="100%" justify="center" align="center">
+                    <Flex wrap="wrap" justify="center" align="center" width="100%">
                         <WorldPageTable 
                                 rows = {tablerows}
                                 rows__pastweek = {tablerows__pastweek}
                             />
-                        <div width="70%">
+                        <div flex='1' className={classes.mapContainer}>
 
-                            <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
+                            <ReactTooltip html={true}></ReactTooltip>
                             <ComposableMap
-                                projectionConfig={projection_config}
+                                projectionConfig={{
+                                    scale: 36,
+                                    center: [90.412518, 23.810332]
+                                }}
                                 projection="geoMercator"
-                                width={3.6}
+                                width={3.0}
                                 height={4.2}
                                 data-tip=""
-                            // style={{ 
-                            //     width: "100%", 
-                            //     height: "100%" 
-                            // }}
+                                style={{ 
+                                    width: "100%", 
+                                    height: "100%" 
+                                }}
                             >
 
                                 {
@@ -453,53 +476,58 @@ export const MapChart = ({
                         <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
                     </ul>  */}
                     <Flex wrap="wrap" width="100%" justify="center" align="center">
-                        <div width="100%">
-                        <svg width="50" height="12">
-                            <rect width="50" height="12"
-                                style={{
-                                    fill: COLOR_BUCKET_tooltip[0],
-                                    strokeWidth: 3,
-                                    stroke: "rgb(0,0,0)"
-                                }}
-                            />
-                        </svg> <strong>&nbsp;Trivial</strong>
-                        &nbsp; &nbsp;
+                        <div style={{
+                            width: '80%',
+                            fontSize: '10px',
+                            align: 'center',
+                            justify: 'center'
+                        }}>
+                            <svg width="40" height="10">
+                                <rect width="40" height="10"
+                                    style={{
+                                        fill: COLOR_BUCKET_tooltip[0],
+                                        strokeWidth: 3,
+                                        stroke: "rgb(0,0,0)"
+                                    }}
+                                />
+                            </svg> <strong >&nbsp;Trivial</strong>
+                            &nbsp; &nbsp;
 
-                        <svg width="50" height="12">
-                            <rect width="50" height="12"
-                                style={{
-                                    fill: COLOR_BUCKET_tooltip[1],
-                                    strokeWidth: 3,
-                                    stroke: "rgb(0,0,0)"
-                                }}
-                            />
-                        </svg> <strong>&nbsp;Community Spread</strong>
-                        &nbsp; &nbsp;
+                            <svg width="40" height="10">
+                                <rect width="40" height="10"
+                                    style={{
+                                        fill: COLOR_BUCKET_tooltip[1],
+                                        strokeWidth: 3,
+                                        stroke: "rgb(0,0,0)"
+                                    }}
+                                />
+                            </svg> <strong>&nbsp;Community Spread</strong>
+                            &nbsp; &nbsp;
 
-                        <svg width="50" height="12">
-                            <rect width="50" height="12"
-                                style={{
-                                    fill: COLOR_BUCKET_tooltip[2],
-                                    strokeWidth: 3,
-                                    stroke: "rgb(0,0,0)"
-                                }}
-                            />
-                        </svg> <strong>&nbsp;Accelerated Spread</strong>
-                        &nbsp; &nbsp;
+                            <svg width="40" height="10">
+                                <rect width="40" height="10"
+                                    style={{
+                                        fill: COLOR_BUCKET_tooltip[2],
+                                        strokeWidth: 3,
+                                        stroke: "rgb(0,0,0)"
+                                    }}
+                                />
+                            </svg> <strong>&nbsp;Accelerated Spread</strong>
+                            &nbsp; &nbsp;
 
-                        <svg width="50" height="12">
-                            <rect width="50" height="12"
-                                style={{
-                                    fill: COLOR_BUCKET_tooltip[3],
-                                    strokeWidth: 3,
-                                    stroke: "rgb(0,0,0)"
-                                }}
-                            />
-                        </svg> <strong>&nbsp;Tipping Point</strong>
+                            <svg width="40" height="10">
+                                <rect width="40" height="10"
+                                    style={{
+                                        fill: COLOR_BUCKET_tooltip[3],
+                                        strokeWidth: 3,
+                                        stroke: "rgb(0,0,0)"
+                                    }}
+                                />
+                            </svg> <strong>&nbsp;Tipping Point</strong>
                         </div>
                         <div style={{
                             align: 'center',
-                            width: '80%',
+                            width: '100%',
                             justify: 'center'
                         }}>
                             <PrettoSlider 
@@ -517,6 +545,11 @@ export const MapChart = ({
                             />
                         </div>
                     </Flex>
+                    {/* <br /> */}
+                    {/* <br /> */}
+                    {/* <Flex wrap="wrap" width="80%" justify="center" align="center"> */}
+                    
+                    {/* </Flex> */}
 
                     {/* <Button 
                     variant="outlined"

@@ -39,7 +39,16 @@ const useStyles = makeStyles({
         width: '80%',
         margin: 10,
 
-    }
+    },
+    mapContainer: {
+        // margin: 3,
+        width: '69%',
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+        // background: '#fff',
+        background: '#f2f2f2'
+      },
   });
 
 const COLOR_BUCKET = [

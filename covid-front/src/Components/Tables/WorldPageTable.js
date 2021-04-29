@@ -47,13 +47,13 @@ const DEFAULT_COLOR = '#EEE';
 
 const useStyles = makeStyles({
   root: {
-    width: '30%',
+    width: '34%',
   },
   container: {
-    maxHeight: 600,
+    maxHeight: 500,
   },
   tablecell: {
-    fontSize: '8pt'
+    fontSize: '7pt'
   }
 });
 
@@ -194,8 +194,8 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                           // padding='none'
                           size='small'
                         >
-                          <svg width="15" height="15">
-                              <rect width="15" height="15" style={{
+                          <svg width="8" height="8">
+                              <rect width="8" height="8" style={{
                                   fill: my_colorScale(row['risk']),
                                   strokeWidth:1,
                                   stroke: 'rgb(0,0,0)'

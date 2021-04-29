@@ -51,7 +51,7 @@ const geographyStyle = {
 };
 
 // const BD_TOPO_JSON = require('../Data/bd_topo.json');
-const BD_DIST_TOPO = require('../Data/bd_dist_topo_simple.json');
+// const BD_DIST_TOPO = require('../Data/bd_dist_topo_simple.json');
 const WORLD_TOPO = require('../Data/world_110_topo.json');
 // const BD_DIST = require('../Data/bd-districts.json');
 

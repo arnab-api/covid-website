@@ -40,18 +40,19 @@ import TableDistrictForcast from '../Components/Design components/Table/TableDis
 
 const useStyles = makeStyles({
     mapContainer: {
-      margin: 3,
-      width: '49%',
-      height: 834,
+      margin: 0,
+    //   width: '49%',
+      height: 644,
       display: 'flex',
       alignItems: "center",
       justifyContent: "center",
       background: '#fff'
+    //   background: '#f2f2f2'
     },
     chartContainer: {
         margin: 3,
-        width: '49%',
-        height: 414,
+        // width: '49%',
+        height: 320,
         display: 'flex',
         alignItems: "center",
         justifyContent: "center",
