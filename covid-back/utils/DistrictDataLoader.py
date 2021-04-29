@@ -130,7 +130,7 @@ class DistrictDataLoader:
         if(len(DistrictDataLoader.bd_risk_arr) == 0):
             print("Risk array not yet loaded >> loading data")
             day = datetime.fromisoformat(DistrictDataLoader.present)
-            limit = 100
+            limit = 107
             bd_risk_arr = []
             while(limit > 0):
                 day_iso = day.strftime('%Y-%m-%d')
