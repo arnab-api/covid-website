@@ -226,12 +226,12 @@ export const WorldMapPage = ({
                         </div> */}
                         {/* <div style={{background: '#fff'}}> */}
                         <Flex wrap="wrap" width="100%" justify="center" align="center">
-                        <div className={styles.mapContainer}>
-                            <WorldMap 
-                                heatmap={riskmap.heat_map} 
-                                heatmap_date={riskmap.date}
-                                rows={tablerows}
-                            />
+                            <div className={styles.mapContainer}>
+                                <WorldMap 
+                                    heatmap={riskmap.heat_map} 
+                                    heatmap_date={riskmap.date}
+                                    rows={tablerows}
+                                />
                             </div>
                             <WorldPageTable 
                                 rows = {tablerows}

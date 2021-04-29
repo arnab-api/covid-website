@@ -20,11 +20,13 @@ import './MapChart.css'
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
 import styled from 'styled-components';
-import { Box, Flex, Text } from "@chakra-ui/core"
+import { ThemeProvider, Spinner, Flex, SimpleGrid, Box, Text } from "@chakra-ui/core";
 import Plot from 'react-plotly.js';
 import Tooltip from '../Tooltip/Tooltip'
 import Slider from '@material-ui/core/Slider';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { WorldPageTable } from '../Tables/WorldPageTable'
+import axios from "axios";
 
 
 const PrettoSlider = withStyles({
@@ -189,33 +191,6 @@ export const MapChart = ({
     setArea,
     updateCharts__For
 }) => {
-    const CustomTooltip = ({ active, payload, label }) => {
-        if (active) {
-            console.log(" >>>>> ", active, payload, label)
-            return (
-                <Box
-                    background="white"
-                    boxShadow="0px 0px 5px rgba(1,1,1,0.3)"
-                    px={3}
-                    py={3}
-                    borderRadius={10}
-                    lineHeight={0.6}
-                    opacity={0.9}
-                    fontFamily="Baloo Da 2"
-                >
-                    <h2>
-                        D<sub>t</sub>: {payload[0].value.toFixed(2)}
-                        {/* {payload['DT'].toFixed(2)} */}
-                        {/* {payload[2].value.toFixed(2)} */}
-                    </h2>
-                    <br />
-                    <Text color="green.800" fontWeight="bold">{label}</Text>
-                </Box>
-            );
-        }
-
-        return null;
-    };
     // console.log(BD_DIST)
 
     const [tooltipContent, setTooltipContent] = useState('');
@@ -224,9 +199,26 @@ export const MapChart = ({
     const [heatmap_date, setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
     const [projection_config, setProjectionConfig] = useState({
-        scale: 42,
+        scale: 36,
         center: [90.412518, 23.810332]
     });
+    const [loading, setLoading] = useState(true);
+
+    function createTableEntry(name, risk) {
+        return { 
+            'name': name, 
+            'risk': risk
+          };
+      }
+
+    const [tablerows, setTableRows] = useState([
+        createTableEntry('India', 324171354/3287263),
+        createTableEntry('China', 1403500365/9596961),
+      ]);
+      const [tablerows__pastweek, setTableRows__pastweek] = useState([
+        createTableEntry('India', 324171354/3287263),
+        createTableEntry('China', 1403500365/9596961),
+      ]);
 
     const onMouseLeave = () => {
         // console.log("mouse leaving")
@@ -296,26 +288,49 @@ export const MapChart = ({
         return bucket[3];
     }
 
-    useEffect(() => {
-        fetch('/api/heat_map_array').then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-        }).then(data => {
-            console.log(" >>> checking input", data.length)
-            setRiskMap(data)
-            setHeatMap(data[data.length-1].heat_map)
-            setHeatMap_date(data[data.length-1].date)
-            // console.log("heat map", heatmap)
-        })
+    // useEffect(() => {
+    //     fetch('/api/heat_map_array').then(response => {
+    //         if (response.ok) {
+    //             return response.json()
+    //         }
+    //     }).then(data => {
+    //         console.log(" >>> checking input", data.length)
+    //         setRiskMap(data)
+    //         setHeatMap(data[data.length-1].heat_map)
+    //         setHeatMap_date(data[data.length-1].date)
 
-    }, [])
+    //         updateTableRows(data[data.length-1])
+    //         updateTableRows__pastweek(data[data.length-8])
+    //         // console.log("heat map", heatmap)
+    //     })
+
+    // }, [])
+
+    useEffect(() => {
+        axios.get("/api/heat_map_array")
+            .then((response) => {
+                console.log(" heat_map array >>> ", response.data, response.data.length);
+                // setRiskMap_present(response.data);
+                setRiskMap(response.data)
+                setHeatMap(response.data[response.data.length-1].heat_map)
+                setHeatMap_date(response.data[response.data.length-1].date)
+
+                updateTableRows(response.data[response.data.length-1])
+                updateTableRows__pastweek(response.data[response.data.length-8])
+                setLoading(false)
+            }).catch((error) => {
+                setLoading(false)
+            });
+    }, []);
 
     const handleSliderValueChage = (event, value) => {
         console.log("slider value >>> ", event, value, riskmap_arr.length-1)
         
-        setHeatMap(riskmap_arr[value].heat_map)
-        setHeatMap_date(riskmap_arr[value].date)
+        setHeatMap(riskmap_arr[value+7].heat_map)
+        setHeatMap_date(riskmap_arr[value+7].date)
+
+        updateTableRows(riskmap_arr[value+7])
+        updateTableRows__pastweek(riskmap_arr[value])
     }
 
     const getFormattedDate = (date) => {
@@ -336,139 +351,188 @@ export const MapChart = ({
         return date_past_str + " - " + date_present_str
     }
 
+    const updateTableRows = (cur_risk_map) => {
+        let row_data = []
+        for(let i = 0; i < cur_risk_map.heat_map.length; i++){
+            row_data.push({
+                "rank": (i+1),
+                "name": cur_risk_map.heat_map[i].dist,
+                "risk": cur_risk_map.heat_map[i].value
+            })
+        }
+        setTableRows(row_data)
+    }
+
+    const updateTableRows__pastweek = (cur_risk_map) => {
+        let row_data = []
+        for(let i = 0; i < cur_risk_map.heat_map.length; i++){
+            row_data.push({
+                "rank": (i+1),
+                "name": cur_risk_map.heat_map[i].dist,
+                "risk": cur_risk_map.heat_map[i].value
+            })
+        }
+        setTableRows__pastweek(row_data)
+    }
+
     return (
-        <div>
-            <div style={{ 'text-align': 'center' }}>
-                <strong> {getFormattedDate(heatmap_date)} </strong>
-            </div>
-            {/* <Tooltip content="Yee-haw!" direction="right">
-                <strong>test</strong>
-            </Tooltip> */}
-            <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
+        <ThemeProvider>
+        <section>
+        {
+            loading ? (
+                <Flex direction="column" align="center" justify="center" height="100vh">
+                    <Spinner size="xl" color="green.300" />
+                </Flex>) : (
+                <div>
+                    {/* <Tooltip content="Yee-haw!" direction="right">
+                        <strong>test</strong>
+                    </Tooltip> */}
 
-            <ComposableMap
-                projectionConfig={projection_config}
-                projection="geoMercator"
-                width={5}
-                height={4.2}
-                data-tip=""
-            // style={{ 
-            //     width: "100%", 
-            //     height: "100%" 
-            // }}
-            >
+                    <div style={{ 'text-align': 'center' }}>
+                        <strong> {getFormattedDate(heatmap_date)} </strong>
+                    </div>
+                    
+                    <Flex wrap="wrap" width="100%" justify="center" align="center">
+                        <WorldPageTable 
+                                rows = {tablerows}
+                                rows__pastweek = {tablerows__pastweek}
+                            />
+                        <div width="70%">
 
-                {
-                    BD_DIST.districts.map(dist => (
-                        <Marker coordinates={[dist.long, dist.lat]} fill="#000">
-                            <text class="unselectable" y=".03" x=".01" fontSize={.06} font-weight={900} textAnchor="middle">
-                                {dist.name.substring(0, 3).toUpperCase()}
-                            </text>
-                        </Marker>
-                    ))
-                }
-                <Geographies geography={BD_DIST_TOPO}>
-                    {({ geographies }) =>
-                        geographies.map(geo => {
-                            const current = heatmap.find(s => s.id === geo.id);
-                            return (
-                                <Geography
-                                    key={geo.rsmKey}
-                                    geography={geo}
-                                    style={geographyStyle}
-                                    // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
-                                    fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
-                                    // fill= {DEFAULT_COLOR}
-                                    onMouseEnter={onMouseEnter(geo, current)}
-                                    onMouseLeave={onMouseLeave}
-                                    onClick={handleClick(geo)}
-                                />
-                            )
-                        }
-                        )}
-                </Geographies>
+                            <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
+                            <ComposableMap
+                                projectionConfig={projection_config}
+                                projection="geoMercator"
+                                width={3.6}
+                                height={4.2}
+                                data-tip=""
+                            // style={{ 
+                            //     width: "100%", 
+                            //     height: "100%" 
+                            // }}
+                            >
 
-            </ComposableMap>
-            {/* <div><LinearGradient data={gradientData} /></div> */}
-            {/* <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>
-                <li><span style={{'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0]}}>__</span> <strong>Trivial</strong></li>
-                <li><span style={{'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1]}}>__</span> <strong>Community Spread</strong></li>
-                <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
-                <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
-            </ul>  */}
-            <Flex wrap="wrap" width="100%" justify="center" align="center">
-                <svg width="50" height="12">
-                    <rect width="50" height="12"
-                        style={{
-                            fill: COLOR_BUCKET_tooltip[0],
-                            strokeWidth: 3,
-                            stroke: "rgb(0,0,0)"
-                        }}
-                    />
-                </svg> <strong>&nbsp;Trivial</strong>
-                &nbsp; &nbsp;
+                                {
+                                    BD_DIST.districts.map(dist => (
+                                        <Marker coordinates={[dist.long, dist.lat]} fill="#000">
+                                            <text class="unselectable" y=".03" x=".01" fontSize={.06} font-weight={900} textAnchor="middle">
+                                                {dist.name.substring(0, 3).toUpperCase()}
+                                            </text>
+                                        </Marker>
+                                    ))
+                                }
+                                <Geographies geography={BD_DIST_TOPO}>
+                                    {({ geographies }) =>
+                                        geographies.map(geo => {
+                                            const current = heatmap.find(s => s.id === geo.id);
+                                            return (
+                                                <Geography
+                                                    key={geo.rsmKey}
+                                                    geography={geo}
+                                                    style={geographyStyle}
+                                                    // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
+                                                    fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
+                                                    // fill= {DEFAULT_COLOR}
+                                                    onMouseEnter={onMouseEnter(geo, current)}
+                                                    onMouseLeave={onMouseLeave}
+                                                    onClick={handleClick(geo)}
+                                                />
+                                            )
+                                        }
+                                        )}
+                                </Geographies>
 
-                <svg width="50" height="12">
-                    <rect width="50" height="12"
-                        style={{
-                            fill: COLOR_BUCKET_tooltip[1],
-                            strokeWidth: 3,
-                            stroke: "rgb(0,0,0)"
-                        }}
-                    />
-                </svg> <strong>&nbsp;Community Spread</strong>
-                &nbsp; &nbsp;
+                            </ComposableMap>
+                        </div>
+                    </Flex>
+                    {/* <div><LinearGradient data={gradientData} /></div> */}
+                    {/* <ul style={{position:'absolute',right:'1rem',top:'1rem', 'list-style': "none"}}>
+                        <li><span style={{'background-color': COLOR_BUCKET[0], 'color': COLOR_BUCKET[0]}}>__</span> <strong>Trivial</strong></li>
+                        <li><span style={{'background-color': COLOR_BUCKET[1], 'color': COLOR_BUCKET[1]}}>__</span> <strong>Community Spread</strong></li>
+                        <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
+                        <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
+                    </ul>  */}
+                    <Flex wrap="wrap" width="100%" justify="center" align="center">
+                        <div width="100%">
+                        <svg width="50" height="12">
+                            <rect width="50" height="12"
+                                style={{
+                                    fill: COLOR_BUCKET_tooltip[0],
+                                    strokeWidth: 3,
+                                    stroke: "rgb(0,0,0)"
+                                }}
+                            />
+                        </svg> <strong>&nbsp;Trivial</strong>
+                        &nbsp; &nbsp;
 
-                <svg width="50" height="12">
-                    <rect width="50" height="12"
-                        style={{
-                            fill: COLOR_BUCKET_tooltip[2],
-                            strokeWidth: 3,
-                            stroke: "rgb(0,0,0)"
-                        }}
-                    />
-                </svg> <strong>&nbsp;Accelerated Spread</strong>
-                &nbsp; &nbsp;
+                        <svg width="50" height="12">
+                            <rect width="50" height="12"
+                                style={{
+                                    fill: COLOR_BUCKET_tooltip[1],
+                                    strokeWidth: 3,
+                                    stroke: "rgb(0,0,0)"
+                                }}
+                            />
+                        </svg> <strong>&nbsp;Community Spread</strong>
+                        &nbsp; &nbsp;
 
-                <svg width="50" height="12">
-                    <rect width="50" height="12"
-                        style={{
-                            fill: COLOR_BUCKET_tooltip[3],
-                            strokeWidth: 3,
-                            stroke: "rgb(0,0,0)"
-                        }}
-                    />
-                </svg> <strong>&nbsp;Tipping Point</strong>
-            </Flex>
-            <br />
-            {/* <br /> */}
-            <Flex wrap="wrap" width="100%" justify="center" align="center">
-                <PrettoSlider 
-                    valueLabelDisplay="off" 
-                    aria-label="pretto slider" 
-                    aria-labelledby="discrete-slider"
-                    defaultValue={99}
-                    // getAriaValueText={sliderText}
-                    valueLabelFormat={value => ``}
-                    step={1}
-                    marks
-                    min={0}
-                    max={riskmap_arr.length-1}
-                    onChange={handleSliderValueChage}
-                />
-            </Flex>
+                        <svg width="50" height="12">
+                            <rect width="50" height="12"
+                                style={{
+                                    fill: COLOR_BUCKET_tooltip[2],
+                                    strokeWidth: 3,
+                                    stroke: "rgb(0,0,0)"
+                                }}
+                            />
+                        </svg> <strong>&nbsp;Accelerated Spread</strong>
+                        &nbsp; &nbsp;
 
-            {/* <Button 
-            variant="outlined"
-             startIcon={<CachedIcon/>} 
-             onClick={getHeatMapData} 
-             style={{position:'absolute',right:'1rem',top:'1rem'}}
-             >
-                Refresh
-            </Button> */}
+                        <svg width="50" height="12">
+                            <rect width="50" height="12"
+                                style={{
+                                    fill: COLOR_BUCKET_tooltip[3],
+                                    strokeWidth: 3,
+                                    stroke: "rgb(0,0,0)"
+                                }}
+                            />
+                        </svg> <strong>&nbsp;Tipping Point</strong>
+                        </div>
+                        <div style={{
+                            align: 'center',
+                            width: '80%',
+                            justify: 'center'
+                        }}>
+                            <PrettoSlider 
+                                valueLabelDisplay="off" 
+                                aria-label="pretto slider" 
+                                aria-labelledby="discrete-slider"
+                                defaultValue={riskmap_arr.length-8}
+                                // getAriaValueText={sliderText}
+                                valueLabelFormat={value => ``}
+                                step={1}
+                                marks
+                                min={0}
+                                max={riskmap_arr.length-8}
+                                onChange={handleSliderValueChage}
+                            />
+                        </div>
+                    </Flex>
 
-            {/* </div> */}
-        </div>
+                    {/* <Button 
+                    variant="outlined"
+                    startIcon={<CachedIcon/>} 
+                    onClick={getHeatMapData} 
+                    style={{position:'absolute',right:'1rem',top:'1rem'}}
+                    >
+                        Refresh
+                    </Button> */}
+
+                    {/* </div> */}
+                </div>
+            )
+        }
+        </section>
+        </ThemeProvider>
     )
 }
 

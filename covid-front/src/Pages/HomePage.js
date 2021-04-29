@@ -107,13 +107,14 @@ export const HomePage = ({
             </div>
 
             <Flex wrap="wrap" width="100%" justify="center" align="center">
-                    <Box className={classes.mapContainer}>
+                    <Box className={classes.mapContainer} width="59.5%">
                         <MapChart 
                             setArea = {setArea}  
                             updateCharts__For = {updateCharts__For}
                         />
                     </Box>
-                    <Flex wrap="wrap" width="50%" justify="center" align="center">
+                   
+                    <Flex wrap="wrap" width="40%" justify="center" align="center">
                         <Box width='100%' className={classes.chartContainer}>
                             { 
                                 checkArea() ? (

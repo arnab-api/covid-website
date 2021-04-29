@@ -18,18 +18,18 @@ const columns = [
     id: 'rank', 
     label: '#', 
     align: 'right',
-    minWidth: 100, 
+    // minWidth: 100, 
   },
   { 
     id: 'name', 
     label: 'Name', 
-    minWidth: 170,
+    // minWidth: 170,
     // maxWidth: 170, 
   },
   {
     id: 'risk',
-    label: 'Risk Value',
-    minWidth: 130,
+    label: 'Risk',
+    // minWidth: 130,
     // width: 170,
     align: 'right',
     format: (value) => value.toFixed(2),
@@ -47,11 +47,14 @@ const DEFAULT_COLOR = '#EEE';
 
 const useStyles = makeStyles({
   root: {
-    width: '25%',
+    width: '30%',
   },
   container: {
     maxHeight: 600,
   },
+  tablecell: {
+    fontSize: '8pt'
+  }
 });
 
 // export default function WorldPageTable() {
@@ -97,10 +100,10 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
     if(cur_risk < past_risk) return "down"; // green down
   }
 
-  const rankCompare = (cur_risk, past_risk) => {
-    if(cur_risk == past_risk) return "equal";
-    if(cur_risk > past_risk) return "up";
-    if(cur_risk < past_risk) return "down"; // green down
+  const rankCompare = (cur_rank, past_rank) => {
+    if(cur_rank == past_rank) return "equal";
+    if(cur_rank > past_rank) return "down";
+    if(cur_rank < past_rank) return "up"; // green down
   }
 
   const riskTooltip = (cur_risk, past_risk) => {
@@ -142,7 +145,7 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                     let cmp = riskCompare(row['risk'], past_data['risk'])
                     if(column.id == 'risk'){
                       return (
-                        <TableCell 
+                        <TableCell className={classes.tablecell}
                           key={column.id} 
                           align={column.align}
                           size='small'
@@ -185,7 +188,7 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                     }
                     else if(column.id == 'name'){
                       return (
-                        <TableCell 
+                        <TableCell className={classes.tablecell}
                           key={column.id} 
                           align={column.align}
                           // padding='none'
@@ -198,14 +201,14 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                                   stroke: 'rgb(0,0,0)'
                               }}/>
                           </svg>
-                          <strong>&nbsp;&nbsp;{value}</strong>
+                          &nbsp;&nbsp;{value}
                         </TableCell>
                       )
                     }
                     else if(column.id == 'rank'){
                       let cmp = rankCompare(row['rank'], past_data['rank'])
                       return (
-                        <TableCell 
+                        <TableCell className={classes.tablecell}
                           key={column.id} 
                           align={column.align}
                           // padding='none'
