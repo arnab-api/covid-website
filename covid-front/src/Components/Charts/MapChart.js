@@ -25,7 +25,7 @@ import Plot from 'react-plotly.js';
 import Tooltip from '../Tooltip/Tooltip'
 import Slider from '@material-ui/core/Slider';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { WorldPageTable } from '../Tables/WorldPageTable'
+import { BDPageTable } from '../Tables/BDPageTable'
 import axios from "axios";
 
 
@@ -72,7 +72,7 @@ const PrettoSlider = withStyles({
 
   const useStyles = makeStyles({
     mapContainer: {
-      margin: 1,
+      margin: 3,
       width: '65%',
       height: 550,
       display: 'flex',
@@ -402,7 +402,7 @@ export const MapChart = ({
                 <Flex direction="column" align="center" justify="center" height="100vh">
                     <Spinner size="xl" color="green.300" />
                 </Flex>) : (
-                <div width="100%">
+                <>
                     {/* <Tooltip content="Yee-haw!" direction="right">
                         <strong>test</strong>
                     </Tooltip> */}
@@ -413,7 +413,7 @@ export const MapChart = ({
  
                     
                     <Flex wrap="wrap" justify="center" align="center" width="100%">
-                        <WorldPageTable 
+                        <BDPageTable 
                                 rows = {tablerows}
                                 rows__pastweek = {tablerows__pastweek}
                             />
@@ -477,7 +477,7 @@ export const MapChart = ({
                     </ul>  */}
                     <Flex wrap="wrap" width="100%" justify="center" align="center">
                         <div style={{
-                            width: '80%',
+                            width: '65%',
                             fontSize: '10px',
                             align: 'center',
                             justify: 'center'
@@ -527,7 +527,7 @@ export const MapChart = ({
                         </div>
                         <div style={{
                             align: 'center',
-                            width: '100%',
+                            width: '80%',
                             justify: 'center'
                         }}>
                             <PrettoSlider 
@@ -561,7 +561,7 @@ export const MapChart = ({
                     </Button> */}
 
                     {/* </div> */}
-                </div>
+                </>
             )
         }
         </section>

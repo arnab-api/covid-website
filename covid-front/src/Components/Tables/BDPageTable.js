@@ -47,7 +47,7 @@ const DEFAULT_COLOR = '#EEE';
 
 const useStyles = makeStyles({
   root: {
-    width: '25%',
+    width: '34%',
   },
   container: {
     maxHeight: 500,
@@ -58,7 +58,7 @@ const useStyles = makeStyles({
 });
 
 // export default function WorldPageTable() {
-export const WorldPageTable = ({rows, rows__pastweek}) => {
+export const BDPageTable = ({rows, rows__pastweek}) => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(rows.length);
@@ -149,6 +149,7 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                           key={column.id} 
                           align={column.align}
                           size='small'
+                          padding='none'
                         >
                             {/* {column.format && typeof value === 'number' ? column.format(value) : value} */}
                             {checkValue(value)} &nbsp;
@@ -191,7 +192,7 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                         <TableCell className={classes.tablecell}
                           key={column.id} 
                           align={column.align}
-                          // padding='none'
+                          padding='none'
                           size='small'
                         >
                           <svg width="8" height="8">
@@ -211,7 +212,7 @@ export const WorldPageTable = ({rows, rows__pastweek}) => {
                         <TableCell className={classes.tablecell}
                           key={column.id} 
                           align={column.align}
-                          // padding='none'
+                          padding='none'
                           size='small'
                         >
                           
