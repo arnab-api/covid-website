@@ -367,24 +367,36 @@ export const MapChart = ({
 
     const updateTableRows = (cur_risk_map) => {
         let row_data = []
+        let track = {}
+        let skip = 0
         for(let i = 0; i < cur_risk_map.heat_map.length; i++){
-            row_data.push({
-                "rank": (i+1),
-                "name": cur_risk_map.heat_map[i].dist,
-                "risk": cur_risk_map.heat_map[i].value
-            })
+            if(track[cur_risk_map.heat_map[i].dist] == undefined){
+                row_data.push({
+                    "rank": (i+1) - skip,
+                    "name": cur_risk_map.heat_map[i].dist,
+                    "risk": cur_risk_map.heat_map[i].value
+                })
+                track[cur_risk_map.heat_map[i].dist] = true;
+            }
+            else skip++;
         }
         setTableRows(row_data)
     }
 
     const updateTableRows__pastweek = (cur_risk_map) => {
         let row_data = []
+        let track = {}
+        let skip = 0
         for(let i = 0; i < cur_risk_map.heat_map.length; i++){
-            row_data.push({
-                "rank": (i+1),
-                "name": cur_risk_map.heat_map[i].dist,
-                "risk": cur_risk_map.heat_map[i].value
-            })
+            if(track[cur_risk_map.heat_map[i].dist] == undefined){
+                row_data.push({
+                    "rank": (i+1) - skip,
+                    "name": cur_risk_map.heat_map[i].dist,
+                    "risk": cur_risk_map.heat_map[i].value
+                })
+                track[cur_risk_map.heat_map[i].dist] = true;
+            }
+            else skip++;
         }
         setTableRows__pastweek(row_data)
     }

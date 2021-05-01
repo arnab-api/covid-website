@@ -109,6 +109,24 @@ export const MapChart_comparison = ( {
         center: [90.412518, 23.810332] 
     });
 
+    const getFormattedDate = (date) => {
+        date = date.split("-");
+        let date_present = new Date(date[0], date[1] - 1, date[2]);
+        let days = 6;
+        let date_past = new Date(date_present.getTime() - (days * 24 * 60 * 60 * 1000))
+        let date_present_str = date_present.toLocaleDateString("en-BD", {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        let date_past_str = date_past.toLocaleDateString("en-BD", {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        return date_past_str + " - " + date_present_str
+    }
+
     const onMouseLeave = () => {
         // console.log("mouse leaving")
         setTooltipContent('');
@@ -154,6 +172,9 @@ export const MapChart_comparison = ( {
 
     return (
         <div>
+            <div style={{'text-align': 'center', fontSize: '12px'}}>
+                <strong> {getFormattedDate(heatmap__time)} </strong>
+            </div>
             <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
             <ComposableMap
                 projectionConfig={projection_config}
@@ -197,9 +218,6 @@ export const MapChart_comparison = ( {
                         )}
                 </Geographies>
             </ComposableMap>
-            <div style={{'text-align': 'center'}}>
-                <strong> {heatmap__time} </strong>
-            </div>
         </div>
     )
 }

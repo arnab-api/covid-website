@@ -16,6 +16,7 @@ export const MapPage = ({
     const [riskmap_past, setRiskMap_past] = useState({})
     const [riskmap_future, setRiskMap_future] = useState({})
     const [loading, setLoading] = useState(true);
+    
 
     useEffect( () => {
         axios.get("/api/heat_map")

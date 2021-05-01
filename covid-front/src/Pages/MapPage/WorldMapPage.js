@@ -218,6 +218,24 @@ export const WorldMapPage = ({
         updateTableRows__pastweek(riskmap_arr[value])
     }
 
+    const getFormattedDate = (date) => {
+        date = date.split("-");
+        let date_present = new Date(date[0], date[1] - 1, date[2]);
+        let days = 6;
+        let date_past = new Date(date_present.getTime() - (days * 24 * 60 * 60 * 1000))
+        let date_present_str = date_present.toLocaleDateString("en-BD", {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        let date_past_str = date_past.toLocaleDateString("en-BD", {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        return date_past_str + " - " + date_present_str
+    }
+
     return (
         <ThemeProvider>
             <section>
@@ -251,7 +269,6 @@ export const WorldMapPage = ({
                         
                         <div style={{background: '#fff'}}>
                             <br/>
-                            <br/>
                             <Flex wrap="wrap" width="100%" justify="center" align="center">
                                 {/* <div className={classes.slider_root}>
                                     <Slider 
@@ -268,7 +285,7 @@ export const WorldMapPage = ({
                                     />
                                 </div> */}
                                 <PrettoSlider 
-                                    valueLabelDisplay="on" 
+                                    valueLabelDisplay="off" 
                                     aria-label="pretto slider" 
                                     aria-labelledby="discrete-slider"
                                     defaultValue={riskmap_arr.length-8}
@@ -282,7 +299,7 @@ export const WorldMapPage = ({
                                 />
                             </Flex>
                             <div style={{ 'text-align': 'center' }}>
-                                <strong> {riskmap.date} </strong>
+                                <strong> {getFormattedDate(riskmap.date)} </strong>
                             </div>
                         </div>
 
