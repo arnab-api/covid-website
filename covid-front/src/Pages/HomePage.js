@@ -76,6 +76,7 @@ export const HomePage = ({
     plotlyZoneRisk, setPlotlyZoneRisk,
     plotlyZoneRiskLayout, setPlotlyZoneRiskLayout,
     dist_cum_rt_Data, dist_cum_rt_Options,
+    districtForcastTable, setDistrictForcastTable,
 
     updateSucceptiblePopulationData,
     updateCaseEstimationData,
@@ -152,7 +153,7 @@ export const HomePage = ({
                     <Table/>
                 ) : (
                     // <Table/>
-                     <TableDistrictForcast area={area}/>
+                     <TableDistrictForcast area={area} tableData={districtForcastTable} setTableData = {setDistrictForcastTable}/>
                 )
             }
 

@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Table.css'
 
-const TableDistrictForcast = ({ area }) => {
-  const [tableData, setTableData] = useState([{ date: '12/1/21', confirmedCases: 38, recoveredCases: 12, deaths: 0, Rt: 2, DT: 1.9 }])
+const TableDistrictForcast = ({ area, tableData, setTableData }) => {
+  // const [tableData, setTableData] = useState([{ date: '12/1/21', confirmedCases: 38, recoveredCases: 12, deaths: 0, Rt: 2, DT: 1.9 }])
 
   // useEffect(() => {
   //   setTableData([])
   // }, [])
-  console.log(" >>>>>>>>>>>>>>>>>>> ", area)
-  useEffect(() => {
-    fetch('/api/forcast_table/' + area).then(response => {
-      if (response.ok) {
-        console.log(response.data)
-        return response.json()
-      }
-    }).then(data => {
-      console.log(" >>>>>>>>>>>>>>>>>>>>>>> ", data)
-      setTableData(data)
-    })
-  }, [])
+  // console.log(" >>>>>>>>>>>>>>>>>>> ", area)
+  // useEffect(() => {
+  //   fetch('/api/forcast_table/' + area).then(response => {
+  //     if (response.ok) {
+  //       console.log(response.data)
+  //       return response.json()
+  //     }
+  //   }).then(data => {
+  //     console.log(" >>>>>>>>>>>>>>>>>>>>>>> ", data)
+  //     setTableData(data)
+  //   })
+  // }, [])
 
   return (
     <div className='tableContainer'>

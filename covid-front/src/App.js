@@ -532,6 +532,25 @@ function App() {
     }
     // ###################################### District Zone Risk timeline ##########################################
 
+    // ###################################### District Forcast Table ##########################################
+    const [districtForcastTable, setDistrictForcastTable] = useState([])
+
+    const getDistrictForcast__For = (geo) => {
+        console.log("refreshing forcast table data for ", geo)
+        fetch('/api/forcast_table/' + geo).then(response => {
+            if (response.ok) {
+              console.log(response.data)
+              return response.json()
+            }
+          }).then(data => {
+            console.log(" >>>>>>>>>>>>>>>>>>>>>>> ", data)
+            setDistrictForcastTable(data)
+        })
+    }
+
+
+    // ###################################### District Forcast Table ##########################################
+
 
     const updateCharts = () => {
         console.log(" >>> update charts called")
@@ -548,6 +567,7 @@ function App() {
         getDistrictChart1__For(geo)
         // getDistrictChart2__For(geo)
         getDistrictZoneRisk__For(geo)
+        getDistrictForcast__For(geo)
     }
 
     return (
@@ -583,6 +603,7 @@ function App() {
                             plotlyLayout__2={plotlyLayout__2} setPlotlyLayout__2={setPlotlyLayout__2}
                             plotlyZoneRisk = {plotlyZoneRisk} setPlotlyZoneRisk = {setPlotlyZoneRisk}
                             plotlyZoneRiskLayout = {plotlyZoneRiskLayout} setPlotlyZoneRiskLayout = {setPlotlyZoneRiskLayout}
+                            districtForcastTable = {districtForcastTable} setDistrictForcastTable = {setDistrictForcastTable}
                             //   dist_cum_rt_Data = {dist_cum_rt_Data} dist_cum_rt_Options = {dist_cum_rt_Options}
 
                             updateSucceptiblePopulationData={updateSucceptiblePopulationData}
