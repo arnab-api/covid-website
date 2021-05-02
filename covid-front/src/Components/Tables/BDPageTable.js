@@ -48,13 +48,19 @@ const DEFAULT_COLOR = '#EEE';
 const useStyles = makeStyles({
   root: {
     width: '34%',
+    borderCollapse: 'separate',
+    borderSpacing: '0px 4px'
   },
   container: {
     maxHeight: 500,
   },
+  table: {
+    borderCollapse: 'separate',
+    borderSpacing: '0px 4px'
+  },
   tablecell: {
-    fontSize: '7pt'
-  }
+    fontSize: '8pt',
+  },
 });
 
 // export default function WorldPageTable() {

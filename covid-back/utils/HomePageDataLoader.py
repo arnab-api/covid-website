@@ -3,6 +3,7 @@ import numpy as np
 import json
 import math
 import datetime
+import copy
 
 class HomePageDataLoader:
 
@@ -20,6 +21,7 @@ class HomePageDataLoader:
     df_sim = pd.read_csv(DATA_PATH + 'Bangladesh_sim.csv', encoding='UTF-8')
     df_rt_real = pd.read_csv(DATA_PATH + "rt_real.csv")
     df_rt_sim = pd.read_csv(DATA_PATH + 'rt_sim.csv')
+    bd_dt_sim = pd.read_csv(DATA_PATH + "doublingtimes_sim.csv")
     df_owid = pd.read_csv(DATA_PATH + 'owid-covid-data.csv')
     df_owid = df_owid[df_owid['location']=='Bangladesh']
     df_owid['date'] = pd.to_datetime(df_owid['date'])
@@ -268,10 +270,12 @@ class HomePageDataLoader:
             print("Forcast data >> already loaded and cached -- returning")
             return HomePageDataLoader.forcast_data
 
-        DATA_PATH = "Data/CSV/"
-        bd_df = pd.read_csv(DATA_PATH + "Bangladesh_sim.csv")
-        bd_rt = pd.read_csv(DATA_PATH + "rt_sim.csv")
-        bd_dt = pd.read_csv(DATA_PATH + "doublingtimes_sim.csv")
+        # bd_df = pd.read_csv(DATA_PATH + "Bangladesh_sim.csv")
+        # bd_rt = pd.read_csv(DATA_PATH + "rt_sim.csv")
+        # bd_dt = pd.read_csv(DATA_PATH + "doublingtimes_sim.csv")
+        bd_df = copy.deepcopy(HomePageDataLoader.df_sim)
+        bd_rt = copy.deepcopy(HomePageDataLoader.df_rt_sim)
+        bd_dt = copy.deepcopy(HomePageDataLoader.bd_dt_sim)
 
         today = datetime.datetime.today() - datetime.timedelta(days=1)
         today_str = today.strftime("%Y-%m-%d")
