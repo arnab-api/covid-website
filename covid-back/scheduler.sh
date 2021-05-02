@@ -13,19 +13,19 @@ do
     echo ">>>>>>>>>>>>>> starting flask server --> $TIME"
     python app.py & # start in background
     CMDPID=$! # get pid of that command
-    echo " <><><><> $CMDPID"
+    echo ">>>>>>>>>>>>>> PORT ID: $CMDPID"
     trap 'cleanup $CMDPID' EXIT
 
     # next while loop just keeps checking time
     # We don't want to block up CPU with 
     # continuous sleep command
     LIMIT=$[($TIME+3600*24)]
-    echo ">><<>> $LIMIT"
+    echo ">>>>>>>>>>>>>> TIME LIMIT: $LIMIT"
     while [ $(date +%s) -lt $LIMIT ];
     do  
       TIME_rem=$[$LIMIT-$(date +%s)]
       echo ">>>>>>>>>>>>>> server will be reloaded after $TIME_rem seconds" 
-      sleep 60
+      sleep 600
     done
     echo ">>>>>>>>>>>>>> killing flask server"
     kill -TERM $CMDPID # kill that process
