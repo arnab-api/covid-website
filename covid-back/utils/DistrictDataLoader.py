@@ -669,8 +669,8 @@ class DistrictDataLoader:
 
         df_dist = DistrictDataLoader.zone_risk_df[DistrictDataLoader.zone_risk_df['district'] == district]
         dates =  list(df_dist.keys())[1:]
-        if(DistrictDataLoader.present in dates):
-            dates = dates[0:dates.index(DistrictDataLoader.present)]
+        # if(DistrictDataLoader.present in dates):
+        #     dates = dates[0:dates.index(DistrictDataLoader.present)]
 
         x_dates = []
         risk_values = []

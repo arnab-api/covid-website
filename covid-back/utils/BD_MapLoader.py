@@ -11,7 +11,6 @@ from plotly.subplots import make_subplots
 class BD_MapLoader:
     bd_geo = None
     graphJson = None
-    DATA_PATH = "Data/CSV/"
 
 
     @staticmethod
