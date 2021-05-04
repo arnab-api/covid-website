@@ -151,7 +151,11 @@ export const GridPlot = ({ area }) => {
               <YAxis
                 dataKey="ML"
                 allowDataOverflow={true}
-                domain={[0, 6]}
+                // domain={[0, 6]}
+                domain={[
+                  Math.floor(Math.min.apply(Math, data.map(function(o) { return o.Low_90; })) * 5)/5,
+                  Math.ceil(Math.max.apply(Math, data.map(function(o) { return o.Low_90 + o.High_90; })) * 5)/5
+                ]}
                 orientation="left"
                 axisLine={false}
                 tickMargin={10}
@@ -189,9 +193,8 @@ export const GridPlot = ({ area }) => {
                 stroke="red"
                 strokeWidth={0.7}
                 label={{
-                  value: "Rt=1",
-
-                  position: "left",
+                  value: "1",
+                  position: "right",
                 }}
               />
             </ComposedChart>

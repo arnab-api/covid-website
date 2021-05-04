@@ -15,7 +15,7 @@ from .BD_MapLoader import BD_MapLoader
 
 class DistrictDataLoader:
 
-    # DATA_PATH = "Data/CSV/"
+    # DATA_PATH = "Data/CSV_new/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     df_cases_real = pd.read_csv(DATA_PATH + 'districts_real.csv')
@@ -453,33 +453,13 @@ class DistrictDataLoader:
             rt_latest.append({
                 'date': row['date'],
                 'ML': row['ML'],
-                'Low_90': row['Low_90'],
-                'High_90': row['High_90'] - row['Low_90'],
+                # 'Low_90': row['Low_90'],
+                # 'High_90': row['High_90'] - row['Low_90'],
+                'Low_90': row['ML']*.85,
+                'High_90': row['ML']*1.15 - row['ML']*.85,
                 'district': row['district']
             })
         return rt_latest
-
-    # @staticmethod
-    # def get_rt_before_15():
-    #     rt_latest = DistrictDataLoader.get_latest_rt()
-    #     date_now = datetime.fromisoformat(rt_latest[0]['date'])
-    #     date_15 = date_now - timedelta(days= 15)
-    #     date_15 = date_15.strftime('%Y-%m-%d')
-
-    #     df_real, df_sim = DistrictDataLoader.load_rt_dt_gr_files()
-    #     df_15 = df_real[df_real['date'] <= date_15].sort_values(by=['date'], ascending= False)
-    #     df_15 = df_15.drop_duplicates('district')
-
-    #     rt_old = []
-    #     for latest_rt in rt_latest:
-    #         district = latest_rt['district']
-    #         old_rt = df_15[df_15['district'] == district]
-    #         old_rt_json = old_rt[['date','ML','Low_90','High_90', 'district']].to_json(orient="records")
-    #         old_rt_json = json.loads(old_rt_json)
-    #         old_rt_json = old_rt_json[0]
-    #         rt_old.append(old_rt_json)
-
-    #     return rt_old
     
     @staticmethod
     def get_rt_value():
@@ -489,8 +469,10 @@ class DistrictDataLoader:
             rt_real.append({
                 'date': row['date'],
                 'ML': row['ML'],
-                'Low_90': row['Low_90'],
-                'High_90': row['High_90'],
+                # 'Low_90': row['Low_90'],
+                # 'High_90': row['High_90'],
+                'Low_90': row['ML']*.85,
+                'High_90': row['ML']*1.15,
                 'district': row['district']
             })
         return rt_real
@@ -510,8 +492,10 @@ class DistrictDataLoader:
                 rt_real[district].append({
                     'Date': row['date'],
                     'ML': row['ML'],
-                    'Low_90': row['Low_90'],
-                    'High_90': row['High_90'],
+                    # 'Low_90': row['Low_90'],
+                    # 'High_90': row['High_90'],
+                    'Low_90': row['ML']*.85,
+                    'High_90': row['ML']*1.15,
                     'district': row['district']
                 })
             DistrictDataLoader.rt_dict = rt_real
@@ -541,8 +525,10 @@ class DistrictDataLoader:
                         'date': rt_val['Date'],
                         'district': rt_val['district'],
                         'ML': rt_val['ML'],
-                        'Low_90': rt_val['Low_90'],
-                        'High_90': rt_val['High_90'] - rt_val['Low_90']
+                        # 'Low_90': rt_val['Low_90'],
+                        # 'High_90': rt_val['High_90'] - rt_val['Low_90']
+                        'Low_90': rt_val['ML']*.85,
+                        'High_90': rt_val['ML']*1.15 - rt_val['ML']*.85,
                     })
                     found = True
                     break
@@ -669,8 +655,8 @@ class DistrictDataLoader:
 
         df_dist = DistrictDataLoader.zone_risk_df[DistrictDataLoader.zone_risk_df['district'] == district]
         dates =  list(df_dist.keys())[1:]
-        # if(DistrictDataLoader.present in dates):
-        #     dates = dates[0:dates.index(DistrictDataLoader.present)]
+        if(DistrictDataLoader.present in dates):
+            dates = dates[0:dates.index(DistrictDataLoader.present)]
 
         x_dates = []
         risk_values = []

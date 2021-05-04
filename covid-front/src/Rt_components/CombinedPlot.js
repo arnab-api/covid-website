@@ -96,7 +96,11 @@ export default function CombinedPlot(props) {
         orientation="left"
         axisLine={false}
         tickMargin={10}
-        domain={[0.75, 1.5]}
+        // domain={[0.4, 1.5]}
+        domain={[
+          Math.floor(Math.min.apply(Math, dataBar.map(function(o) { return o.Low_90; })) * 5)/5,
+          Math.ceil(Math.max.apply(Math, dataBar.map(function(o) { return o.Low_90 + o.High_90; })) * 5)/5
+        ]}
         type="number"
       />
 

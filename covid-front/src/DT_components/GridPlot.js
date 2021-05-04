@@ -83,6 +83,11 @@ export const GridPlot = ({ area }) => {
         // console.log(area, ' ===> ', response.data.length, response.data);
         var dt = processData(response.data)
         // console.log(dt)
+        // domain=[
+        //   Math.floor(Math.min.apply(Math, dt.map(function(o) { return o.doubling_time; }))/100)*100,
+        //   Math.ceil(Math.max.apply(Math, dt.map(function(o) { return o.doubling_time; }))/100)*100
+        // ]
+
         //   setData(
         //     processData(
         //       // response.data.filter((word) => word.district === area)
@@ -146,7 +151,11 @@ export const GridPlot = ({ area }) => {
               <YAxis
                 dataKey="DT"
                 allowDataOverflow={true}
-                domain={[0, 500]}
+                // domain={[0, 2000]}
+                domain={[
+                  Math.floor(Math.min.apply(Math, data.map(function(o) { return o.DT; }))/100)*100,
+                  Math.ceil(Math.max.apply(Math, data.map(function(o) { return o.DT; }))/100)*100
+                ]}
                 orientation="left"
                 axisLine={false}
                 tickMargin={10}
