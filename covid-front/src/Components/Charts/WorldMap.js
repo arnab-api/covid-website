@@ -23,7 +23,7 @@ import { WorldPageTable } from '../Tables/WorldPageTable'
 import LinearGradient from './LinearGradient.js';
 import { DistrictDataContext } from '../../App.js';
 import { Flex } from "@chakra-ui/core"
-
+import Tooltip__color_table from '../Tooltip/Tooltip__color_table'
 
 
 
@@ -223,7 +223,8 @@ export const WorldMap = ({
                 <li><span style={{ 'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3] }}>__</span> <strong>Tipping Point</strong></li>
             </ul> */}
             {/* <div> */}
-            <Flex wrap="wrap" width="100%" justify="center" align="center">
+            <Flex wrap="wrap" width="100%" justify="center" align="center" fontSize="12px">
+                <Tooltip__color_table content="" direction="top">
                 <svg width="50" height="12">
                 <rect width="50" height="12" 
                     // style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"
@@ -233,7 +234,7 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>&nbsp;Trivial</strong>
+                </svg> <strong class="unselectable">&nbsp;Trivial</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
@@ -245,7 +246,7 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>&nbsp;Community Spread</strong>
+                </svg> <strong class="unselectable">&nbsp;Community Spread</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
@@ -257,7 +258,7 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>&nbsp;Accelerated Spread</strong>
+                </svg> <strong class="unselectable">&nbsp;Accelerated Spread</strong>
                 &nbsp; &nbsp;
 
                 <svg width="50" height="12">
@@ -269,7 +270,8 @@ export const WorldMap = ({
                         stroke:"rgb(0,0,0)"
                     }}
                 />
-                </svg> <strong>&nbsp;Tipping Point</strong>
+                </svg> <strong class="unselectable">&nbsp;Tipping Point</strong>
+                </Tooltip__color_table>
             </Flex>
             {/* </div> */}
             {/* <div style={{ 'text-align': 'center' }}>
