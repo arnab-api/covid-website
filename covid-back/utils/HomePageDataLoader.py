@@ -31,6 +31,13 @@ class HomePageDataLoader:
     df_mobility_mean = df_mobility[['retail_and_recreation_percent_change_from_baseline','grocery_and_pharmacy_percent_change_from_baseline','parks_percent_change_from_baseline','transit_stations_percent_change_from_baseline','workplaces_percent_change_from_baseline']]
     df_mobility['mean'] = df_mobility_mean.mean(axis=1)
 
+    latest_summary = None
+    @staticmethod
+    def getLatestInfo():
+        if(HomePageDataLoader.latest_summary == None):
+            latest_summary = HomePageDataLoader.df_real.sort_values(by=['date'], ascending=False).iloc[0]
+            HomePageDataLoader.latest_summary = json.loads(latest_summary.to_json())
+        return HomePageDataLoader.latest_summary
 
     web_plot_1 = None
     @staticmethod
@@ -49,12 +56,14 @@ class HomePageDataLoader:
         growth_real = []
         confirmed_real = []
         death_real = []
+        daily_death_real = []
 
         active_cases = []
         hospitals_required = []
         deaths = []
         total_cases = []
         daily_cases = []
+        daily_death_est = []
 
         df_sim = HomePageDataLoader.df_sim
         df_real = HomePageDataLoader.df_real
@@ -67,19 +76,26 @@ class HomePageDataLoader:
             deaths.append(HomePageDataLoader.get_num(df_sim['deaths'][i]))
             total_cases.append(HomePageDataLoader.get_num(df_sim['confirmed'][i]))
             diff = 0
+            death_diff = 0
             if(i > 0):
                 diff = df_sim['confirmed'][i] - df_sim['confirmed'][i-1]
+                death_diff = df_sim['deaths'][i] - df_sim['deaths'][i-1] 
             daily_cases.append(HomePageDataLoader.get_num(diff))
+            daily_death_est.append(HomePageDataLoader.get_num(death_diff))
 
             if(i < len(df_real['date'])):
                 active_real.append(int(df_real['active'][i]))
                 confirmed_real.append(int(df_real['confirmed'][i]))
                 death_real.append(int(df_real['deaths'][i]))
                 diff = 0
+                death_diff = 0
                 if(i > 0):
                     diff = df_real['confirmed'][i] - df_real['confirmed'][i-1]
+                    death_diff = df_real['deaths'][i] - df_real['deaths'][i-1] 
                 # print(type(diff))
                 growth_real.append(int(diff))
+                daily_death_real.append(HomePageDataLoader.get_num(death_diff))
+
             # else:
             #     active_real.append(None)
             #     confirmed_real.append(None)
@@ -87,18 +103,20 @@ class HomePageDataLoader:
             #     growth_real.append(None)
         
         web_plot_1['values'] = [
-            { 'value': hospitals_required, 'label': 'Hospitals Required', 'color': "green", 'showLine': True },
+            { 'value': hospitals_required, 'label': 'Hospitalization Required', 'color': "green", 'showLine': True },
 
 
-            { 'value': active_real, 'label': 'Active Real', 'color': "black", 'showLine': False },
-            { 'value': confirmed_real, 'label': 'Confirmed Real', 'color': "#8080ff", 'showLine': False },
-            { 'value': death_real, 'label': 'Death Real', 'color': "#ff6666", 'showLine': False },
-            { 'value': growth_real, 'label': 'Growth Real', 'color': "#b300b3", 'showLine': False },
+            { 'value': active_real, 'label': 'Active', 'color': "black", 'showLine': False },
+            # { 'value': confirmed_real, 'label': 'Confirmed Real', 'color': "#8080ff", 'showLine': False },
+            # { 'value': death_real, 'label': 'Death', 'color': "#ff6666", 'showLine': False },
+            { 'value': daily_death_real, 'label': 'Death', 'color': "#ff6666", 'showLine': False },
+            { 'value': growth_real, 'label': 'Growth', 'color': "#b300b3", 'showLine': False },
 
-            { 'value': active_cases, 'label': 'Active Cases', 'color': "black", 'showLine': True },
-            { 'value': deaths, 'label': 'Deaths', 'color': "#ff8080", 'showLine': True },
-            { 'value': total_cases, 'label': 'Total Cases', 'color': "#8080ff", 'showLine': True },
-            { 'value': daily_cases, 'label': 'Daily Cases', 'color': "#ff99ff", 'showLine': True },
+            { 'value': active_cases, 'label': 'Active Estimated', 'color': "black", 'showLine': True },
+            # { 'value': deaths, 'label': 'Deaths Estimated', 'color': "#ff8080", 'showLine': True },
+            { 'value': daily_death_est, 'label': 'Deaths Estimated', 'color': "#ff8080", 'showLine': True },
+            # { 'value': total_cases, 'label': 'Total Cases', 'color': "#8080ff", 'showLine': True },
+            { 'value': daily_cases, 'label': 'Daily Cases Estimated', 'color': "#ff99ff", 'showLine': True },
         ]
 
         HomePageDataLoader.web_plot_1 = web_plot_1
@@ -250,7 +268,7 @@ class HomePageDataLoader:
             'x_labels': date_arr,
             'values': [
                 { 'value': mobility_drop, 'label': 'Drops in Mobility (x10)', 'color': "black"},
-                { 'value': daily_cases, 'label': 'Daily Cases (x1K)', 'color': "#8080ff"},
+                # { 'value': daily_cases, 'label': 'Daily Cases (x1K)', 'color': "#8080ff"},
                 { 'value': test_positive, 'label': 'Test Positive Rate (x10 in %)', 'color': "green" },
                 { 'value': rt_1, 'label': 'R_t', 'color': "#ff8080" },
                 # { 'value': rt_2, 'label': 'R_t_2', 'color': "rgba(235, 9, 28, .5)" },

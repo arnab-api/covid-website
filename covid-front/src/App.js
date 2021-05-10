@@ -48,9 +48,8 @@ function App() {
             console.log(dist_2_id)
         })
 
-        updateCharts()
-        // updateCharts()
-        // updateCharts()
+        updateCharts();
+        getLatestInfo();
 
     }, [])
 
@@ -283,7 +282,7 @@ function App() {
                 labels: {
                     filter: function (item, chart) {
                         // Logic to remove a particular legend item goes here
-                        return !item.text.includes('Real');
+                        return !item.text.includes('Estimated');
                     },
                     fontSize: 8
                 }
@@ -539,17 +538,29 @@ function App() {
         console.log("refreshing forcast table data for ", geo)
         fetch('/api/forcast_table/' + geo).then(response => {
             if (response.ok) {
-              console.log(response.data)
+            //   console.log(response.data)
               return response.json()
             }
           }).then(data => {
-            console.log(" >>>>>>>>>>>>>>>>>>>>>>> ", data)
+            // console.log(" >>>>>>>>>>>>>>>>>>>>>>> ", data)
             setDistrictForcastTable(data)
         })
     }
 
 
     // ###################################### District Forcast Table ##########################################
+    const [summaryInfo, setSummaryInfo] = useState("")
+    const getLatestInfo = () => {
+        fetch('api/latest_summary').then(response => {
+            if(response.ok) {
+                console.log(response.data)
+                return response.json()
+            }
+        }).then(data => {
+            console.log(" >>>> ", data)
+            setSummaryInfo(data)
+        })
+    }
 
 
     const updateCharts = () => {
@@ -588,6 +599,7 @@ function App() {
                     <Route exact path='/'>
                         <HomePage
                             dist_2_id={dist_2_id}
+                            summaryInfo = {summaryInfo}
                             area={area} setArea={setArea}
                             caseEstimationData={caseEstimationData} setCaseEstimationData={setCaseEstimationData}
                             caseEstimationOptions={caseEstimationOptions} setCaseEstimationOptions={setCaseEstimationOptions}

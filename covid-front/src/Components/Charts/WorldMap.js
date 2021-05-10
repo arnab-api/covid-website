@@ -176,7 +176,7 @@ export const WorldMap = ({
             <ComposableMap
                 projectionConfig={{
                     scale: 160,
-                    rotation: [-11, 0, 0],
+                    rotation: [-45, 0, 0],
                 }}
                 // projection="geoMercator"
                 width={800}

@@ -151,11 +151,13 @@ export const GridPlot = ({ area }) => {
               <YAxis
                 dataKey="DT"
                 allowDataOverflow={true}
+                scale="log"
+                domain={['auto', 'auto']} 
                 // domain={[0, 2000]}
-                domain={[
-                  Math.floor(Math.min.apply(Math, data.map(function(o) { return o.DT; }))/100)*100,
-                  Math.ceil(Math.max.apply(Math, data.map(function(o) { return o.DT; }))/100)*100
-                ]}
+                // domain={[
+                //   Math.floor(Math.min.apply(Math, data.map(function(o) { return o.DT; }))/100)*100,
+                //   Math.ceil(Math.max.apply(Math, data.map(function(o) { return o.DT; }))/100)*100
+                // ]}
                 orientation="left"
                 axisLine={false}
                 tickMargin={10}

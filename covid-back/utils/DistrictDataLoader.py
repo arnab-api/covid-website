@@ -287,6 +287,27 @@ class DistrictDataLoader:
         # Set y-axes titles
         fig.update_yaxes(title_text="<b>Daily Cases</b>", secondary_y=False)
         fig.update_yaxes(title_text="<b>Rt</b>", secondary_y=True)
+        fig.update_yaxes(range=[0, 3], secondary_y=True)
+
+        fig.add_hline(
+            y=1, 
+            line_color="blue",
+            secondary_y=True,
+        )
+        fig.add_annotation(
+            x = 1.02,
+            y=1,
+            showarrow=False,
+            text="<i>"+"Rt=1"+"</i>",
+            textangle=0,
+            xref="paper",
+            yref="y2",
+            font=dict(
+                # family="Courier New, monospace",
+                size=10,
+                color="rgba(0, 0, 255, 1)"
+            ),
+        )
 
         # fig.update_layout(
         #     autosize=False,

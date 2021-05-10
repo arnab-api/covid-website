@@ -1,7 +1,7 @@
 /* Custom properties */
 :root {
-    --tooltip-text-color: white;
-    --tooltip-background-color: black;
+    --tooltip-text-color: rgb(0, 0, 0);
+    --tooltip-background-color: rgb(235, 235, 224);
     --tooltip-margin: 30px;
     --tooltip-arrow-size: 6px;
   }
@@ -43,7 +43,7 @@
   
   /* Absolute positioning */
   .Tooltip-Tip.top {
-    top: calc(var(--tooltip-margin) * -1);
+    top: calc(var(--tooltip-margin) * -11);
   }
   /* CSS border triangles */
   .Tooltip-Tip.top::before {
@@ -67,7 +67,7 @@
   
   /* Absolute positioning */
   .Tooltip-Tip.bottom {
-    bottom: calc(var(--tooltip-margin) * -1);
+    bottom: calc(var(--tooltip-margin) * -10);
   }
   /* CSS border triangles */
   .Tooltip-Tip.bottom::before {
@@ -90,4 +90,6 @@
     transform: translateX(0) translateY(-50%);
     border-left-color: var(--tooltip-background-color);
   }
+
+
   

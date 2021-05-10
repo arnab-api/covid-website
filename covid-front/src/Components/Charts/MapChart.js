@@ -22,7 +22,7 @@ import { DistrictDataContext } from '../../App.js';
 import styled from 'styled-components';
 import { ThemeProvider, Spinner, Flex, SimpleGrid, Box, Text } from "@chakra-ui/core";
 import Plot from 'react-plotly.js';
-import Tooltip from '../Tooltip/Tooltip'
+import Tooltip__color_table from '../Tooltip/Tooltip__color_table'
 import Slider from '@material-ui/core/Slider';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { BDPageTable } from '../Tables/BDPageTable'
@@ -415,11 +415,8 @@ export const MapChart = ({
                     <Spinner size="xl" color="green.300" />
                 </Flex>) : (
                 <>
-                    {/* <Tooltip content="Yee-haw!" direction="right">
-                        <strong>test</strong>
-                    </Tooltip> */}
 
-                    <div style={{ 'text-align': 'center' }}>
+                    <div style={{ 'text-align': 'center', fontSize: "12px"}}>
                         <strong> {getFormattedDate(heatmap_date)} </strong>
                     </div>
  
@@ -487,22 +484,33 @@ export const MapChart = ({
                         <li><span style={{'background-color': COLOR_BUCKET[2], 'color': COLOR_BUCKET[2]}}>__</span> <strong>Accelerated Spread</strong></li>
                         <li><span style={{'background-color': COLOR_BUCKET[3], 'color': COLOR_BUCKET[3]}}>__</span> <strong>Tipping Point</strong></li>
                     </ul>  */}
+                    
+                    {/* <Tooltip content="Yee-haw!" direction="right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                        </svg>
+                    </Tooltip> */}
                     <Flex wrap="wrap" width="100%" justify="center" align="center">
                         <div style={{
-                            width: '65%',
+                            width: '68%',
                             fontSize: '10px',
                             align: 'center',
                             justify: 'center'
                         }}>
-                            <svg width="40" height="10">
-                                <rect width="40" height="10"
-                                    style={{
-                                        fill: COLOR_BUCKET_tooltip[0],
-                                        strokeWidth: 3,
-                                        stroke: "rgb(0,0,0)"
-                                    }}
-                                />
-                            </svg> <strong >&nbsp;Trivial</strong>
+                            <Tooltip__color_table content="" direction="top">
+                                <svg width="40" height="10">
+                                    <rect width="40" height="10"
+                                        style={{
+                                            fill: COLOR_BUCKET_tooltip[0],
+                                            strokeWidth: 3,
+                                            stroke: "rgb(0,0,0)"
+                                        }}
+                                    />
+                                </svg> 
+                            
+                                <strong class="unselectable">&nbsp;Trivial</strong>
+                            
                             &nbsp; &nbsp;
 
                             <svg width="40" height="10">
@@ -513,7 +521,7 @@ export const MapChart = ({
                                         stroke: "rgb(0,0,0)"
                                     }}
                                 />
-                            </svg> <strong>&nbsp;Community Spread</strong>
+                            </svg> <strong class="unselectable">&nbsp;Community Spread</strong>
                             &nbsp; &nbsp;
 
                             <svg width="40" height="10">
@@ -524,7 +532,7 @@ export const MapChart = ({
                                         stroke: "rgb(0,0,0)"
                                     }}
                                 />
-                            </svg> <strong>&nbsp;Accelerated Spread</strong>
+                            </svg> <strong class="unselectable">&nbsp;Accelerated Spread</strong>
                             &nbsp; &nbsp;
 
                             <svg width="40" height="10">
@@ -535,26 +543,37 @@ export const MapChart = ({
                                         stroke: "rgb(0,0,0)"
                                     }}
                                 />
-                            </svg> <strong>&nbsp;Tipping Point</strong>
+                            </svg> <strong class="unselectable">&nbsp;Tipping Point</strong>
+                            </Tooltip__color_table>
+
+                            {/* &nbsp; &nbsp;  
+                            <Tooltip content="" direction="top">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                                </svg>
+                            </Tooltip> */}
                         </div>
+                    </Flex>
+                    <Flex wrap="wrap" width="100%" justify="center" align="center">
                         <div style={{
-                            align: 'center',
-                            width: '80%',
-                            justify: 'center'
-                        }}>
-                            <PrettoSlider 
-                                valueLabelDisplay="off" 
-                                aria-label="pretto slider" 
-                                aria-labelledby="discrete-slider"
-                                defaultValue={riskmap_arr.length-8}
-                                // getAriaValueText={sliderText}
-                                valueLabelFormat={value => ``}
-                                step={1}
-                                marks
-                                min={0}
-                                max={riskmap_arr.length-8}
-                                onChange={handleSliderValueChage}
-                            />
+                                align: 'center',
+                                width: '80%',
+                                justify: 'center'
+                            }}>
+                                <PrettoSlider 
+                                    valueLabelDisplay="off" 
+                                    aria-label="pretto slider" 
+                                    aria-labelledby="discrete-slider"
+                                    defaultValue={riskmap_arr.length-8}
+                                    // getAriaValueText={sliderText}
+                                    valueLabelFormat={value => ``}
+                                    step={1}
+                                    marks
+                                    min={0}
+                                    max={riskmap_arr.length-8}
+                                    onChange={handleSliderValueChage}
+                                />
                         </div>
                     </Flex>
                     {/* <br /> */}

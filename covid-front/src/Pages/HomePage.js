@@ -60,7 +60,7 @@ const useStyles = makeStyles({
 })
 
 export const HomePage = ({
-    area, setArea,
+    area, setArea, summaryInfo,
     caseEstimationData, setCaseEstimationData,
     caseEstimationOptions, setCaseEstimationOptions,
     succeptiblePopulationData, setSucceptiblePopulationData,
@@ -104,6 +104,7 @@ export const HomePage = ({
                     area = {area}
                     setArea = {setArea}  
                     updateCharts = {updateCharts}
+                    summaryInfo = {summaryInfo}
                 />
             </div>
 

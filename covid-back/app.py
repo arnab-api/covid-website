@@ -450,6 +450,10 @@ def latest_dt():
 def get_dt_before_15():
     return jsonify(DistrictDataLoader.get_dt_before_15())
 ##################### DT ########################
+@app.route("/api/latest_summary")
+def latest_summary():
+    return jsonify(HomePageDataLoader.getLatestInfo())
+
 if __name__ == "__main__":
     app.run(
                 host=os.getenv('IP', '0.0.0.0'), 

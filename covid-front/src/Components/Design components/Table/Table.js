@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from './Table.css'
+import './Table.css'
 
 const Table = () => {
   const [tableData, setTableData] = useState([{ date: '12/1/21', confirmedCases: 38, recoveredCases: 12, deaths: 0, Rt: 2, DT: 1.9 }])
