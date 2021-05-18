@@ -402,6 +402,13 @@ export const MapChart = ({
         setTableRows__pastweek(row_data)
     }
 
+    const queryTable = (table_info, dist_name) => {
+        for(let i = 0; i < table_info.length; i++){
+            if(table_info[i].name == dist_name) return table_info[i];
+        }
+        return null;
+    }
+
     const [projection_config, setProjectionConfig] = useState({
         scale: 36,
         center: [90.412518, 23.810332]
@@ -446,6 +453,12 @@ export const MapChart = ({
             return null;
         }
     }
+
+    const riskCompare = (cur_risk, past_risk) => {
+        if(cur_risk == past_risk) return "equal";
+        if(cur_risk > past_risk) return "up";
+        if(cur_risk < past_risk) return "down"; // green down
+      }
 
     return (
         <ThemeProvider>
@@ -500,18 +513,46 @@ export const MapChart = ({
                                         geographies.map(geo => {
                                             
                                             let centroid = findCentroid(geo)
-                                            console.log(">>>> ", geo.properties.DIST_NAME, centroid)
+                                            let present_data = queryTable(tablerows, geo.properties.DIST_NAME)
+                                            let past_data = queryTable(tablerows__pastweek, geo.properties.DIST_NAME)
+                                            let cmp = riskCompare(present_data.risk, past_data.risk)
+                                            let color = "black";
+                                            if(cmp == "up") color="red";
+                                            else if(cmp=="down") color="green";
+                                            console.log(">>>> ", geo.properties.DIST_NAME, centroid, present_data, past_data, cmp)
 
                                             const current = heatmap.find(s => s.id === geo.id);
                                             return (
                                                 <>
                                                     {
                                                         centroid != null ? (
-                                                            <Marker coordinates={[centroid.x, centroid.y]} fill="#000">
-                                                                <text class="unselectable" y=".0" x="-.02" fontSize={.05} font-weight={1000} textAnchor="middle">
+                                                            <>
+                                                            <Marker coordinates={[centroid.x, centroid.y]} fill="black">
+                                                                <text class="unselectable" y="-.01" x="-.02" fontSize={.05} font-weight={1000} textAnchor="middle">
                                                                     {geo.properties.DIST_NAME.substring(0, 3).toUpperCase()}
                                                                 </text>
                                                             </Marker>
+                                                            <Marker coordinates={[centroid.x, centroid.y]} fill={color}>
+                                                                <text class="unselectable" y=".04" x="-.02" fontSize={.05} font-weight={1000} textAnchor="middle">
+                                                                    {
+                                                                        cmp=='equal' ? ( 
+                                                                            <>
+                                                                            </>
+                                                                        ):(
+                                                                            cmp=='up' ? (
+                                                                            <>
+                                                                                &#9650;
+                                                                            </>
+                                                                            ) : (
+                                                                            <>
+                                                                                &#9660;
+                                                                            </>
+                                                                            )
+                                                                        )
+                                                                    }
+                                                                </text>
+                                                            </Marker>
+                                                            </>
                                                         ):(<></>)
                                                     }
                                                     <Geography
