@@ -27,6 +27,7 @@ import Slider from '@material-ui/core/Slider';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { BDPageTable } from '../Tables/BDPageTable'
 import axios from "axios";
+import { utcYears } from 'plotly.js-basic-dist';
 
 
 const PrettoSlider = withStyles({
@@ -406,6 +407,46 @@ export const MapChart = ({
         center: [90.412518, 23.810332]
     });
 
+    const findCentroid = (geo) => {
+        // console.log(geo)
+        // let xy_arr = geo.geometry.coordinates
+        // console.log(geo.properties.DIST_NAME)
+        if(geo.geometry != null){
+            let xy_arr = geo.geometry.coordinates;
+            let x=0, y=0, num_point=0; 
+            
+            for(let i = 0; i<xy_arr.length; i++){
+                for(let j = 0; j<xy_arr[i].length; j++){
+                    if(Array.isArray(xy_arr[i][j][0])){
+                        for(let k = 0; k<xy_arr[i][j].length; k++){
+                            num_point++;
+                            x += xy_arr[i][j][k][0];
+                            y += xy_arr[i][j][k][1];
+                        }
+                    }
+                    else{
+                        num_point++;
+                        x += xy_arr[i][j][0];
+                        y += xy_arr[i][j][1];
+                    }
+                }
+            }
+            x/=num_point;
+            y/=num_point;
+
+            // console.log(xy_arr, x, y, num_point)
+
+            return {
+                'x': x,
+                'y': y
+            }
+        }
+        else{
+            // console.log("This district does not have co-ordinate information");
+            return null;
+        }
+    }
+
     return (
         <ThemeProvider>
         <section>
@@ -444,31 +485,47 @@ export const MapChart = ({
                                 }}
                             >
 
-                                {
+                                {/* {
                                     BD_DIST.districts.map(dist => (
                                         <Marker coordinates={[dist.long, dist.lat]} fill="#000">
-                                            <text class="unselectable" y=".03" x=".01" fontSize={.06} font-weight={900} textAnchor="middle">
+                                            <text class="unselectable" y=".0" x=".0" fontSize={.06} font-weight={900} textAnchor="middle">
                                                 {dist.name.substring(0, 3).toUpperCase()}
                                             </text>
                                         </Marker>
                                     ))
-                                }
+                                } */}
+
                                 <Geographies geography={BD_DIST_TOPO}>
                                     {({ geographies }) =>
                                         geographies.map(geo => {
+                                            
+                                            let centroid = findCentroid(geo)
+                                            console.log(">>>> ", geo.properties.DIST_NAME, centroid)
+
                                             const current = heatmap.find(s => s.id === geo.id);
                                             return (
-                                                <Geography
-                                                    key={geo.rsmKey}
-                                                    geography={geo}
-                                                    style={geographyStyle}
-                                                    // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
-                                                    fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
-                                                    // fill= {DEFAULT_COLOR}
-                                                    onMouseEnter={onMouseEnter(geo, current)}
-                                                    onMouseLeave={onMouseLeave}
-                                                    onClick={handleClick(geo)}
-                                                />
+                                                <>
+                                                    {
+                                                        centroid != null ? (
+                                                            <Marker coordinates={[centroid.x, centroid.y]} fill="#000">
+                                                                <text class="unselectable" y=".0" x="-.02" fontSize={.05} font-weight={1000} textAnchor="middle">
+                                                                    {geo.properties.DIST_NAME.substring(0, 3).toUpperCase()}
+                                                                </text>
+                                                            </Marker>
+                                                        ):(<></>)
+                                                    }
+                                                    <Geography
+                                                        key={geo.rsmKey}
+                                                        geography={geo}
+                                                        style={geographyStyle}
+                                                        // fill={current ? colorScale(current.value) : DEFAULT_COLOR}
+                                                        fill={current ? my_colorScale(current.value) : DEFAULT_COLOR}
+                                                        // fill= {DEFAULT_COLOR}
+                                                        onMouseEnter={onMouseEnter(geo, current)}
+                                                        onMouseLeave={onMouseLeave}
+                                                        onClick={handleClick(geo)}
+                                                    />
+                                                </>
                                             )
                                         }
                                         )}

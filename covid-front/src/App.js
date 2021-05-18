@@ -186,10 +186,10 @@ function App() {
             }
             else {
                 data_obj['showLine'] = false
-                data_obj['pointRadius'] = 2
+                data_obj['pointRadius'] = 1.5
             }
             // if (data[i]['label'] == 'R_t0') data_obj['fill'] = '+1'
-            if (data[i]['label'] == 'Hospitals Required') data_obj['borderWidth'] = 3
+            if (data[i]['label'] == 'Hospitalization Required') data_obj['borderWidth'] = 2
 
             // console.log(data[i]['label'], data_obj['fill'])
 
@@ -351,7 +351,7 @@ function App() {
                 // 'fillColor': data[i]['color'],
                 // 'fill': true,
                 'pointBackgroundColor': data[i]['color'],
-                'pointRadius': 2,
+                'pointRadius': 1.5,
                 'fill': false,
                 'fillOpacity': .3,
                 'spanGaps': true

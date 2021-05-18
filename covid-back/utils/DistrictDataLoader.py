@@ -15,7 +15,7 @@ from .BD_MapLoader import BD_MapLoader
 
 class DistrictDataLoader:
 
-    # DATA_PATH = "Data/CSV_new/"
+    # DATA_PATH = "Data/CSV_18_03/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     df_cases_real = pd.read_csv(DATA_PATH + 'districts_real.csv')

@@ -7,7 +7,7 @@ import copy
 
 class HomePageDataLoader:
 
-    # DATA_PATH = "Data/CSV_new/"
+    # DATA_PATH = "Data/CSV_18_03/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     @staticmethod
@@ -110,7 +110,7 @@ class HomePageDataLoader:
             # { 'value': confirmed_real, 'label': 'Confirmed Real', 'color': "#8080ff", 'showLine': False },
             # { 'value': death_real, 'label': 'Death', 'color': "#ff6666", 'showLine': False },
             { 'value': daily_death_real, 'label': 'Death', 'color': "#ff6666", 'showLine': False },
-            { 'value': growth_real, 'label': 'Growth', 'color': "#b300b3", 'showLine': False },
+            { 'value': growth_real, 'label': 'Daily Cases', 'color': "#b300b3", 'showLine': False },
 
             { 'value': active_cases, 'label': 'Active Estimated', 'color': "black", 'showLine': True },
             # { 'value': deaths, 'label': 'Deaths Estimated', 'color': "#ff8080", 'showLine': True },
