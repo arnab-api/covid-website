@@ -15,7 +15,7 @@ from .BD_MapLoader import BD_MapLoader
 
 class DistrictDataLoader:
 
-    # DATA_PATH = "Data/CSV_18_03/"
+    # DATA_PATH = "Data/CSV_june_19/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     df_cases_real = pd.read_csv(DATA_PATH + 'districts_real.csv')
@@ -66,6 +66,13 @@ class DistrictDataLoader:
             return district_name
 
         return "District Not found"
+
+    @staticmethod
+    def get_Map_districtname(district_name):
+        for key in DistrictDataLoader.replace_name_:
+            if(DistrictDataLoader.replace_name_[key] == district_name):
+                return key
+        return district_name
 
     @staticmethod
     def get_risk_data():
@@ -141,6 +148,102 @@ class DistrictDataLoader:
             DistrictDataLoader.bd_risk_arr = bd_risk_arr
 
         return DistrictDataLoader.bd_risk_arr[::-1]
+
+    rt_json = None
+    @staticmethod
+    def getRtMap__Array():
+        if(DistrictDataLoader.rt_json != None):
+            print("District-wise Rt data is already loaded -- returning cached value")
+            return DistrictDataLoader.rt_json
+        dist_2_id = BD_MapLoader.getDistrictData()
+        # df_rt = DistrictDataLoader.df_real
+        df_rt = pd.read_csv(DistrictDataLoader.DATA_PATH + "/districts_real_rt_gr_dt.csv")
+        rt_date = {}
+        print(df_rt.shape)
+        for index, row in df_rt.iterrows():
+            date = row['date']
+            # print(" >>>>> ", date)
+            if(date not in rt_date):
+                rt_date[date] = []
+            district = DistrictDataLoader.get_Map_districtname(row['district'].upper())
+            ids = dist_2_id[district]
+            for _id in ids:
+                rt_date[date].append({
+                    "dist" : district,
+                    "id"   : _id,
+                    "value": row["ML"]
+                })
+        
+        # return rt_date
+        rt_json = []
+        for date in rt_date:
+            rt_json.append({
+                "date": date,
+                "heat_map": rt_date[date]
+            })
+
+        
+        DistrictDataLoader.rt_json = sorted(rt_json, key=itemgetter('date'), reverse=False)[-107:]
+        return DistrictDataLoader.rt_json
+
+    pop_dist = None
+    @staticmethod
+    def getPopulationDistribution():
+        if(DistrictDataLoader.pop_dist != None):
+            return DistrictDataLoader.pop_dist
+        pop_mod = pd.read_csv("Data/district_population_modified.csv")
+        pop_dist = {}
+
+        for index, row in pop_mod.iterrows():
+            dist = row['Name']
+            pop = row["Population\nProjection (P)\n2016-03-15"]
+            pop = int(pop.replace(",", ""))
+            pop_dist[dist] = pop
+
+        DistrictDataLoader.pop_dist = pop_dist
+        return DistrictDataLoader.pop_dist
+
+    daily_json = None
+    @staticmethod
+    def getDailyCasesMap__Array():
+        if(DistrictDataLoader.daily_json != None):
+            print("District-wise Confirmed data is already loaded -- returning cached value")
+            return DistrictDataLoader.daily_json
+        dist_2_id = BD_MapLoader.getDistrictData()
+
+        df_confirmed = pd.read_csv(DistrictDataLoader.DATA_PATH + "districts_real.csv")
+        df_confirmed['daily_cases'] = df_confirmed['confirmed'].diff()
+        confirmed_date = {}
+
+        pop_dist = DistrictDataLoader.getPopulationDistribution()
+
+        for index, row in df_confirmed.iterrows():
+            date = row['date']
+            if(date not in confirmed_date):
+                confirmed_date[date] = []
+            pop = pop_dist[row['district']]
+            district = DistrictDataLoader.get_Map_districtname(row['district'].upper())
+            ids = dist_2_id[district]
+            value = row["daily_cases"]
+            if(math.isnan(value)):
+                continue
+            for _id in ids:
+                confirmed_date[date].append({
+                    "dist" : district,
+                    "id"   : _id,
+                    "value": round(int(max(row["daily_cases"], 0))*100*1000/pop, 2)
+                })
+        
+        confirmed_json = []
+        for date in confirmed_date:
+            confirmed_json.append({
+                "date": date,
+                "heat_map": confirmed_date[date]
+            })
+
+        
+        DistrictDataLoader.daily_json = sorted(confirmed_json, key=itemgetter('date'), reverse=False)[-107:]
+        return DistrictDataLoader.daily_json
     
     @staticmethod
     def getRiskMap__present():
@@ -320,7 +423,10 @@ class DistrictDataLoader:
             yanchor="bottom",
             y=1.02,
             xanchor="right",
-            x=1
+            x=1,
+            font=dict(
+                size=10,
+            )
         ))
 
         fig.update_layout(
@@ -716,9 +822,12 @@ class DistrictDataLoader:
         fig.update_layout(legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.02,
+            y=1,
             xanchor="right",
-            x=1
+            x=1,
+            font=dict(
+                size=10,
+            )
         ))
         fig.update_yaxes(title_text="<b>Risk Value</b>")
         fig.update_layout(

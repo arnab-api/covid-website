@@ -12,6 +12,7 @@ import TopBar from './Components/Design components/topBar/topBar';
 import Footer from './Components/Design components/footer/footer';
 import { HomePage } from './Pages/HomePage';
 import { MapPage } from './Pages/MapPage/MapPage'
+import { DifferentRiskMaps } from './Pages/MapPage/DifferentRiskMaps';
 import { WorldMapPage } from './Pages/MapPage/WorldMapPage'
 import AboutPage from './Pages/AboutPage/AboutPage';
 import { ObservableImpact } from './Components/Charts/ObservableImpact'
@@ -284,16 +285,16 @@ function App() {
                         // Logic to remove a particular legend item goes here
                         return !item.text.includes('Estimated');
                     },
-                    fontSize: 8
+                    fontSize: 10
                 }
             },
             responsive: false,
             maintainAspectRatio: false,
-            title: {
-                display: true,
-                text: 'Case Estimation Chart',
-                fontSize: 10
-            }
+            // title: {
+            //     display: true,
+            //     text: 'Case Estimation Chart',
+            //     fontSize: 10
+            // }
         }
 
         setCaseEstimationData(chartData)
@@ -442,7 +443,7 @@ function App() {
                         return !item.text.includes('Low') &&
                             !item.text.includes('High');
                     },
-                    fontSize: 8
+                    fontSize: 10
                 }
             },
             responsive: false,
@@ -561,6 +562,7 @@ function App() {
             setSummaryInfo(data)
         })
     }
+    // ###################################### District Forcast Table ##########################################
 
 
     const updateCharts = () => {
@@ -580,6 +582,10 @@ function App() {
         getDistrictZoneRisk__For(geo)
         getDistrictForcast__For(geo)
     }
+
+
+    // ###################################### For World Page ##########################################
+
 
     return (
         <DistrictDataContext.Provider value={[districtData, setDistrictData]}>
@@ -637,6 +643,9 @@ function App() {
                     </Route>
                     <Route path='/maps'>
                         <MapPage setPageName={setPageName} />
+                    </Route>
+                    <Route path='/diffriskmaps'>
+                        <DifferentRiskMaps setPageName={setPageName} />
                     </Route>
                     <Route path='/world'>
                         <WorldMapPage setPageName={setPageName} />

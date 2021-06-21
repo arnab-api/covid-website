@@ -35,6 +35,7 @@ const TopBar = ({
                 <li className={styles.catItem}><Link to='/rt'>R<sub>t</sub></Link></li>
                 <li className={styles.catItem}><Link to='/dt'>D<sub>t</sub></Link></li>
                 <li className={styles.catItem}><Link to='/maps'>BD-Maps</Link></li>
+                <li className={styles.catItem}><Link to='/diffriskmaps'>Different Approaches</Link></li>
                 <li className={styles.catItem}><Link to='/world'>World</Link></li>
                 <li className={styles.catItem}><Link to='/about'>MISC</Link></li>
             </ul>

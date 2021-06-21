@@ -218,6 +218,8 @@ export const MapChart = ({
     const [heatmap_date, setHeatMap_date] = useState("")
     const [districtData, setDistrictData] = useContext(DistrictDataContext);
     const [loading, setLoading] = useState(true);
+    const [increasing, setIncreasing] = useState(0)
+    const [decreasing, setDecreasing] = useState(0)
 
     function createTableEntry(name, risk) {
         return { 
@@ -332,6 +334,8 @@ export const MapChart = ({
 
                 updateTableRows(response.data[response.data.length-1])
                 updateTableRows__pastweek(response.data[response.data.length-8])
+
+                updateIncreasingAndDecreasing(response.data[response.data.length-1], response.data[response.data.length-8])
                 setLoading(false)
             }).catch((error) => {
                 setLoading(false)
@@ -346,6 +350,8 @@ export const MapChart = ({
 
         updateTableRows(riskmap_arr[value+7])
         updateTableRows__pastweek(riskmap_arr[value])
+
+        updateIncreasingAndDecreasing(riskmap_arr[value+7], riskmap_arr[value])
     }
 
     const getFormattedDate = (date) => {
@@ -409,6 +415,34 @@ export const MapChart = ({
         return null;
     }
 
+    const updateIncreasingAndDecreasing = (tablerows, tablerows__pastweek) => {
+        // console.log("<<<<<>>>>> Increasing and Deceasing called", tablerows, tablerows__pastweek);
+
+        let track = [];
+        let inc = 0;
+        let dec = 0;
+        for(let i = 0; i < tablerows.heat_map.length; i++){
+            // console.log("<<<>>>", tablerows.heat_map[i]);
+            let it_dist = tablerows.heat_map[i].dist;
+            let it_risk = tablerows.heat_map[i].value;
+            if(track.includes(it_dist)) continue
+            for(let j = 0; j < tablerows__pastweek.heat_map.length; j++){
+                let jt_dist = tablerows__pastweek.heat_map[j].dist;
+                let jt_risk = tablerows__pastweek.heat_map[j].value;
+                if(it_dist == jt_dist){
+                    // console.log(it_dist,  it_risk, " <><><> ", jt_dist, jt_risk, " :: ", inc, dec)
+                    if(it_risk > jt_risk) inc++;
+                    else if(it_risk < jt_risk) dec++;
+
+                    track.push(it_dist)
+                    break;
+                }
+            }
+        }
+        setIncreasing(inc);
+        setDecreasing(dec);
+    }
+
     const [projection_config, setProjectionConfig] = useState({
         scale: 36,
         center: [90.412518, 23.810332]
@@ -470,8 +504,10 @@ export const MapChart = ({
                 </Flex>) : (
                 <>
 
-                    <div style={{ 'text-align': 'center', fontSize: "12px"}}>
-                        <strong> {getFormattedDate(heatmap_date)} </strong>
+                    <div style={{ 'text-align': 'center', fontSize: "13px", fontWeight: 'bold'}}>
+                        <strong> {getFormattedDate(heatmap_date)} </strong> &nbsp;
+                        (<span style={{color: 'red', fontSize: "17px"}}>&#9650;</span>{increasing}, &nbsp;
+                        <span style={{color: 'green', fontSize: "17px"}}>&#9660;</span>{decreasing})
                     </div>
  
                     
@@ -519,7 +555,7 @@ export const MapChart = ({
                                             let color = "black";
                                             if(cmp == "up") color="red";
                                             else if(cmp=="down") color="green";
-                                            console.log(">>>> ", geo.properties.DIST_NAME, centroid, present_data, past_data, cmp)
+                                            // console.log(">>>> ", geo.properties.DIST_NAME, centroid, present_data, past_data, cmp)
 
                                             const current = heatmap.find(s => s.id === geo.id);
                                             return (
@@ -533,7 +569,7 @@ export const MapChart = ({
                                                                 </text>
                                                             </Marker>
                                                             <Marker coordinates={[centroid.x, centroid.y]} fill={color}>
-                                                                <text class="unselectable" y=".04" x="-.02" fontSize={.05} font-weight={1000} textAnchor="middle">
+                                                                <text class="unselectable" y=".06" x="-.02" fontSize={.085} font-weight={1000} textAnchor="middle">
                                                                     {
                                                                         cmp=='equal' ? ( 
                                                                             <>

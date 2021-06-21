@@ -85,7 +85,25 @@ const COLOR_BUCKET_tooltip = [
     'rgb(248, 140, 81, 1)',   // Accelerated spread
     'rgb(192, 26, 39, 1)',   // Tipping point
 ]
-const bins = [1, 9, 24]
+
+const COLOR_BUCKET_5 = [
+    'rgb(84, 180, 95, .6)',   // trivial
+    'rgb(236, 212, 36, .6)',
+    'rgb(248, 140, 81, .6)',   // Accelerated spread
+    'rgb(255, 0, 0, .6)',
+    'rgb(192, 26, 39, .6)',   // Tipping point
+]
+const COLOR_BUCKET_tooltip_5 = [
+    'rgb(84, 180, 95, 1)',   // trivial
+    'rgb(236, 212, 36, 1)',
+    'rgb(248, 140, 81, 1)',   // Accelerated spread
+    'rgb(255, 0, 0, 1)',
+    'rgb(192, 26, 39, 1)',   // Tipping point
+]
+
+
+
+// const bins = [1, 9, 24]
 
 
 
@@ -98,7 +116,10 @@ const gradientData = {
 
 export const MapChart_comparison = ( {
         heatmap,
-        heatmap__time
+        heatmap__time,
+        isMethod,
+        modelName,
+        bins = [1, 9, 24]
     }) => {
 
     // console.log(BD_DIST)
@@ -136,7 +157,12 @@ export const MapChart_comparison = ( {
         let color_box = `<svg width="12" height="12">`
         color_box += `<rect width="20" height="20" style="fill:${my_colorScale(current.value, true)};stroke-width:3;stroke:rgb(0,0,0)"/>`
         let elem = `<strong style="color:white;">&nbsp;${current.dist}</strong><br/>`
-        elem += `Risk: ${current.value}<br/>`
+        let matric_name = "Risk"
+        if(modelName != null){
+            if(modelName == "Rt") matric_name = "R<sub>t</sub>";
+            else matric_name = modelName
+        }
+        elem += `${matric_name}: ${current.value}<br/>`
         // let rt = checkValue(current.rt.value)
         // elem += `R<sub>t</sub>: ${rt}<br/>`
         // elem += `Confirmed cases: ${current.confirmed}`
@@ -160,8 +186,21 @@ export const MapChart_comparison = ( {
     //     .domain(heatmap.map(d => d.value))
     //     .range(COLOR_RANGE);
 
-    const my_colorScale = (value, for_tooltip = false) => {
+    const my_colorScale_5 = (value, for_tooltip = false) => {
         // console.log("---> ", value)
+        let bucket = COLOR_BUCKET_5;
+        if(for_tooltip == true) bucket = COLOR_BUCKET_tooltip_5
+        if(value < bins[0]) return bucket[0];
+        if(value < bins[1]) return bucket[1];
+        if(value < bins[2]) return bucket[2];
+        if(value < bins[3]) return bucket[3];
+        return bucket[4];
+    }
+
+    const my_colorScale = (value, for_tooltip = false) => {
+        // console.log("---> ", value, bins)
+        if(bins.length == 4) return my_colorScale_5(value, for_tooltip)
+
         let bucket = COLOR_BUCKET;
         if(for_tooltip == true) bucket = COLOR_BUCKET_tooltip
         if(value < bins[0]) return bucket[0];
@@ -172,11 +211,19 @@ export const MapChart_comparison = ( {
 
     return (
         <div>
-            <div style={{'text-align': 'center', fontSize: '12px'}}>
-                <strong> {getFormattedDate(heatmap__time)} </strong>
-            </div>
+            {
+                isMethod ? (
+                    <div style={{'text-align': 'center', fontSize: '12px'}}>
+                        <strong> {modelName} </strong>
+                    </div>
+                ) : (
+                    <div style={{'text-align': 'center', fontSize: '12px'}}>
+                        <strong> {getFormattedDate(heatmap__time)} </strong>
+                    </div>
+                )
+            }
             <ReactTooltip html={true}>{tooltipContent}</ReactTooltip>
-            <ComposableMap
+            {/* <ComposableMap
                 projectionConfig={projection_config}
                 projection="geoMercator"
                 width={5}
@@ -186,7 +233,21 @@ export const MapChart_comparison = ( {
                     height: "110%"
                 }}
                 data-tip=""
-            >
+            > */}
+                <ComposableMap
+                    projectionConfig={{
+                        scale: 36,
+                        center: [90.412518, 23.810332]
+                    }}
+                    projection="geoMercator"
+                    width={3.0}
+                    height={4.2}
+                    data-tip=""
+                    style={{ 
+                        height: "70%",
+                        width: "90%",  
+                    }}
+                >
 
                 {
                     BD_DIST.districts.map( dist => (
@@ -197,6 +258,7 @@ export const MapChart_comparison = ( {
                         </Marker>
                     ))
                 }
+
                 <Geographies geography={BD_DIST_TOPO}>
                     {({ geographies }) =>
                         geographies.map(geo => {
@@ -215,7 +277,7 @@ export const MapChart_comparison = ( {
                                 />
                             )
                         }
-                        )}
+                    )}
                 </Geographies>
             </ComposableMap>
         </div>

@@ -2,11 +2,16 @@ import pandas as pd
 import datetime
 import math
 from operator import itemgetter
+import plotly
+import plotly.graph_objects as go
+import numpy as np
+from plotly.subplots import make_subplots
+import json
 
 
 class WorldMapLoader:
 
-    # DATA_PATH = "Data/CSV_18_03/"
+    # DATA_PATH = "Data/CSV_june_19/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     world_df = pd.read_csv(DATA_PATH + "world_risk_value.csv")
@@ -109,21 +114,118 @@ class WorldMapLoader:
         return WorldMapLoader.world_risk_past
 
     risk_map_arr = []
+    # @staticmethod
+    # def getWorldRiskMap__Array(limit = 107):
+    #     if(len(WorldMapLoader.risk_map_arr) != 0):
+    #         print("World Risk << ARRAY >> data already loaded and cached >> returning")
+    #         return WorldMapLoader.risk_map_arr
+        
+    #     risk_map_arr = []
+    #     key_list = list(WorldMapLoader.world_df.keys())
+    #     counter = 0
+    #     while(counter < limit):
+    #         day = key_list[-(counter+1)]
+    #         risk_map = WorldMapLoader.getWorldRisk__for(day)
+    #         risk_map_arr.append(risk_map)
+
+    #         counter += 1
+
+    #     WorldMapLoader.risk_map_arr = risk_map_arr[::-1]
+    #     return WorldMapLoader.risk_map_arr
+
     @staticmethod
-    def getWorldRiskMap__Array(limit = 107):
+    def loadWorldRiskMap__Array():
         if(len(WorldMapLoader.risk_map_arr) != 0):
             print("World Risk << ARRAY >> data already loaded and cached >> returning")
             return WorldMapLoader.risk_map_arr
         
-        risk_map_arr  =[]
+        limit = 1070
+        risk_map_arr = []
         key_list = list(WorldMapLoader.world_df.keys())
         counter = 0
         while(counter < limit):
             day = key_list[-(counter+1)]
+            if(day == "name"):
+                break
             risk_map = WorldMapLoader.getWorldRisk__for(day)
             risk_map_arr.append(risk_map)
 
             counter += 1
 
-        WorldMapLoader.risk_map_arr = risk_map_arr[::-1]
+        WorldMapLoader.risk_map_arr = risk_map_arr
         return WorldMapLoader.risk_map_arr
+
+    
+    @staticmethod
+    def getWorldRiskMap__Array(limit = 107):
+        risk_map_arr = WorldMapLoader.loadWorldRiskMap__Array()[:107]
+        return risk_map_arr[::-1]
+
+
+    @staticmethod
+    def plotRisk(x_dates, risk_values, country):
+        colors = ['#54b45f', '#ecd424', '#f88c51', '#c01a27']
+        level_arr = [1, 9, 24, 1000]
+        zone_label = ['Trivial', 'Community', 'Accelerated', 'Tipping']
+
+        fig = make_subplots()
+
+        for i in range(len(level_arr)):
+            level = level_arr[i]
+            prev_level = -1
+            if(i > 0):
+                prev_level = level_arr[i-1] 
+            y_risk = [None]*len(x_dates)
+            for j in range(len(risk_values)):
+                risk = risk_values[j]
+                if(risk < level and risk >= prev_level):
+                    y_risk[j] = risk
+
+            fig.add_trace(
+                go.Scatter(
+                    x=x_dates, 
+                    y=y_risk, 
+                    name=zone_label[i],
+                    mode='markers',
+                    line_color=colors[i]
+                ),
+            )
+
+        fig.update_layout(legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-.15,
+            xanchor="right",
+            x=1
+        ))
+        fig.update_yaxes(title_text="<b>Risk Value</b>")
+        fig.update_layout(
+            title_text="Zone risk timeline >> {}".format(country),
+            font=dict(
+                size=12,
+            )
+        )
+
+        fig.update_layout(
+            margin=dict(l=10, r=10, t=25, b=10),
+                # paper_bgcolor="LightSteelBlue",
+        )
+        return fig
+
+
+    @staticmethod
+    def getRiskPlot__For(country):
+        date_arr = []
+        risk_arr = []
+        for obj in WorldMapLoader.risk_map_arr:
+            date_arr.append(obj['date'])
+            for cntry in obj['heat_map']:
+                if(cntry['name'] == country):
+                    risk_arr.append(cntry['value'])
+
+        fig = WorldMapLoader.plotRisk(date_arr, risk_arr, country)
+        graphs = [fig]
+        graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
+        return graphJSON
+
+        

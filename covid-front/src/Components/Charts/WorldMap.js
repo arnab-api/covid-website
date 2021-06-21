@@ -95,7 +95,8 @@ const bins = [1, 9, 24]
 export const WorldMap = ({
     heatmap,
     heatmap_date,
-    rows
+    rows,
+    updatePlots__For
 }) => {
     const [tooltipContent, setTooltipContent] = useState("");
     // const [heatmap, setHeatMap] = useState([]);
@@ -124,6 +125,7 @@ export const WorldMap = ({
 
     const handleClick = geo => () => {
         console.log(geo);
+        updatePlots__For(geo.properties.NAME)
     };
 
     const my_colorScale = (value, for_tooltip = false) => {

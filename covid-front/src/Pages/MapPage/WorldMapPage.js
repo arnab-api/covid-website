@@ -20,6 +20,7 @@ import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { WorldPageTable } from '../../Components/Tables/WorldPageTable'
+import { PlotlyChart } from '../../Components/Charts/PlotlyChart';
 
 // tab styles
 const useStyles = makeStyles({
@@ -119,6 +120,8 @@ export const WorldMapPage = ({
     // const [riskmap_future, setRiskMap_future] = useState({})
     const [loading, setLoading] = useState(true);
 
+    const [daily_risk_plot, setDailyRiskPlot] = useState({})
+
     function createTableEntry(name, risk) {
         return { 
             'name': name, 
@@ -169,12 +172,48 @@ export const WorldMapPage = ({
                 setRiskMap(response.data[response.data.length-1])
                 updateTableRows(response.data[response.data.length-1])
                 updateTableRows__pastweek(response.data[response.data.length-8])
-                setLoading(false)
+
+                axios.get("/api/country_risk_plot/Bangladesh")
+                    .then((response) => {
+                        setDailyRiskPlot(response.data)
+                        console.log("plotly response", response.data[0])
+                        console.log("plotly data >>>> ", response.data[0].data)
+                        console.log("plotly layout >>>> ", response.data[0].layout)
+                        setLoading(false)
+                    }).catch((error) => {
+                        setLoading(false)
+                    });
+                // fetch("/api/country_risk_plot/Bangladesh").then(response => {
+                //     if (response.ok) {
+                //         return response.json()
+                //     }
+                // }).then(data => {
+                //     console.log(data[0])
+                //     setDailyRiskPlot(data)
+                //     setLoading(false)
+                // })
             }).catch((error) => {
                 setRiskMap_present({})
                 setLoading(false)
             });
     }, []);
+
+    const updateRiskTimeline__For = (country) => {
+        axios.get("/api/country_risk_plot/"+country)
+            .then((response) => {
+                setDailyRiskPlot(response.data)
+                console.log(country, " >> plotly response", response.data[0])
+                console.log(country, " >> plotly data >>>> ", response.data[0].data)
+                console.log(country, " >> plotly layout >>>> ", response.data[0].layout)
+                // setLoading(false)
+            }).catch((error) => {
+                // setLoading(false)
+            });
+    }
+
+    const updatePlots__For = (country) => {
+        updateRiskTimeline__For(country)
+    }
 
     const classes = useStyles(); 
     const [value, setValue] = React.useState(0);
@@ -258,6 +297,7 @@ export const WorldMapPage = ({
                                     heatmap={riskmap.heat_map} 
                                     heatmap_date={riskmap.date}
                                     rows={tablerows}
+                                    updatePlots__For = {updatePlots__For}
                                 />
                             </div>
                             <WorldPageTable 
@@ -304,6 +344,27 @@ export const WorldMapPage = ({
                         </div>
 
                         <br/>
+                        
+                        <Flex wrap="wrap" width="98%" justify="center" align="center">
+                            <Box width='45%' className={classes.chartContainer}> 
+                                {
+                                    <PlotlyChart
+                                        data = {daily_risk_plot[0].data}
+                                        layout = {daily_risk_plot[0].layout}
+                                    />
+                                }
+                            </Box>
+                            <Box width='45%' className={classes.chartContainer}> 
+                                {
+     
+                                    <PlotlyChart
+                                        data = {daily_risk_plot[0].data}
+                                        layout = {daily_risk_plot[0].layout}
+                                    />
+                                }
+                            </Box>
+                        </Flex>
+
                         <br/>
                         {/* <Text fontSize={"xl"} textAlign="center" fontFamily="Baloo Da 2">
                             <h2>

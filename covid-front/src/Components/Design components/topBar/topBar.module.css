@@ -10,7 +10,7 @@
 .brand{
     padding: 1rem;
     font-size: 2rem;
-    color:#eee;
+    color:#fff;
     cursor: pointer;
 }
 
@@ -25,7 +25,7 @@
 
 .catItem{
     /* background-color: #eee; */
-    padding: 1rem 2rem;
+    /* padding: 1rem 2rem; */
     margin-right: 2rem;
     border-radius: 3px;
     cursor: pointer;
@@ -33,4 +33,12 @@
 
 .catItem a{
     color: #fafafa !important;
+}
+
+.catItem a:hover{
+    color: rgb(201, 204, 9) !important;
+}
+
+.brand:hover{
+    color: rgb(201, 204, 9) !important;
 }

@@ -54,9 +54,9 @@ export const GridPlot = ({ area }) => {
       date = date.split("-")
       date = new Date(date[0], date[1] - 1, date[2])
       date = date.toLocaleDateString("en-BD", {
-        month: "long",
+        month: "numeric",
         day: "numeric",
-        year: "numeric"
+        year: "2-digit"
       });
       // console.log(date)
       const dataElement = {

@@ -7,7 +7,7 @@ import copy
 
 class HomePageDataLoader:
 
-    # DATA_PATH = "Data/CSV_18_03/"
+    # DATA_PATH = "Data/CSV_june_19/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     @staticmethod
@@ -124,7 +124,11 @@ class HomePageDataLoader:
 
     @staticmethod
     def getFormattedDate(date):
+        if(isinstance(date, str)):
+            return date
         return date.strftime("%Y-%m-%d")
+
+
 
     web_plot_2 = None
     @staticmethod
@@ -135,15 +139,25 @@ class HomePageDataLoader:
         
         print("data not loaded >> loading web plot 2")
 
-        min_date = datetime.datetime(2020, 2, 15)
-        max_date = datetime.datetime(2021, 6, 1)
-        delta = max_date - min_date
+        # min_date = datetime.datetime(2020, 2, 15)
+        # max_date = datetime.datetime(2021, 6, 1)
+        # delta = max_date - min_date
 
-        date_arr = []
-        for i in range(delta.days + 1):
-            day = min_date + datetime.timedelta(days=i)
-            # date_arr.append(day.strftime("%Y-%m-%d"))
-            date_arr.append(HomePageDataLoader.getFormattedDate(day))
+        # date_arr = []
+        # for i in range(delta.days + 1):
+        #     day = min_date + datetime.timedelta(days=i)
+        #     # date_arr.append(day.strftime("%Y-%m-%d"))
+        #     date_arr.append(HomePageDataLoader.getFormattedDate(day))
+
+        date_arr = list(HomePageDataLoader.df_mobility['date'])
+
+        # sim_dates = list(HomePageDataLoader.df_rt_sim['Date'])
+        # for date in sim_dates:
+        #     if(date not in date_arr):
+        #         date_arr.append(date)
+
+        max_date = date_arr[-1]
+
 
         # print(date_arr[0:5])
         # print(date_arr.index('2020-02-17'))
@@ -168,6 +182,7 @@ class HomePageDataLoader:
 
         for index, row in HomePageDataLoader.df_mobility.iterrows():
             date = row['date']
+            print(" >>> ", date)
             if(date == HomePageDataLoader.getFormattedDate(max_date)):
                 break
             value = -row['mean']/10
@@ -203,7 +218,7 @@ class HomePageDataLoader:
         for index, row in df_bd_sim.iterrows():
             date = row['date']
             if(date == HomePageDataLoader.getFormattedDate(max_date)):
-                print("HI")
+                # print("HI")
                 break
             value = row['confirmed']
             idx = date_arr.index(date)
