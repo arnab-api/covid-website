@@ -360,7 +360,7 @@ export const WorldMapPage = ({
                         <br/>
                         
                         <Flex wrap="wrap" width="98%" justify="center" align="center">
-                            <Box width='45%' className={classes.chartContainer}> 
+                            <Box width='45%'> 
                                 {
                                     <PlotlyChart
                                         data = {daily_rt_cases_plot[0].data}
@@ -368,7 +368,7 @@ export const WorldMapPage = ({
                                     />
                                 }
                             </Box>
-                            <Box width='45%' className={classes.chartContainer}> 
+                            <Box width='45%'> 
                                 {
      
                                     <PlotlyChart

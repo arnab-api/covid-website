@@ -182,7 +182,7 @@ export const DifferentRiskMaps = ({
                                 {/* Our Approach */}
                             </div>
                             <div className={styles.mapContainer} align="center" justify="center">
-                                <MapChart_comparison heatmap={tpr_heatmap} isMethod={true} modelName={"TPR"} bins={[3, 10, 20]}/>
+                                <MapChart_comparison heatmap={tpr_heatmap} isMethod={true} modelName={"TPR (%)"} bins={[3, 10, 20]}/>
                                 {/* only TPR */}
                             </div>
                             <div className={styles.mapContainer} align="center" justify="center">

@@ -139,7 +139,7 @@ class WorldMapLoader:
             print("World Risk << ARRAY >> data already loaded and cached >> returning")
             return WorldMapLoader.risk_map_arr
         
-        limit = 1070
+        limit = 10
         risk_map_arr = []
         key_list = list(WorldMapLoader.world_df.keys())
         counter = 0
@@ -319,7 +319,7 @@ class WorldMapLoader:
         fig.update_yaxes(range=[0, 3], secondary_y=True)
 
         fig.update_layout(
-            margin=dict(l=10, r=10, t=10, b=10),
+            margin=dict(l=10, r=10, t=25, b=10),
             # paper_bgcolor="LightSteelBlue",
         )
 
