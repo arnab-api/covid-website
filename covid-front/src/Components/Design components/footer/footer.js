@@ -4,10 +4,10 @@ import styles from './footer.module.css';
 const Footer = () => {
     return (
         <div className={styles.footerContainer}>
-            <div>
-                <p>Powered by: </p>
-                <p>Copyright &copy; </p>
-            </div>
+            {/* <ul className={styles.footerItems}> */}
+                {/* <li>Powered by: </li> */}
+                <li>Copyright &copy; </li>
+            {/* </ul> */}
         </div>
     )
 }

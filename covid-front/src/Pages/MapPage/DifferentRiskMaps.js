@@ -82,17 +82,19 @@ export const DifferentRiskMaps = ({
 
     const [riskmap_arr, setRiskMap] = useState([]);
     const [rt_riskmap_arr, setRtRiskMap] = useState([])
+    const [tpr_riskmap_arr, setTPRRiskMap] = useState([])
     const [daily_riskmap_arr, setDailyRiskMap] = useState([])
 
     const [heatmap, setHeatMap] = useState([]);
     const [rt_heatmap, setRtHeatMap] = useState([]);
+    const [tpr_heatmap, setTPRHeatMap] = useState([]);
     const [daily_heatmap, setDailyHeatMap] = useState([]);
     
 
     useEffect(() => {
         axios.get("/api/heat_map_array")
             .then((response) => {
-                console.log(" heat_map array >>> ", response.data, response.data.length);
+                // console.log(" heat_map array >>> ", response.data, response.data.length);
                 // setRiskMap_present(response.data);
                 setRiskMap(response.data)
                 setHeatMap(response.data[response.data.length-1].heat_map)
@@ -100,17 +102,26 @@ export const DifferentRiskMaps = ({
 
                 axios.get("/api/heat_map_array_rt")
                     .then((response) => {
-                        console.log("Rt heat_map array >>> ", response.data, response.data.length);
+                        // console.log("Rt heat_map array >>> ", response.data, response.data.length);
                         setRtRiskMap(response.data)
                         setRtHeatMap(response.data[response.data.length-1].heat_map)
 
                         axios.get("/api/heat_map_array_daily")
                             .then((response) => {
-                                console.log("Daily heat_map array >>> ", response.data, response.data.length);
+                                // console.log("Daily heat_map array >>> ", response.data, response.data.length);
                                 setDailyRiskMap(response.data)
                                 setDailyHeatMap(response.data[response.data.length-1].heat_map)
 
-                                setLoading(false)    
+                                axios.get("/api/heat_map_array_tpr")
+                                    .then((response) => {
+                                        console.log("TPR heat_map array >>> ", response.data, response.data.length);
+                                        setTPRRiskMap(response.data)
+                                        setTPRHeatMap(response.data[response.data.length-1].heat_map)
+        
+                                        setLoading(false)    
+                                    }).catch((error) => {
+                                        setLoading(false)
+                                    })
                             }).catch((error) => {
                                 setLoading(false)
                             })
@@ -147,6 +158,7 @@ export const DifferentRiskMaps = ({
         
         setHeatMap(riskmap_arr[value+7].heat_map)
         setRtHeatMap(rt_riskmap_arr[value+7].heat_map)
+        setTPRHeatMap(tpr_riskmap_arr[value+7].heat_map)
         setDailyHeatMap(daily_riskmap_arr[value+7].heat_map)
 
         setHeatMap_date(riskmap_arr[value+7].date)
@@ -170,7 +182,7 @@ export const DifferentRiskMaps = ({
                                 {/* Our Approach */}
                             </div>
                             <div className={styles.mapContainer} align="center" justify="center">
-                                <MapChart_comparison heatmap={heatmap} isMethod={true} modelName={"TPR"}/>
+                                <MapChart_comparison heatmap={tpr_heatmap} isMethod={true} modelName={"TPR"} bins={[3, 10, 20]}/>
                                 {/* only TPR */}
                             </div>
                             <div className={styles.mapContainer} align="center" justify="center">
@@ -187,34 +199,27 @@ export const DifferentRiskMaps = ({
                             <strong> {getFormattedDate(heatmap_date)} </strong>
                         </div>
                         <hr/>
-
-                        <Flex wrap="wrap" width="100%" height="30px" justify="center" align="center" background="white">
+                        
+                        <Flex wrap="wrap" width="100%" height="50px" justify="center" align="center" background="white">
                             <div style={{
+                                    justify: 'center',
                                     align: 'center',
                                     width: '80%',
-                                    background: "white",
-                                    justify: 'center'
+                                    // background: "white",
                                 }}>
-                                <div style={{
-                                        align: 'center',
-                                        width: '100%',
-                                        background: "white",
-                                        justify: 'center'
-                                    }}>
-                                        <PrettoSlider 
-                                            valueLabelDisplay="off" 
-                                            aria-label="pretto slider" 
-                                            aria-labelledby="discrete-slider"
-                                            defaultValue={riskmap_arr.length-8}
-                                            // getAriaValueText={sliderText}
-                                            valueLabelFormat={value => ``}
-                                            step={1}
-                                            marks
-                                            min={0}
-                                            max={riskmap_arr.length-8}
-                                            onChange={handleSliderValueChage}
-                                        />
-                                </div>
+                                    <PrettoSlider 
+                                        valueLabelDisplay="off" 
+                                        aria-label="pretto slider" 
+                                        aria-labelledby="discrete-slider"
+                                        defaultValue={riskmap_arr.length-8}
+                                        // getAriaValueText={sliderText}
+                                        valueLabelFormat={value => ``}
+                                        step={1}
+                                        marks
+                                        min={0}
+                                        max={riskmap_arr.length-8}
+                                        onChange={handleSliderValueChage}
+                                    />
                             </div>
                         </Flex>
                     {/* </Flex> */}

@@ -244,6 +244,80 @@ class DistrictDataLoader:
         
         DistrictDataLoader.daily_json = sorted(confirmed_json, key=itemgetter('date'), reverse=False)[-107:]
         return DistrictDataLoader.daily_json
+
+
+    @staticmethod
+    def formatDate(date_time_str):
+        date_time_obj = datetime.strptime(date_time_str, '%m/%d/%Y')
+        return date_time_obj.strftime("%Y-%m-%d")
+
+    tpr_json = None
+    @staticmethod
+    def getTPRMap__Array():
+        if(DistrictDataLoader.tpr_json != None):
+            print("District-wise Test positive rate heatmap is already loaded -- returning cached value")
+            return DistrictDataLoader.tpr_json
+        dist_2_id = BD_MapLoader.getDistrictData()
+        df = pd.read_csv("Data/bd_daily_cases_2021-06-22.csv")
+
+        tpr_date = {}
+
+        dist_cases = {}
+        dist_tests = {}
+
+
+        for index, row in df.iterrows():
+            date = DistrictDataLoader.formatDate(row["test_date"])
+            if(date not in tpr_date):
+                tpr_date[date] = []
+            district = row['district']
+            if(isinstance(district, str) == False):
+                continue
+            
+            district = DistrictDataLoader.get_Map_districtname(district.upper())
+
+            if(district not in dist_cases):
+                dist_cases[district] = []
+                dist_tests[district] = []
+
+            total_tests = row['tests_combined']
+            total_cases = row['cases_combined']
+
+            dist_cases[district].append(total_cases)
+            dist_tests[district].append(total_tests)
+
+            sum_cases = sum(dist_cases[district][-7:])
+            sum_tests = sum(dist_tests[district][-7:])
+
+            ids = dist_2_id[district]
+            cur_value = 0
+            if(total_tests != 0):
+                cur_value = round(total_cases*100/total_tests, 2)
+            value = 0 
+            if(sum_tests != 0):
+                value = round(sum_cases*100/sum_tests, 2)
+            for _id in ids:
+                tpr_date[date].append({
+                    "dist" : district,
+                    "id"   : _id,
+                    "value": value,
+                    "cur_value": cur_value,
+                    "daily_cases": total_cases,
+                    "daily_tests": total_tests
+                })
+
+        max_date = DistrictDataLoader.getDailyCasesMap__Array()[-1]['date']
+        tpr_json = []
+        for date in tpr_date:
+            if(date > max_date):
+                break
+            tpr_json.append({
+                'date': date,
+                'heat_map': tpr_date[date]
+            })    
+        
+        DistrictDataLoader.tpr_json = sorted(tpr_json, key=itemgetter('date'), reverse=False)[-107:]
+        return DistrictDataLoader.tpr_json
     
     @staticmethod
     def getRiskMap__present():

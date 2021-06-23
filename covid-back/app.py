@@ -360,6 +360,11 @@ def getheatmap__array_confirmed():
     mapdata = DistrictDataLoader.getDailyCasesMap__Array()
     return jsonify(mapdata)
 
+@app.route("/api/heat_map_array_tpr")
+def getheatmap__array_tpr():
+    mapdata = DistrictDataLoader.getTPRMap__Array()
+    return jsonify(mapdata)
+
 @app.route("/api/heat_map_combined")
 def getheatmap__combined():
     # mapdata = BD_MapLoader.getRandomHeatMap()
@@ -398,6 +403,10 @@ def getWorldRisk__array():
 @app.route("/api/country_risk_plot/<country>")
 def getRiskPlot__For(country):
     return WorldMapLoader.getRiskPlot__For(country)
+
+@app.route("/api/country_rt_cases_plot/<country>")
+def getRtDailyCasesPlot__For(country):
+    return WorldMapLoader.getRtDailyCasesPlot__For(country)
 
 
 @app.route("/api/dist_plot_1/<district_name>")

@@ -15,6 +15,11 @@ const OptionBar = ({
     updateCharts()
   }
 
+  const checkArea = () => {
+    // console.log('<',area,">")
+    return area != ""
+  }
+
   return (
     <Flex wrap="wrap" width="100%" justify="center" align="center" backgroundColor="#fff">
       <div style={{ 
@@ -25,9 +30,18 @@ const OptionBar = ({
         width:"49%" }}>
         <h2 style={{ cursor: 'pointer', fontSize:"20px" }} onClick={handleClick}>Bangladesh </h2>
         {
-          area && <h2 style={{ display: 'flex', alignItems: 'center', fontSize:"15px"}}> 
-              <ArrowForwardIosIcon style={{fontSize:"20px"}}/> {area[0]+area.substr(1, area.length-1).toLowerCase()}
+          // area && <h2 style={{ display: 'flex', alignItems: 'center', fontSize:"18px"}}> 
+          //     <ArrowForwardIosIcon style={{fontSize:"20px"}}/> {area[0]+area.substr(1, area.length-1).toLowerCase()}
+          //   </h2>
+          checkArea() ? (
+            <h2 style={{ display: 'flex', alignItems: 'center', fontSize:"18px"}}> 
+                <ArrowForwardIosIcon style={{fontSize:"20px"}}/> {area[0]+area.substr(1, area.length-1).toLowerCase()}
             </h2>
+          ) : (
+            <h2 style={{ display: 'flex', alignItems: 'center', fontSize:"12px"}}> 
+                &nbsp;&nbsp; <i>(Please click on a district to check it's status)</i>
+            </h2>
+          )
         }
       </div>
       <div style={{

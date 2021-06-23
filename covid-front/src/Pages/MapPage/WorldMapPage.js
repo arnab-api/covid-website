@@ -121,6 +121,7 @@ export const WorldMapPage = ({
     const [loading, setLoading] = useState(true);
 
     const [daily_risk_plot, setDailyRiskPlot] = useState({})
+    const [daily_rt_cases_plot, setRtCasesPlot] = useState({})
 
     function createTableEntry(name, risk) {
         return { 
@@ -176,22 +177,22 @@ export const WorldMapPage = ({
                 axios.get("/api/country_risk_plot/Bangladesh")
                     .then((response) => {
                         setDailyRiskPlot(response.data)
-                        console.log("plotly response", response.data[0])
-                        console.log("plotly data >>>> ", response.data[0].data)
-                        console.log("plotly layout >>>> ", response.data[0].layout)
-                        setLoading(false)
+                        // console.log("plotly response", response.data[0])
+                        // console.log("plotly data >>>> ", response.data[0].data)
+                        // console.log("plotly layout >>>> ", response.data[0].layout)
+                        axios.get("/api/country_rt_cases_plot/Bangladesh")
+                            .then((response) => {
+                                setRtCasesPlot(response.data)
+                                // console.log("plotly response", response.data[0])
+                                // console.log("plotly data >>>> ", response.data[0].data)
+                                // console.log("plotly layout >>>> ", response.data[0].layout)
+                                setLoading(false)
+                            }).catch((error) => {
+                                setLoading(false)
+                            });
                     }).catch((error) => {
                         setLoading(false)
                     });
-                // fetch("/api/country_risk_plot/Bangladesh").then(response => {
-                //     if (response.ok) {
-                //         return response.json()
-                //     }
-                // }).then(data => {
-                //     console.log(data[0])
-                //     setDailyRiskPlot(data)
-                //     setLoading(false)
-                // })
             }).catch((error) => {
                 setRiskMap_present({})
                 setLoading(false)
@@ -202,17 +203,30 @@ export const WorldMapPage = ({
         axios.get("/api/country_risk_plot/"+country)
             .then((response) => {
                 setDailyRiskPlot(response.data)
-                console.log(country, " >> plotly response", response.data[0])
-                console.log(country, " >> plotly data >>>> ", response.data[0].data)
-                console.log(country, " >> plotly layout >>>> ", response.data[0].layout)
-                // setLoading(false)
+                // console.log(country, " >> plotly response", response.data[0])
+                // console.log(country, " >> plotly data >>>> ", response.data[0].data)
+                // console.log(country, " >> plotly layout >>>> ", response.data[0].layout)
             }).catch((error) => {
-                // setLoading(false)
+                console.log("could not load risk timeline for >> ", country)
             });
     }
 
+    const updateRtCasesTimeline__For = (country) => {
+        axios.get("/api/country_rt_cases_plot/"+country)
+            .then((response) => {
+                setRtCasesPlot(response.data)
+                // console.log(country, " >> plotly response", response.data[0])
+                // console.log(country, " >> plotly data >>>> ", response.data[0].data)
+                // console.log(country, " >> plotly layout >>>> ", response.data[0].layout)
+            }).catch((error) => {
+                console.log("could not load rt and cases timeline for >> ", country)
+            });
+    }
+
+
     const updatePlots__For = (country) => {
         updateRiskTimeline__For(country)
+        updateRtCasesTimeline__For(country)
     }
 
     const classes = useStyles(); 
@@ -349,8 +363,8 @@ export const WorldMapPage = ({
                             <Box width='45%' className={classes.chartContainer}> 
                                 {
                                     <PlotlyChart
-                                        data = {daily_risk_plot[0].data}
-                                        layout = {daily_risk_plot[0].layout}
+                                        data = {daily_rt_cases_plot[0].data}
+                                        layout = {daily_rt_cases_plot[0].layout}
                                     />
                                 }
                             </Box>

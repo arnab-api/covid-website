@@ -1,16 +1,29 @@
 .footerContainer{
-    padding: 3rem;
+    /* padding: 3rem; */
     background-color: #000000de;
     color: #fafafa;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    bottom: 0;
+    position: fixed;
     width: 100%;
-    height: 100px;
+    height: 30px;
+    bottom: 0;
     /* margin-top: -200px; */
 }
+
+.footerContainer li{
+    list-style: none;
+    position: absolute;
+    right: 20px;
+    font-weight: 500;
+}
+
+/* .footerItems{
+    background-color: red;
+    width: 600px;
+    list-style: none;
+} */
 
 p{
     opacity: .7;

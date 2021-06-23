@@ -221,6 +221,8 @@ export const MapChart = ({
     const [increasing, setIncreasing] = useState(0)
     const [decreasing, setDecreasing] = useState(0)
 
+    const [distDistribution, setDistDistribution] = useState([0, 0, 0, 0])
+
     function createTableEntry(name, risk) {
         return { 
             'name': name, 
@@ -336,6 +338,8 @@ export const MapChart = ({
                 updateTableRows__pastweek(response.data[response.data.length-8])
 
                 updateIncreasingAndDecreasing(response.data[response.data.length-1], response.data[response.data.length-8])
+                updateDistrictDistribution(response.data[response.data.length-1])
+                
                 setLoading(false)
             }).catch((error) => {
                 setLoading(false)
@@ -352,6 +356,7 @@ export const MapChart = ({
         updateTableRows__pastweek(riskmap_arr[value])
 
         updateIncreasingAndDecreasing(riskmap_arr[value+7], riskmap_arr[value])
+        updateDistrictDistribution(riskmap_arr[value+7])
     }
 
     const getFormattedDate = (date) => {
@@ -441,6 +446,30 @@ export const MapChart = ({
         }
         setIncreasing(inc);
         setDecreasing(dec);
+    }
+
+    const updateDistrictDistribution = (tablerows) => {
+        let distribution = [0, 0, 0, 0]
+        let track = [];
+        for(let i = 0; i < tablerows.heat_map.length; i++){
+            // console.log("<<<>>>", tablerows.heat_map[i]);
+            let it_dist = tablerows.heat_map[i].dist;
+            let it_risk = tablerows.heat_map[i].value;
+            if(track.includes(it_dist)) continue;
+            for(let b = bins.length-1; b >=0; b--){
+                if(it_risk >= bins[b]){
+                    distribution[b+1] += 1;
+                    track.push(it_dist);
+                    break;
+                }
+            }
+            if(track.includes(it_dist) == false){
+                distribution[0]++;
+                track.push(it_dist);
+            }
+        }
+        console.log(distribution, bins)
+        setDistDistribution(distribution)
     }
 
     const [projection_config, setProjectionConfig] = useState({
@@ -643,9 +672,9 @@ export const MapChart = ({
                                     />
                                 </svg> 
                             
-                                <strong class="unselectable">&nbsp;Trivial</strong>
+                                <strong class="unselectable">&nbsp;Trivial&nbsp;({distDistribution[0]})</strong>
                             
-                            &nbsp; &nbsp;
+                            &nbsp; &nbsp; &nbsp;
 
                             <svg width="40" height="10">
                                 <rect width="40" height="10"
@@ -655,8 +684,8 @@ export const MapChart = ({
                                         stroke: "rgb(0,0,0)"
                                     }}
                                 />
-                            </svg> <strong class="unselectable">&nbsp;Community Spread</strong>
-                            &nbsp; &nbsp;
+                            </svg> <strong class="unselectable">&nbsp;Community Spread&nbsp;({distDistribution[1]})</strong>
+                            &nbsp; &nbsp; &nbsp;
 
                             <svg width="40" height="10">
                                 <rect width="40" height="10"
@@ -666,8 +695,8 @@ export const MapChart = ({
                                         stroke: "rgb(0,0,0)"
                                     }}
                                 />
-                            </svg> <strong class="unselectable">&nbsp;Accelerated Spread</strong>
-                            &nbsp; &nbsp;
+                            </svg> <strong class="unselectable">&nbsp;Accelerated Spread&nbsp;({distDistribution[2]})</strong>
+                            &nbsp; &nbsp; &nbsp;
 
                             <svg width="40" height="10">
                                 <rect width="40" height="10"
@@ -677,7 +706,7 @@ export const MapChart = ({
                                         stroke: "rgb(0,0,0)"
                                     }}
                                 />
-                            </svg> <strong class="unselectable">&nbsp;Tipping Point</strong>
+                            </svg> <strong class="unselectable">&nbsp;Tipping Point&nbsp;({distDistribution[3]})</strong>
                             </Tooltip__color_table>
 
                             {/* &nbsp; &nbsp;  
