@@ -103,7 +103,7 @@ export const ReactTooltipStyled = styled(ReactTooltip)`
   }
 `;
 
-const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json"
+// const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json"
 
 const geographyStyle = {
     default: {
@@ -533,7 +533,7 @@ export const MapChart = ({
                 </Flex>) : (
                 <>
 
-                    <div style={{ 'text-align': 'center', fontSize: "13px", fontWeight: 'bold'}}>
+                    <div style={{ 'text-align': 'center', fontSize: "15px", fontWeight: 'bold'}}>
                         <strong> {getFormattedDate(heatmap_date)} </strong> &nbsp;
                         (<span style={{color: 'red', fontSize: "17px"}}>&#9650;</span>{increasing}, &nbsp;
                         <span style={{color: 'green', fontSize: "17px"}}>&#9660;</span>{decreasing})
@@ -654,13 +654,13 @@ export const MapChart = ({
                             <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
                         </svg>
                     </Tooltip> */}
-                    <Flex wrap="wrap" width="100%" justify="center" align="center">
-                        <div style={{
-                            width: '68%',
+                    <Flex wrap="wrap" width="100%" justify="center" align="center" fontSize="11px">
+                        {/* <div style={{
+                            width: '80%',
                             fontSize: '10px',
                             align: 'center',
                             justify: 'center'
-                        }}>
+                        }}> */}
                             <Tooltip__color_table content="" direction="top">
                                 <svg width="40" height="10">
                                     <rect width="40" height="10"
@@ -676,37 +676,39 @@ export const MapChart = ({
                             
                             &nbsp; &nbsp; &nbsp;
 
-                            <svg width="40" height="10">
-                                <rect width="40" height="10"
-                                    style={{
-                                        fill: COLOR_BUCKET_tooltip[1],
-                                        strokeWidth: 3,
-                                        stroke: "rgb(0,0,0)"
-                                    }}
-                                />
-                            </svg> <strong class="unselectable">&nbsp;Community Spread&nbsp;({distDistribution[1]})</strong>
+                                <svg width="40" height="10">
+                                    <rect width="40" height="10"
+                                        style={{
+                                            fill: COLOR_BUCKET_tooltip[1],
+                                            strokeWidth: 3,
+                                            stroke: "rgb(0,0,0)"
+                                        }}
+                                    />
+                                </svg> <strong class="unselectable">&nbsp;Community Spread&nbsp;({distDistribution[1]})</strong>
+                            
                             &nbsp; &nbsp; &nbsp;
 
-                            <svg width="40" height="10">
-                                <rect width="40" height="10"
-                                    style={{
-                                        fill: COLOR_BUCKET_tooltip[2],
-                                        strokeWidth: 3,
-                                        stroke: "rgb(0,0,0)"
-                                    }}
-                                />
-                            </svg> <strong class="unselectable">&nbsp;Accelerated Spread&nbsp;({distDistribution[2]})</strong>
+                                <svg width="40" height="10">
+                                    <rect width="40" height="10"
+                                        style={{
+                                            fill: COLOR_BUCKET_tooltip[2],
+                                            strokeWidth: 3,
+                                            stroke: "rgb(0,0,0)"
+                                        }}
+                                    />
+                                </svg> <strong class="unselectable">&nbsp;Accelerated Spread&nbsp;({distDistribution[2]})</strong>
+                            
                             &nbsp; &nbsp; &nbsp;
 
-                            <svg width="40" height="10">
-                                <rect width="40" height="10"
-                                    style={{
-                                        fill: COLOR_BUCKET_tooltip[3],
-                                        strokeWidth: 3,
-                                        stroke: "rgb(0,0,0)"
-                                    }}
-                                />
-                            </svg> <strong class="unselectable">&nbsp;Tipping Point&nbsp;({distDistribution[3]})</strong>
+                                <svg width="40" height="10">
+                                    <rect width="40" height="10"
+                                        style={{
+                                            fill: COLOR_BUCKET_tooltip[3],
+                                            strokeWidth: 3,
+                                            stroke: "rgb(0,0,0)"
+                                        }}
+                                    />
+                                </svg> <strong class="unselectable">&nbsp;Tipping Point&nbsp;({distDistribution[3]})</strong>
                             </Tooltip__color_table>
 
                             {/* &nbsp; &nbsp;  
@@ -716,7 +718,7 @@ export const MapChart = ({
                                     <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
                                 </svg>
                             </Tooltip> */}
-                        </div>
+                        {/* </div> */}
                     </Flex>
                     <Flex wrap="wrap" width="100%" justify="center" align="center">
                         <div style={{

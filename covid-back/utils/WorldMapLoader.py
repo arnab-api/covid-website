@@ -139,7 +139,7 @@ class WorldMapLoader:
             print("World Risk << ARRAY >> data already loaded and cached >> returning")
             return WorldMapLoader.risk_map_arr
         
-        limit = 10
+        limit = 1070
         risk_map_arr = []
         key_list = list(WorldMapLoader.world_df.keys())
         counter = 0
