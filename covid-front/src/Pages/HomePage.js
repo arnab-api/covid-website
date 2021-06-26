@@ -42,7 +42,7 @@ const useStyles = makeStyles({
     mapContainer: {
       margin: 3,
     //   width: '49%',
-      height: 644,
+      height: 654,
       alignItems: "center",
       justifyContent: "center",
       background: '#fff'
@@ -51,7 +51,7 @@ const useStyles = makeStyles({
     chartContainer: {
         margin: 3,
         // width: '49%',
-        height: 320,
+        height: 324,
         display: 'flex',
         alignItems: "center",
         justifyContent: "center",
