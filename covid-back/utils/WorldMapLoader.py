@@ -11,7 +11,7 @@ import json
 
 class WorldMapLoader:
 
-    # DATA_PATH = "Data/CSV_june_19/"
+    # DATA_PATH = "Data/CSV_July_13/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     world_df = pd.read_csv(DATA_PATH + "world_risk_value.csv")

@@ -13,6 +13,7 @@ import Footer from './Components/Design components/footer/footer';
 import { HomePage } from './Pages/HomePage';
 import { MapPage } from './Pages/MapPage/MapPage'
 import { DifferentRiskMaps } from './Pages/MapPage/DifferentRiskMaps';
+import { DifferentRiskMaps__formulae } from './Pages/MapPage/DifferentRiskMaps__formulae';
 import { WorldMapPage } from './Pages/MapPage/WorldMapPage'
 import AboutPage from './Pages/AboutPage/AboutPage';
 import { ObservableImpact } from './Components/Charts/ObservableImpact'
@@ -646,6 +647,9 @@ function App() {
                     </Route>
                     <Route path='/diffriskmaps'>
                         <DifferentRiskMaps setPageName={setPageName} />
+                    </Route>
+                    <Route path='/diffriskmaps_formulae'>
+                        <DifferentRiskMaps__formulae setPageName={setPageName} />
                     </Route>
                     <Route path='/world'>
                         <WorldMapPage setPageName={setPageName} />

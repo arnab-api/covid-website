@@ -15,7 +15,7 @@ from .BD_MapLoader import BD_MapLoader
 
 class DistrictDataLoader:
 
-    # DATA_PATH = "Data/CSV_june_19/"
+    # DATA_PATH = "Data/CSV_July_13/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     df_cases_real = pd.read_csv(DATA_PATH + 'districts_real.csv')
@@ -53,7 +53,7 @@ class DistrictDataLoader:
     # this_week = this_week.strftime('%Y-%m-%d')
     # last_week = last_week.strftime('%Y-%m-%d')
     # next_week = next_week.strftime('%Y-%m-%d')
-    risk_data = None
+    
 
     @staticmethod
     def get_CSV_districtname(district_name):
@@ -74,6 +74,7 @@ class DistrictDataLoader:
                 return key
         return district_name
 
+    risk_data = None
     @staticmethod
     def get_risk_data():
         if(DistrictDataLoader.risk_data == None):
@@ -96,6 +97,30 @@ class DistrictDataLoader:
 
         return DistrictDataLoader.risk_data
 
+    risk_data_formulae = None
+    @staticmethod
+    def get_risk_data_formulae():
+        if(DistrictDataLoader.risk_data_formulae == None):
+            df_risk = pd.read_csv(DistrictDataLoader.DATA_PATH + 'zone_risk_value_formulae.csv')
+
+            keys = list(df_risk.keys())
+            days = keys[1:]
+
+            risk_data = {}
+            for index, row in df_risk.iterrows():
+                data_obj = {}
+                for day in days:
+                    value = row[day]
+                    if(math.isnan(value)):
+                        value = -1
+                    data_obj[day] = value
+                risk_data[row['district']] = data_obj
+
+            DistrictDataLoader.risk_data_formulae = risk_data
+
+        return DistrictDataLoader.risk_data_formulae
+
+
     @staticmethod
     def loadConfirmedCases__for(district, day):
         print(district, day)
@@ -104,9 +129,12 @@ class DistrictDataLoader:
         return int(df['confirmed'].iloc[0])
     
     @staticmethod
-    def get_risk_for(day):
+    def get_risk_for(day, formulae = False):
         dist_dict = BD_MapLoader.getDistrictData()
-        risk_data = DistrictDataLoader.get_risk_data()
+        if(formulae == True):
+            risk_data = DistrictDataLoader.get_risk_data_formulae()
+        else:
+            risk_data = DistrictDataLoader.get_risk_data()
         heat_map = []
         for dist in dist_dict:
             for _id in dist_dict[dist]:
@@ -148,6 +176,24 @@ class DistrictDataLoader:
             DistrictDataLoader.bd_risk_arr = bd_risk_arr
 
         return DistrictDataLoader.bd_risk_arr[::-1]
+
+    bd_risk_arr_formulae = []
+    @staticmethod
+    def getRiskMap_formulae__Array():
+        if(len(DistrictDataLoader.bd_risk_arr_formulae) == 0):
+            print("<FORMULAE> Risk array not yet loaded >> loading data")
+            day = datetime.fromisoformat(DistrictDataLoader.present)
+            limit = 107
+            bd_risk_arr = []
+            while(limit > 0):
+                day_iso = day.strftime('%Y-%m-%d')
+                print("<FORMULAE> loading bd risk data for >> ", day_iso)
+                bd_risk_arr.append(DistrictDataLoader.get_risk_for(day_iso, formulae=True))
+                day = day - timedelta(days=1)
+                limit -= 1
+            DistrictDataLoader.bd_risk_arr_formulae = bd_risk_arr
+
+        return DistrictDataLoader.bd_risk_arr_formulae[::-1]
 
     rt_json = None
     @staticmethod

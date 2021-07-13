@@ -350,6 +350,11 @@ def getheatmap__array():
     mapdata = DistrictDataLoader.getRiskMap__Array()
     return jsonify(mapdata)
 
+@app.route("/api/heat_map_array_formulae")
+def getheatmap_formulae__array():
+    mapdata = DistrictDataLoader.getRiskMap_formulae__Array()
+    return jsonify(mapdata)
+
 @app.route("/api/heat_map_array_rt")
 def getheatmap__array_rt():
     mapdata = DistrictDataLoader.getRtMap__Array()

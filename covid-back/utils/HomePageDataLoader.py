@@ -7,7 +7,7 @@ import copy
 
 class HomePageDataLoader:
 
-    # DATA_PATH = "Data/CSV_june_19/"
+    # DATA_PATH = "Data/CSV_July_13/"
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     @staticmethod
