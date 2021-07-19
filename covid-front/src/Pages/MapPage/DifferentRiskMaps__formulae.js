@@ -48,26 +48,26 @@ const PrettoSlider = withStyles({
     },
   })(Slider);
 
-  const useStyles = makeStyles({
-    mapContainer: {
-      margin: 3,
-      width: '65%',
-      height: 550,
-      display: 'flex',
-      alignItems: "right",
-      justifyContent: "right",
-      background: '#fff'
-    },
-    chartContainer: {
-        margin: 3,
-        width: '49%',
-        height: 320,
-        display: 'flex',
-        alignItems: "center",
-        justifyContent: "center",
-        background: '#fff'
-    }
-})
+// const useStyles = makeStyles({
+//     mapContainer: {
+//       margin: 3,
+//       width: '65%',
+//       height: 550,
+//       display: 'flex',
+//       alignItems: "right",
+//       justifyContent: "right",
+//       background: '#fff'
+//     },
+//     chartContainer: {
+//         margin: 3,
+//         width: '49%',
+//         height: 320,
+//         display: 'flex',
+//         alignItems: "center",
+//         justifyContent: "center",
+//         background: '#fff'
+//     }
+// })
 
 
 export const DifferentRiskMaps__formulae = ({

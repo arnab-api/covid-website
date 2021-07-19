@@ -15,6 +15,7 @@ class WorldMapLoader:
     DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     world_df = pd.read_csv(DATA_PATH + "world_risk_value.csv")
+    world_df_formulae = pd.read_csv(DATA_PATH + "world_risk_value_formulae.csv")
     owid = pd.read_csv(DATA_PATH + "world_owid.csv")
     owid = owid.sort_values(by=['date'], ascending=False)
 
@@ -43,12 +44,12 @@ class WorldMapLoader:
         return country_rt
 
     @staticmethod
-    def get_heat_map(day):
+    def get_heat_map(day, world_df = world_df):
         heat_map = []
 
         print("loading world heat map >>> ", day)
         country_rt = WorldMapLoader.loadCountryRtFor(day)
-        for index, row in WorldMapLoader.world_df.iterrows():
+        for index, row in world_df.iterrows():
             # rt, rt_date = WorldMapLoader.getRtValue(row['name'], day)
             # print(row['name']," >>>>>>>>>>>> OK", rt, rt_date)
             country = row['name']
@@ -78,8 +79,8 @@ class WorldMapLoader:
         # return heat_map
 
     @staticmethod
-    def getWorldRisk__for(day):
-        heat_map = WorldMapLoader.get_heat_map(day)
+    def getWorldRisk__for(day, world_df = world_df):
+        heat_map = WorldMapLoader.get_heat_map(day, world_df = world_df)
         risk_map = {
             "date": day,
             "heat_map": heat_map
@@ -155,17 +156,49 @@ class WorldMapLoader:
         WorldMapLoader.risk_map_arr = risk_map_arr
         return WorldMapLoader.risk_map_arr
 
+
+    risk_map_arr__formulae = []
+    @staticmethod
+    def loadWorldRiskMap_formulae__Array():
+        if(len(WorldMapLoader.risk_map_arr__formulae) != 0):
+            print("<<Formulae>> World Risk << ARRAY >> data already loaded and cached >> returning")
+            return WorldMapLoader.risk_map_arr__formulae
+        
+        limit = 1070
+        risk_map_arr = []
+        key_list = list(WorldMapLoader.world_df_formulae.keys())
+        counter = 0
+        while(counter < limit):
+            day = key_list[-(counter+1)]
+            if(day == "name"):
+                break
+            risk_map = WorldMapLoader.getWorldRisk__for(day, WorldMapLoader.world_df_formulae)
+            risk_map_arr.append(risk_map)
+
+            counter += 1
+
+        WorldMapLoader.risk_map_arr__formulae = risk_map_arr
+        return WorldMapLoader.risk_map_arr__formulae
+
     
     @staticmethod
     def getWorldRiskMap__Array(limit = 107):
-        risk_map_arr = WorldMapLoader.loadWorldRiskMap__Array()[:107]
+        risk_map_arr = WorldMapLoader.loadWorldRiskMap__Array()[:limit]
+        return risk_map_arr[::-1]
+
+    @staticmethod
+    def getWorldRiskMap_formulae__Array(limit = 107):
+        risk_map_arr = WorldMapLoader.loadWorldRiskMap_formulae__Array()[:limit]
         return risk_map_arr[::-1]
 
 
     @staticmethod
-    def plotRisk(x_dates, risk_values, country):
+    def plotRisk(x_dates, risk_values, country, formulae=False):
         colors = ['#54b45f', '#ecd424', '#f88c51', '#c01a27']
-        level_arr = [1, 9, 24, 1000]
+        if(formulae == False):
+            level_arr = [1, 9, 24, 1000]
+        else:
+            level_arr = [math.exp(3), math.exp(5), math.exp(7), math.exp(50)]
         zone_label = ['Trivial', 'Community', 'Accelerated', 'Tipping']
 
         fig = make_subplots()
@@ -215,16 +248,20 @@ class WorldMapLoader:
 
 
     @staticmethod
-    def getRiskPlot__For(country):
+    def getRiskPlot__For(country, formulae=False):
+        if(formulae == False):
+            risk_map_arr = WorldMapLoader.loadWorldRiskMap__Array()
+        else:
+            risk_map_arr = WorldMapLoader.loadWorldRiskMap_formulae__Array()
         date_arr = []
         risk_arr = []
-        for obj in WorldMapLoader.risk_map_arr:
+        for obj in risk_map_arr:
             date_arr.append(obj['date'])
             for cntry in obj['heat_map']:
                 if(cntry['name'] == country):
                     risk_arr.append(cntry['value'])
 
-        fig = WorldMapLoader.plotRisk(date_arr, risk_arr, country)
+        fig = WorldMapLoader.plotRisk(date_arr, risk_arr, country, formulae)
         graphs = [fig]
         graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
         return graphJSON

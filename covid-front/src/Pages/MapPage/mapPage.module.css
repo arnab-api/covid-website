@@ -27,6 +27,14 @@
   position: relative;
 }
 
+.worldMapContainer {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  /* height: 85rem; */
+  /* width: 30rem; */
+  position: relative;
+}
+
 .chartsContainer {
   display: grid;
   grid-row-gap: 1rem;

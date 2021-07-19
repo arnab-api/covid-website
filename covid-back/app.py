@@ -405,9 +405,17 @@ def getWorldRisk__past():
 def getWorldRisk__array():
     return jsonify(WorldMapLoader.getWorldRiskMap__Array())
 
+@app.route("/api/world_risk_arr_formulae")
+def getWorldRisk_formulae__array():
+    return jsonify(WorldMapLoader.getWorldRiskMap_formulae__Array())
+
 @app.route("/api/country_risk_plot/<country>")
 def getRiskPlot__For(country):
     return WorldMapLoader.getRiskPlot__For(country)
+
+@app.route("/api/country_risk_plot_formulae/<country>")
+def getRiskPlot_formulae__For(country):
+    return WorldMapLoader.getRiskPlot__For(country, formulae=True)
 
 @app.route("/api/country_rt_cases_plot/<country>")
 def getRtDailyCasesPlot__For(country):

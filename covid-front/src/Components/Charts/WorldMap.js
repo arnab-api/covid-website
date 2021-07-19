@@ -27,7 +27,7 @@ import Tooltip__color_table from '../Tooltip/Tooltip__color_table'
 
 
 
-const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json"
+// const geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json"
 
 const geographyStyle = {
     default: {

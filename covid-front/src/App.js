@@ -15,6 +15,7 @@ import { MapPage } from './Pages/MapPage/MapPage'
 import { DifferentRiskMaps } from './Pages/MapPage/DifferentRiskMaps';
 import { DifferentRiskMaps__formulae } from './Pages/MapPage/DifferentRiskMaps__formulae';
 import { WorldMapPage } from './Pages/MapPage/WorldMapPage'
+import { WorldMapPage__formulae } from './Pages/MapPage/WorldMapPage__formulae';
 import AboutPage from './Pages/AboutPage/AboutPage';
 import { ObservableImpact } from './Components/Charts/ObservableImpact'
 import { Rt_info } from './Pages/Rt/Rt_info'
@@ -653,6 +654,9 @@ function App() {
                     </Route>
                     <Route path='/world'>
                         <WorldMapPage setPageName={setPageName} />
+                    </Route>
+                    <Route path='/world_formulae'>
+                        <WorldMapPage__formulae setPageName={setPageName} />
                     </Route>
                     <Route path='/about'>
                         <AboutPage setPageName={setPageName} />
