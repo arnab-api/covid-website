@@ -22,7 +22,7 @@ const TableDistrictForcast = ({ area, tableData, setTableData }) => {
 
   return (
     <div className='tableContainer'>
-      <h1>Forecasting SERS-CoV-2 for {area}</h1>
+      <h1>Forecasting SARS-CoV-2 for {area}</h1>
       <table>
         <thead>
           <tr>

@@ -39,7 +39,7 @@ const my_colorScale = (value) => {
 
   return (
     <div className='tableContainer'>
-      {/* <h1>Forecasting SERS-CoV-2 in Bangladesh</h1> */}
+      {/* <h1>Forecasting SARS-CoV-2 in Bangladesh</h1> */}
       <table>
         <thead>
           <tr>

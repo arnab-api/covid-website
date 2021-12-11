@@ -30,7 +30,7 @@ const Table = () => {
             <h1>Forcast Data is not updated</h1>
           ) : (
             <div className='tableContainer'>
-              <h1>Forecasting SERS-CoV-2 in Bangladesh</h1>
+              <h1>Forecasting SARS-CoV-2 in Bangladesh</h1>
               <table>
                 <thead>
                   <tr>
