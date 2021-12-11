@@ -4,11 +4,13 @@ import json
 import math
 import datetime
 import copy
+from flask import Flask, jsonify
+
 
 class HomePageDataLoader:
 
-    # DATA_PATH = "Data/CSV_July_13/"
-    DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
+    DATA_PATH = "Data/CSV_July_13/"
+    # DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     @staticmethod
     def get_num(num):
@@ -296,6 +298,11 @@ class HomePageDataLoader:
         HomePageDataLoader.web_plot_2 = web_plot_2
         return HomePageDataLoader.web_plot_2
 
+    def getLatestDateFromDataFrame(df):
+        date_field = ["Date", "date"]
+        for date in date_field:
+            if(date in df):
+                return df[date].max()
 
     forcast_data = []
     def getForcastData():
@@ -306,14 +313,29 @@ class HomePageDataLoader:
         # bd_df = pd.read_csv(DATA_PATH + "Bangladesh_sim.csv")
         # bd_rt = pd.read_csv(DATA_PATH + "rt_sim.csv")
         # bd_dt = pd.read_csv(DATA_PATH + "doublingtimes_sim.csv")
+
         bd_df = copy.deepcopy(HomePageDataLoader.df_sim)
         bd_rt = copy.deepcopy(HomePageDataLoader.df_rt_sim)
         bd_dt = copy.deepcopy(HomePageDataLoader.bd_dt_sim)
 
+        df_latest_date = min(
+                                HomePageDataLoader.getLatestDateFromDataFrame(bd_rt),
+                                HomePageDataLoader.getLatestDateFromDataFrame(bd_dt),
+                                HomePageDataLoader.getLatestDateFromDataFrame(bd_df)
+                            )
+        print("latest date >> " , df_latest_date)
+        # return "Breaked"
+
         today = datetime.datetime.today() - datetime.timedelta(days=1)
         today_str = today.strftime("%Y-%m-%d")
+
         max_limit = today + datetime.timedelta(days=10)
         max_limit_str = max_limit.strftime("%Y-%m-%d")
+
+        # if(max_limit_str > df_latest_date):
+        #     return {
+        #         "msg": "Forcast data is not updated"
+        #     }
 
         bd_rt = bd_rt[bd_rt['Date'] >= today_str]
         bd_rt = bd_rt[bd_rt['Date'] <= max_limit_str]

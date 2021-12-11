@@ -14,45 +14,60 @@ const Table = () => {
           }
       }).then(data => {
           setTableData(data)
+          console.log(data)
       })
   }, [])
 
+  const checkInvalidForcastData = (data) => {
+    return data === undefined
+  }
+
+
   return (
-    <div className='tableContainer'>
-      <h1>Forecasting SERS-CoV-2 in Bangladesh</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Confirmed Cases</th>
-            <th>Daily Confirmed</th>
-            <th>Recoverd Cases</th>
-            <th>Daily Recoverd</th>
-            <th>Deaths</th>
-            <th>Daily Deaths</th>
-            <th>Rt</th>
-            <th>DT</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            tableData.map((rowData, i) => (
-              <tr key={i}>
-                <td>{rowData.date}</td>
-                <td>{rowData.confirmedCases}</td>
-                <td>{rowData.confirmedDaily}</td>
-                <td>{rowData.recoveredCases}</td>
-                <td>{rowData.recoveredDaily}</td>
-                <td>{rowData.deaths}</td>
-                <td>{rowData.deathsDaily}</td>
-                <td>{rowData.Rt.toFixed(2)}</td>
-                <td>{rowData.DT.toFixed(2)}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
+    <section>
+        {
+          checkInvalidForcastData(tableData) ? (
+            <h1>Forcast Data is not updated</h1>
+          ) : (
+            <div className='tableContainer'>
+              <h1>Forecasting SERS-CoV-2 in Bangladesh</h1>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Confirmed Cases</th>
+                    <th>Daily Confirmed</th>
+                    <th>Recoverd Cases</th>
+                    <th>Daily Recoverd</th>
+                    <th>Deaths</th>
+                    <th>Daily Deaths</th>
+                    <th>Rt</th>
+                    <th>DT</th>
+                  </tr>
+                </thead>
+                {/* <tbody>
+                  {
+                    tableData.map((rowData, i) => (
+                      <tr key={i}>
+                        <td>{rowData.date}</td>
+                        <td>{rowData.confirmedCases}</td>
+                        <td>{rowData.confirmedDaily}</td>
+                        <td>{rowData.recoveredCases}</td>
+                        <td>{rowData.recoveredDaily}</td>
+                        <td>{rowData.deaths}</td>
+                        <td>{rowData.deathsDaily}</td>
+                        <td>{rowData.Rt.toFixed(2)}</td>
+                        <td>{rowData.DT.toFixed(2)}</td>
+                      </tr>
+                    ))
+                  }
+                </tbody> */}
+              </table>
+            </div>
+          )
+        }
+
+    </section>
   );
 };
 
