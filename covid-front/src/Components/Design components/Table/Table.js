@@ -27,7 +27,7 @@ const Table = () => {
     <section>
         {
           checkInvalidForcastData(tableData) ? (
-            <h1>Forcast Data is not updated</h1>
+            <h1>Forecast Data is not updated</h1>
           ) : (
             <div className='tableContainer'>
               <h1>Forecasting SARS-CoV-2 in Bangladesh</h1>
@@ -45,7 +45,7 @@ const Table = () => {
                     <th>DT</th>
                   </tr>
                 </thead>
-                {/* <tbody>
+                <tbody>
                   {
                     tableData.map((rowData, i) => (
                       <tr key={i}>
@@ -61,7 +61,7 @@ const Table = () => {
                       </tr>
                     ))
                   }
-                </tbody> */}
+                </tbody>
               </table>
             </div>
           )

@@ -9,8 +9,9 @@ from flask import Flask, jsonify
 
 class HomePageDataLoader:
 
-    DATA_PATH = "Data/CSV_July_13/"
-    # DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
+    # DATA_PATH = "Data/CSV_Jan_7_22/"
+    # DATA_PATH = "Data/CSV_July_13/"
+    DATA_PATH = "/u/erdos/students/mjonyh/CSV/"
 
     @staticmethod
     def get_num(num):
